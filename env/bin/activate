@@ -39,7 +39,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="/Users/katmutua/projects/web-participation/env"
+VIRTUAL_ENV="/Users/ypliu/projects/ureport-web-participation/env"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"
