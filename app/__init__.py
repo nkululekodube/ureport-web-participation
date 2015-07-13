@@ -16,3 +16,4 @@ from app.mod_auth.controllers import mod_auth as auth_module
 
 app.register_blueprint(auth_module)
 
+db.create_all()

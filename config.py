@@ -1,3 +1,5 @@
+DEBUG = True
+
 import os
 
 DEBUG = True
@@ -10,6 +12,7 @@ PASSWORD = 'admin'
 
 SQLALCHEMY_DATABASE_URI = "postgresql://" + USERNAME + ":" + PASSWORD+"@localhost/test"
 	
+
 DATABASE_CONNECT_OPTIONS = {}
 
 THREADS_PER_PAGE = 2

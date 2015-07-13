@@ -9,8 +9,9 @@ class Base(db.Model):
     date_modified = db.Column(db.DateTime,  default=db.func.current_timestamp(),
                                            onupdate=db.func.current_timestamp())
 class User(Base):
-
+    
     __tablename__ = 'users'
+
     name    = db.Column(db.String(128),  nullable=False)
     email    = db.Column(db.String(128),  nullable=False,
                                             unique=True)
