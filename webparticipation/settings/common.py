@@ -200,6 +200,7 @@ THIRD_PARTY_APPS = (
 
 LOCAL_APPS = (
     'webparticipation.apps.register',
+    'webparticipation.apps.rapidpro_receptor',
 )
 
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
