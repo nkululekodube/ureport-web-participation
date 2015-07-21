@@ -14,15 +14,13 @@ def register(request):
     context = {}
 
     if request.method == 'GET':
-        requests.post(settings.RAPIDPRO_URL, data={'from': user, 'text': 'webregister'})
-        user_messages = get_messages_for_user(user)
-        response = render(request, 'register.html', {'messages': user_messages})
+        requests.post(settings.RAPIDPRO_URL, data={ 'from': user, 'text': 'webregister' })
+        response = render(request, 'register.html', {'messages': get_messages_for_user(user)})
         response.set_cookie(key='userid', value=user)
 
     if request.method == 'POST':
-        requests.post(settings.RAPIDPRO_URL, data={'from': user, 'text': request.POST['send']})
-        user_messages = get_messages_for_user(user)
-        response = render(request, 'register.html', {'messages': user_messages})
+        requests.post(settings.RAPIDPRO_URL, data={ 'from': user, 'text': request.POST['send'] })
+        response = render(request, 'register.html', {'messages': get_messages_for_user(user)})
 
     print request.method + ' messages', messages
     return response

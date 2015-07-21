@@ -18,9 +18,9 @@ def send_received_confirmation_to_rapidpro(response_params):
 def broadcast_rapidpro_response(response_params):
     broadcast = settings.RAPIDPRO_DISPATCHER.send(
         sender=response_params['to'],
-        param_id=response_params['id'], # 2372 (message id)
-        param_channel=response_params['channel'], # 3
-        param_from=response_params['from'], # 'register'
-        param_to=response_params['to'], # 'user4228946082'
+        param_id=response_params['id'],
+        param_channel=response_params['channel'],
+        param_from=response_params['from'],
+        param_to=response_params['to'],
         param_text=response_params['text'])
     print 'broadcast', broadcast

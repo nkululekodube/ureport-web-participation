@@ -7,13 +7,9 @@ import dispatch
 import auth
 
 RAPIDPRO_PROTOCOL = 'http://'
-
 RAPIDPRO_HOST = 'localhost'
-
 RAPIDPRO_PORT = '8000'
-
 RAPIDPRO_PATH = '/api/v1/external/received/7a795bef-8c13-476e-9350-8799da09d362/' # Enter your own channel id here
-
 RAPIDPRO_URL = RAPIDPRO_PROTOCOL + RAPIDPRO_HOST + ':' + RAPIDPRO_PORT + RAPIDPRO_PATH
 
 RAPIDPRO_DISPATCHER = dispatch.Signal()
