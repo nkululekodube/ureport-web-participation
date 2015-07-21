@@ -6,13 +6,14 @@
     <link rel="stylesheet" href="/static/css/styles.css" type="text/css">
 </head>
 <body>
-    <h1>Register</h1>
     <ul class="messages">
-        <li>{{messages}}</li>
+    {% for message in messages %}
+        <li>{{message.msg_text}}</li>
+    {% endfor %}
     </ul>
     <form action="{% url 'register' %}" method="post">
         {% csrf_token %}
-        <input class="send" name="send" type="text">
+        <input class="dlg-send" name="send" type="text">
         <button type="submit">Send</button>
     </form>
 </body>

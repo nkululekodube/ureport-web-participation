@@ -1,14 +1,26 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
-import requests
+from django.views.decorators.csrf import csrf_exempt
+from django.conf import settings
+import requests, dispatch
 
-def rapidpro_receptor(request):
-    print request.method
-    if request.method == 'POST':
-        post_data = {
-            'from': request.POST['to'],
-            'text': request.POST['text']
-        }
-        requests.post('http://localhost:8000/api/v1/external/received/7a795bef-8c13-476e-9350-8799da09d362/',
-            data=post_data)
+@csrf_exempt
+def rapidpro_receptor(response):
+    if response.method == 'POST':
+        response_params = response.POST.dict()
+        send_received_confirmation_to_rapidpro(response_params)
+        broadcast_rapidpro_response(response_params)
         return HttpResponse('OK')
+
+def send_received_confirmation_to_rapidpro(response_params):
+    requests.post(settings.RAPIDPRO_URL, data={ 'from': response_params['from'], 'text': response_params['text'] })
+
+def broadcast_rapidpro_response(response_params):
+    broadcast = settings.RAPIDPRO_DISPATCHER.send(
+        sender=response_params['to'],
+        param_id=response_params['id'], # 2372 (message id)
+        param_channel=response_params['channel'], # 3
+        param_from=response_params['from'], # 'register'
+        param_to=response_params['to'], # 'user4228946082'
+        param_text=response_params['text'])
+    print 'broadcast', broadcast

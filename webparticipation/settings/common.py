@@ -3,6 +3,15 @@
 from datetime import timedelta
 from os.path import abspath, basename, dirname, join, normpath
 from sys import path
+import dispatch
+
+RAPIDPRO_PROTOCOL = 'http://'
+RAPIDPRO_HOST = 'localhost'
+RAPIDPRO_PORT = '8000'
+RAPIDPRO_PATH = '/api/v1/external/received/7a795bef-8c13-476e-9350-8799da09d362/' # Enter your own channel id here
+RAPIDPRO_URL = RAPIDPRO_PROTOCOL + RAPIDPRO_HOST + ':' + RAPIDPRO_PORT + RAPIDPRO_PATH
+
+RAPIDPRO_DISPATCHER = dispatch.Signal()
 
 DJANGO_ROOT = dirname(dirname(abspath(__file__)))
 
