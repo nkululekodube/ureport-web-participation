@@ -16,7 +16,8 @@ def register(request):
         requests.post(settings.RAPIDPRO_URL, data={ 'from': user, 'text': 'webregister' })
         while not len(messages):
             sleep(.5)
-        response = render(request, 'register.html', {'messages': messages})
+        filtered_messages = filter_messages(user)
+        response = render(request, 'register.html', {'messages': filtered_messages})
         response.set_cookie(key='userid', value=user)
 
     if request.method == 'POST':
@@ -28,6 +29,12 @@ def register(request):
 
 def get_user(request):
     return request.COOKIES.get('userid') or 'user' + str(randint(100000000, 999999999))
+
+def filter_messages(user_id):
+    global messages
+    filtered_messages = filter(lambda msg: msg['msg_to'] == user_id, messages)
+    messages = filter(lambda msg: msg['msg_to'] != user_id, messages) # remove messages for this user
+    return filtered_messages
 
 def rapidpro_dispatcher_callback(sender, **kwargs):
     print 'dispatcher', sender, kwargs['param_id'], kwargs['param_channel'], kwargs['param_from'], kwargs['param_to'], kwargs['param_text']
