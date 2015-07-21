@@ -12,6 +12,8 @@ RAPIDPRO_PORT = '8000'
 RAPIDPRO_PATH = '/api/v1/external/received/7a795bef-8c13-476e-9350-8799da09d362/' # Enter your own channel id here
 RAPIDPRO_URL = RAPIDPRO_PROTOCOL + RAPIDPRO_HOST + ':' + RAPIDPRO_PORT + RAPIDPRO_PATH
 
+RAPIDPRO_API_TOKEN = '8c09076c77b2a47a40633b93c0f70829777990ef'
+
 RAPIDPRO_DISPATCHER = dispatch.Signal()
 
 DJANGO_ROOT = dirname(dirname(abspath(__file__)))
@@ -129,6 +131,7 @@ THIRD_PARTY_APPS = (
 LOCAL_APPS = (
     'webparticipation.apps.register',
     'webparticipation.apps.rapidpro_receptor',
+    'webparticipation.apps.ureport_user',
 )
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
