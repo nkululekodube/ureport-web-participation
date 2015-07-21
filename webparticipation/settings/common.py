@@ -4,11 +4,16 @@ from datetime import timedelta
 from os.path import abspath, basename, dirname, join, normpath
 from sys import path
 import dispatch
+import auth
 
 RAPIDPRO_PROTOCOL = 'http://'
+
 RAPIDPRO_HOST = 'localhost'
+
 RAPIDPRO_PORT = '8000'
+
 RAPIDPRO_PATH = '/api/v1/external/received/7a795bef-8c13-476e-9350-8799da09d362/' # Enter your own channel id here
+
 RAPIDPRO_URL = RAPIDPRO_PROTOCOL + RAPIDPRO_HOST + ':' + RAPIDPRO_PORT + RAPIDPRO_PATH
 
 RAPIDPRO_DISPATCHER = dispatch.Signal()
@@ -180,16 +185,16 @@ COMPRESS_JS_FILTERS = [
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
-DEFAULT_FROM_EMAIL = '<host_email>>'
+DEFAULT_FROM_EMAIL = auth.EMAIL_HOST_USER
 
-SERVER_EMAIL = '<user_email>'
+SERVER_EMAIL = auth.SERVER_EMAIL
 
 EMAIL_USE_TLS = True
 
-EMAIL_HOST = '<smtp_host>'
+EMAIL_HOST = 'smtp.gmail.com'
 
 EMAIL_PORT = 587
 
-EMAIL_HOST_USER = '<host_email>'
+EMAIL_HOST_USER = auth.EMAIL_HOST_USER
 
-EMAIL_HOST_PASSWORD = '<host_password>'
+EMAIL_HOST_PASSWORD = auth.EMAIL_HOST_PASSWORD

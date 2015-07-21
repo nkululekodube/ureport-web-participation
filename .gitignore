@@ -3,4 +3,5 @@
 *.log
 *.pem
 env
+auth.py
 *.pyc
