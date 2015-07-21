@@ -33,7 +33,7 @@ DATABASES = {
     }
 }
 
-TIME_ZONE = 'America/Los_Angeles'
+TIME_ZONE = 'Africa/Nairobi'
 
 LANGUAGE_CODE = 'en-us'
 
@@ -113,7 +113,7 @@ DJANGO_APPS = (
 
 THIRD_PARTY_APPS = (
     'compressor',
-    # 'djcelery',
+    'djcelery',
 )
 
 LOCAL_APPS = (
@@ -155,8 +155,6 @@ CELERY_TASK_RESULT_EXPIRES = timedelta(minutes=30)
 
 CELERY_CHORD_PROPAGATES = True
 
-# setup_loader()
-
 WSGI_APPLICATION = 'wsgi.application'
 
 COMPRESS_ENABLED = True
@@ -170,3 +168,19 @@ COMPRESS_CSS_FILTERS = [
 COMPRESS_JS_FILTERS = [
     'compressor.filters.template.TemplateFilter',
 ]
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+DEFAULT_FROM_EMAIL = '<host_email>>'
+
+SERVER_EMAIL = '<user_email>'
+
+EMAIL_USE_TLS = True
+
+EMAIL_HOST = '<smtp_host>'
+
+EMAIL_PORT = 587
+
+EMAIL_HOST_USER = '<host_email>'
+
+EMAIL_HOST_PASSWORD = '<host_password>'
