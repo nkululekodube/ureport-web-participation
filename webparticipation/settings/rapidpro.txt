@@ -1,0 +1,11 @@
+"""RapidPro settings"""
+
+# Rename this file rapidpro.py and override these settings with your own RapidPro instance details
+RAPIDPRO_PROTOCOL = 'http://'
+RAPIDPRO_HOST = 'localhost'
+RAPIDPRO_PORT = '8000'
+RAPIDPRO_PATH = '/api/v1/external/received/aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee/'
+
+RAPIDPRO_URL = RAPIDPRO_PROTOCOL + RAPIDPRO_HOST + ':' + RAPIDPRO_PORT + RAPIDPRO_PATH
+
+RAPIDPRO_API_TOKEN = ''

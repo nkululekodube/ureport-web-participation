@@ -4,15 +4,9 @@ from datetime import timedelta
 from os.path import abspath, basename, dirname, join, normpath
 from sys import path
 import dispatch
-import auth
-
-RAPIDPRO_PROTOCOL = 'http://'
-RAPIDPRO_HOST = 'localhost'
-RAPIDPRO_PORT = '8000'
-RAPIDPRO_PATH = '/api/v1/external/received/7a795bef-8c13-476e-9350-8799da09d362/' # Enter your own channel id here
-RAPIDPRO_URL = RAPIDPRO_PROTOCOL + RAPIDPRO_HOST + ':' + RAPIDPRO_PORT + RAPIDPRO_PATH
-
-RAPIDPRO_API_TOKEN = '8c09076c77b2a47a40633b93c0f70829777990ef'
+from secret import *
+from rapidpro import *
+from auth import *
 
 RAPIDPRO_DISPATCHER = dispatch.Signal()
 
@@ -74,8 +68,6 @@ STATICFILES_FINDERS = (
     'compressor.finders.CompressorFinder',
 )
 
-SECRET_KEY = r"fnm@j%xid5kxd8+^wgwz$b5vl_5vx9bjv+#4byn90%5%rq%h8^"
-
 FIXTURE_DIRS = (
     normpath(join(DJANGO_ROOT, 'fixtures')),
 )
@@ -132,6 +124,8 @@ LOCAL_APPS = (
     'webparticipation.apps.register',
     'webparticipation.apps.rapidpro_receptor',
     'webparticipation.apps.ureport_user',
+    'webparticipation.apps.send_token',
+    'webparticipation.apps.utils',
 )
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -183,17 +177,3 @@ COMPRESS_JS_FILTERS = [
 ]
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-
-DEFAULT_FROM_EMAIL = auth.EMAIL_HOST_USER
-
-SERVER_EMAIL = auth.SERVER_EMAIL
-
-EMAIL_USE_TLS = True
-
-EMAIL_HOST = 'smtp.gmail.com'
-
-EMAIL_PORT = 587
-
-EMAIL_HOST_USER = auth.EMAIL_HOST_USER
-
-EMAIL_HOST_PASSWORD = auth.EMAIL_HOST_PASSWORD

@@ -3,6 +3,8 @@
 *.log
 *.pem
 env
-auth.py
 *.pyc
 celerybeat-schedule.db
+webparticipation/settings/auth.py
+webparticipation/settings/rapidpro.py
+webparticipation/settings/secret.py
