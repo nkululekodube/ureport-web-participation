@@ -5,7 +5,7 @@ from random import randint
 
 class UreportUser(models.Model):
     def generate_token():
-        return str(randint(100, 999))
+        return str(randint(1000, 9999))
     def token_has_expired(self):
         return self.pub_date >= timezone.now() - datetime.timedelta(days=1)
     def invalidate_token(self):
@@ -19,4 +19,4 @@ class UreportUser(models.Model):
     uuid = models.CharField(max_length=36)
     pub_date = models.DateTimeField(default=timezone.now())
     def __unicode__(self):
-        return self.user_id
+        return self.uuid

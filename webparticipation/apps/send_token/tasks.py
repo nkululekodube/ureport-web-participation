@@ -3,12 +3,12 @@ from django.core.mail import EmailMessage
 import binascii
 import random
 import string
-from webparticipation.apps.ureport_user.models import UreportUser
 
 
 @task()
 def send_verification_token(user):
-    print 'send_verification_token', user
+    # print 'user.email', user.email
+    print user
     subject = 'Hello'
     body = 'Welcome to ureport. To complete the registration process, ' \
            'use this code to verify your account ' + generate_auth_token() + ' .' \
@@ -19,7 +19,6 @@ def send_verification_token(user):
     message.send()
 
 
-def generate_auth_token(user_id):
-    user = UreportUser.objects.get(user_id)
-    token = user['token']
-    return token
+def generate_auth_token():
+    digits = string.digits
+    return binascii.hexlify(''.join([random.choice(digits) for _ in range(4)]))

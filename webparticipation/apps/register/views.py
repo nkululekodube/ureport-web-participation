@@ -4,23 +4,25 @@ from django.conf import settings
 from random import randint
 from time import sleep
 import requests
+import tasks
 from webparticipation.apps.ureport_user.models import UreportUser
+from webparticipation.apps.utils.views import dashify_user, undashify_user
 
 messages = []
 
 def register(request):
     user = get_user(request)
-    stripped_user_id = user.replace('-', '')
     response = HttpResponse()
 
     if request.method == 'GET':
-        requests.post(settings.RAPIDPRO_URL, data={ 'from': strip_user(user), 'text': 'webregister' })
+        requests.post(settings.RAPIDPRO_URL, data={ 'from': undashify_user(user), 'text': 'webregister' })
         response = render(request, 'register.html', {'messages': get_messages_for_user(user)})
         response.set_cookie(key='uuid', value=user)
 
     if request.method == 'POST':
-        requests.post(settings.RAPIDPRO_URL, data={ 'from': strip_user(user), 'text': request.POST['send'] })
-        response = render(request, 'register.html', {'messages': get_messages_for_user(user)})
+        requests.post(settings.RAPIDPRO_URL, data={ 'from': undashify_user(user), 'text': request.POST['send'] })
+        messages = get_messages_for_user(user)
+        response = render(request, 'register.html', {'messages': messages})
 
     return response
 
@@ -39,10 +41,6 @@ def get_user(request):
         return uuid
 
 
-def strip_user(user):
-    return user.replace('-', '')
-
-
 def get_messages_for_user(user_id):
     global messages
     while not len(messages):
@@ -52,8 +50,8 @@ def get_messages_for_user(user_id):
 
 def filter_messages(user_id):
     global messages
-    filtered_messages = filter(lambda msg: msg['msg_to'] == strip_user(user_id), messages)
-    messages = filter(lambda msg: msg['msg_to'] != strip_user(user_id), messages)
+    filtered_messages = filter(lambda msg: msg['msg_to'] == undashify_user(user_id), messages)
+    messages = filter(lambda msg: msg['msg_to'] != undashify_user(user_id), messages)
     return filtered_messages
 
 
