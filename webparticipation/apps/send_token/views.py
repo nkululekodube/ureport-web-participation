@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from webparticipation.apps.ureport_user.models import UreportUser
@@ -10,7 +9,6 @@ from . import tasks
 def send_token(response):
     if response.method == 'POST':
         response_params = response.POST.dict()
-        print 'send_token', response_params
         email = response_params['text']
         user = UreportUser.objects.get(uuid=dashify_user(response_params['phone']))
         user.email = email
@@ -19,4 +17,3 @@ def send_token(response):
         resp = HttpResponse()
         resp.status_code = 200
         return resp
-

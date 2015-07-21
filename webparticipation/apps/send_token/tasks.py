@@ -7,8 +7,6 @@ import string
 
 @task()
 def send_verification_token(user):
-    # print 'user.email', user.email
-    print user
     subject = 'Hello'
     body = 'Welcome to ureport. To complete the registration process, ' \
            'use this code to verify your account ' + generate_auth_token() + ' .' \

@@ -1,14 +1,10 @@
 from celery import task
 from django.core.mail import EmailMessage
-import binascii
-import random
-import string
 from webparticipation.apps.ureport_user.models import UreportUser
 
 
 @task()
 def send_verification_token(user):
-    print 'send_verification_token', user
     subject = 'Hello'
     body = 'Welcome to ureport. To complete the registration process, ' \
            'use this code to verify your account ' + generate_auth_token() + ' .' \

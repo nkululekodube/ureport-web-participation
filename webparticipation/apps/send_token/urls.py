@@ -1,7 +1,6 @@
-from django.conf.urls import include, url
+from django.conf.urls import url
 from . import views
 
 urlpatterns = [
-  url(r'^', views.send_token, name='send_token'),
+    url(r'^', views.send_token, name='send_token'),
 ]
-

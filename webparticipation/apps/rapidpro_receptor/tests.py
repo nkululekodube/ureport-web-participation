@@ -2,8 +2,8 @@ from django.test import TestCase, Client
 from mock import Mock, patch
 import requests
 
-class TestRapidproReceptor(TestCase):
 
+class TestRapidproReceptor(TestCase):
     def setUp(self):
         self.params = {
             'to': 'something',
@@ -33,4 +33,3 @@ class TestRapidproReceptor(TestCase):
         mocked_post_request.assert_called_with(
             'http://localhost:8000/api/v1/external/received/7a795bef-8c13-476e-9350-8799da09d362/',
             data={'from': self.params['to'], 'text': self.params['text']})
-
