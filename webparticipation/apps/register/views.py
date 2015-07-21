@@ -9,20 +9,19 @@ messages = []
 
 def register(request):
     response = HttpResponse()
-    context = {}
     user = get_user(request)
+    context = {}
 
     if request.method == 'GET':
         requests.post(settings.RAPIDPRO_URL, data={ 'from': user, 'text': 'webregister' })
-        while not len(messages):
-            sleep(.5)
-        filtered_messages = filter_messages(user)
-        response = render(request, 'register.html', {'messages': filtered_messages})
+        user_messages = get_messages_for_user(user)
+        response = render(request, 'register.html', {'messages': user_messages})
         response.set_cookie(key='userid', value=user)
 
     if request.method == 'POST':
         requests.post(settings.RAPIDPRO_URL, data={ 'from': user, 'text': request.POST['send'] })
-        response = render(request, 'register.html', {'messages': messages})
+        user_messages = get_messages_for_user(user)
+        response = render(request, 'register.html', {'messages': user_messages})
 
     print request.method + ' messages', messages
     return response
@@ -30,10 +29,16 @@ def register(request):
 def get_user(request):
     return request.COOKIES.get('userid') or 'user' + str(randint(100000000, 999999999))
 
+def get_messages_for_user(user_id):
+    global messages
+    while not len(messages):
+        sleep(.5)
+    return filter_messages(user_id)
+
 def filter_messages(user_id):
     global messages
     filtered_messages = filter(lambda msg: msg['msg_to'] == user_id, messages)
-    messages = filter(lambda msg: msg['msg_to'] != user_id, messages) # remove messages for this user
+    messages = filter(lambda msg: msg['msg_to'] != user_id, messages)
     return filtered_messages
 
 def rapidpro_dispatcher_callback(sender, **kwargs):
