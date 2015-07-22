@@ -2,14 +2,16 @@ SECRET_KEY = ''
 
 
 """RapidPro settings"""
+RAPIDPRO_API_TOKEN = ''
+
 RAPIDPRO_PROTOCOL = 'http://'
 RAPIDPRO_HOST = 'localhost'
 RAPIDPRO_PORT = '8000'
-RAPIDPRO_PATH = '/api/v1/external/received/aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee/'
+RAPIDPRO_WEB_CHANNEL = 'aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee'
 
-RAPIDPRO_URL = RAPIDPRO_PROTOCOL + RAPIDPRO_HOST + ':' + RAPIDPRO_PORT + RAPIDPRO_PATH
-
-RAPIDPRO_API_TOKEN = ''
+# Don't change these
+RAPIDPRO_API_PATH = RAPIDPRO_PROTOCOL + RAPIDPRO_HOST + ':' + RAPIDPRO_PORT + '/api/v1'
+RAPIDPRO_RECEIVED_PATH = RAPIDPRO_API_PATH + '/external/received/' + RAPIDPRO_WEB_CHANNEL + '/'
 
 
 """Email settings"""

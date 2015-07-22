@@ -12,16 +12,15 @@ def confirm_token(request):
         uuid = dashify_user(request_params['phone'])
         user = UreportUser.objects.get(uuid=uuid)
 
-        status_code = 403
-        data = {}
+        data = None
         if str(user.token) == submitted_code:
             user.active = True
             user.token = 0
             user.save()
-            status_code = 200
-            data = {'status': 200}
+            data = {'token_ok': 'true'}
         else:
-            data = {'status': 403}
+            data = {'token_ok': 'false'}
+
         response = JsonResponse(data)
-        response.status_code = status_code
+        response.status_code = 200
         return response

@@ -8,33 +8,41 @@ import tasks
 from webparticipation.apps.ureport_user.models import UreportUser
 from webparticipation.apps.utils.views import dashify_user, undashify_user
 
+
 messages = []
+
 
 def register(request):
     user = get_user(request)
     response = HttpResponse()
 
     if request.method == 'GET':
-        requests.post(settings.RAPIDPRO_URL, data={ 'from': undashify_user(user), 'text': 'webregister' })
-        response = render(request, 'register.html', {'messages': get_messages_for_user(user)})
-        response.set_cookie(key='uuid', value=user)
+        if user_is_authenticated(request):
+            response = render(request, 'register.html', {'messages': [{'msg_text': "You're already registered!"}]})
+        else:
+            requests.post(settings.RAPIDPRO_RECEIVED_PATH, data={ 'from': undashify_user(user), 'text': 'webregister' })
+            response = render(request, 'register.html', {'messages': get_messages_for_user(user)})
+            response.set_cookie(key='uuid', value=user)
 
     if request.method == 'POST':
-        requests.post(settings.RAPIDPRO_URL, data={ 'from': undashify_user(user), 'text': request.POST['send'] })
+        requests.post(settings.RAPIDPRO_RECEIVED_PATH, data={ 'from': undashify_user(user), 'text': request.POST['send'] })
         messages = get_messages_for_user(user)
         response = render(request, 'register.html', {'messages': messages})
 
     return response
 
 
+def user_is_authenticated(request):
+    return request.COOKIES.get('uuid')
+
+
 def get_user(request):
-    # if request.user.is_authenticated():
-    if request.COOKIES.get('uuid'):
+    if user_is_authenticated(request):
         return request.COOKIES.get('uuid')
     else:
         rand_seed = 'user' + str(randint(100000000, 999999999))
-        contact = requests.post('http://localhost:8000/api/v1/contacts.json',
-            data={"urns": ["tel:" + rand_seed]},
+        contact = requests.post(settings.RAPIDPRO_API_PATH + '/contacts.json',
+            data={'urns': ['tel:' + rand_seed]},
             headers={'Authorization': 'Token ' + settings.RAPIDPRO_API_TOKEN})
         uuid = contact.json()['uuid']
         UreportUser(uuid=uuid).save()
