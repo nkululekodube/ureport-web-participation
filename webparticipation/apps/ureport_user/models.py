@@ -22,7 +22,7 @@ class UreportUser(models.Model):
     active = models.BooleanField(default=False)
     token = models.IntegerField(null=False, default=generate_token())
     uuid = models.CharField(max_length=36)
-    pub_date = models.DateTimeField(default=timezone.now())
+    pub_date = models.DateTimeField(default=timezone.now)
 
     def __unicode__(self):
         return self.uuid

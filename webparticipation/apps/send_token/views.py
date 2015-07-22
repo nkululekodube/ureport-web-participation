@@ -9,9 +9,9 @@ from . import tasks
 def send_token(response):
     if response.method == 'POST':
         response_params = response.POST.dict()
-        email = response_params['text']
+        email_address = response_params['text']
         user = UreportUser.objects.get(uuid=dashify_user(response_params['phone']))
-        user.email = email
+        user.email = email_address
         user.save()
         tasks.send_verification_token.delay(user)
         resp = HttpResponse()
