@@ -123,6 +123,7 @@ LOCAL_APPS = (
     'webparticipation.apps.rapidpro_receptor',
     'webparticipation.apps.ureport_user',
     'webparticipation.apps.send_token',
+    'webparticipation.apps.confirm_token',
     'webparticipation.apps.utils',
 )
 

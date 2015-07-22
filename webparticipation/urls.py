@@ -9,4 +9,5 @@ urlpatterns = patterns('',
     url(r'^register/', include('apps.register.urls')),
     url(r'^rapidpro-receptor', include('apps.rapidpro_receptor.urls')),
     url(r'^send-token', include('apps.send_token.urls')),
+    url(r'^confirm-token', include('apps.confirm_token.urls')),
 )
