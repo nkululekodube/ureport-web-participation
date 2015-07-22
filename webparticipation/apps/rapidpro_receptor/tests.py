@@ -1,7 +1,6 @@
-from django.test import TestCase, Client
-from mock import Mock, patch
+from django.test import TestCase
+from mock import patch
 from django.conf import settings
-import requests
 
 
 class TestRapidproReceptor(TestCase):
@@ -15,16 +14,13 @@ class TestRapidproReceptor(TestCase):
             'text': 'sometext'
         }
 
-
     def test_receptor_is_available(self):
         self.response = self.client.post('/rapidpro-receptor', self.params)
         self.assertEqual(200, self.response.status_code)
 
-
     def test_receptor_returns_confirmation_message(self):
         self.response = self.client.post('/rapidpro-receptor', self.params)
         self.assertEqual('OK', self.response.content)
-
 
     @patch("requests.post")
     def test_receptor_makes_post_request(self, mocked_post_request):
