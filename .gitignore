@@ -5,6 +5,4 @@
 env
 *.pyc
 celerybeat-schedule.db
-webparticipation/settings/auth.py
-webparticipation/settings/rapidpro.py
-webparticipation/settings/secret.py
+webparticipation/settings/local_settings.py

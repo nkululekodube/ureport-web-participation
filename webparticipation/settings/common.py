@@ -4,9 +4,7 @@ from datetime import timedelta
 from os.path import abspath, basename, dirname, join, normpath
 from sys import path
 import dispatch
-from secret import *
-from rapidpro import *
-from auth import *
+from local_settings import *
 
 RAPIDPRO_DISPATCHER = dispatch.Signal()
 
