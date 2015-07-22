@@ -1,0 +1,560 @@
+{
+  "version": 4, 
+  "flows": [
+    {
+      "definition": {
+        "entry": "92b265c0-0916-4600-a567-54c2f9334212", 
+        "rule_sets": [
+          {
+            "uuid": "f02ce354-c85e-4ca0-93bc-eef5852634db", 
+            "webhook_action": null, 
+            "rules": [
+              {
+                "category": "email", 
+                "uuid": "c7dfe180-d379-420d-bcfc-8b286f71284d", 
+                "destination": "70f452f3-32ed-4abc-87f4-a44f4b2e35e1", 
+                "destination_type": "A", 
+                "test": {
+                  "test": "@", 
+                  "base": "@", 
+                  "type": "regex"
+                }, 
+                "config": {
+                  "name": "Regex", 
+                  "operands": 1, 
+                  "type": "regex", 
+                  "voice": true, 
+                  "verbose_name": "matches regex", 
+                  "localized": true
+                }
+              }, 
+              {
+                "category": "Other", 
+                "uuid": "d564b3fd-3886-4762-85f7-326af7834abd", 
+                "destination": "23c86576-829d-468a-a034-334902f60e92", 
+                "destination_type": "A", 
+                "test": {
+                  "test": "true", 
+                  "type": "true"
+                }, 
+                "config": {
+                  "type": "true", 
+                  "verbose_name": "contains anything", 
+                  "name": "Other", 
+                  "operands": 0
+                }
+              }
+            ], 
+            "webhook": null, 
+            "label": "email", 
+            "operand": "@step.value", 
+            "finished_key": null, 
+            "response_type": "C", 
+            "y": 338, 
+            "x": 317
+          }, 
+          {
+            "uuid": "e2bf7f40-9a2b-4e48-a477-e4c741d83c7b", 
+            "webhook_action": null, 
+            "rules": [
+              {
+                "category": "1000 - 9999", 
+                "uuid": "eed93207-f2d5-48f9-8a53-017d268fb690", 
+                "destination": "a0646994-1e18-41ae-9515-e4905c05efb5", 
+                "destination_type": "A", 
+                "test": {
+                  "max": "9999", 
+                  "type": "between", 
+                  "min": "1000"
+                }, 
+                "config": {
+                  "type": "between", 
+                  "voice": true, 
+                  "verbose_name": "has a number between", 
+                  "name": "Number between", 
+                  "operands": 2
+                }
+              }, 
+              {
+                "category": "Other", 
+                "uuid": "3abaf9ca-c6a9-4a27-a293-5395cd769249", 
+                "destination": "1bfcad0b-b1e6-4977-ba33-8b0ec84ec3d4", 
+                "destination_type": "A", 
+                "test": {
+                  "test": "true", 
+                  "type": "true"
+                }, 
+                "config": {
+                  "type": "true", 
+                  "verbose_name": "contains anything", 
+                  "name": "Other", 
+                  "operands": 0
+                }
+              }
+            ], 
+            "webhook": null, 
+            "label": "code", 
+            "operand": "@step.value", 
+            "finished_key": null, 
+            "response_type": "N", 
+            "y": 705, 
+            "x": 82
+          }, 
+          {
+            "uuid": "4bf838c7-8ca3-4c6f-87d8-24e2700034d2", 
+            "webhook_action": null, 
+            "rules": [
+              {
+                "category": "All Responses", 
+                "uuid": "3caa9774-d1a4-4f05-8e6b-418611e73dc8", 
+                "destination": "5f441cab-b688-45b2-8153-be370adefd4d", 
+                "destination_type": "A", 
+                "test": {
+                  "test": "true", 
+                  "type": "true"
+                }, 
+                "config": {
+                  "type": "true", 
+                  "verbose_name": "contains anything", 
+                  "name": "Other", 
+                  "operands": 0
+                }
+              }
+            ], 
+            "webhook": null, 
+            "label": "country", 
+            "operand": "@step.value", 
+            "finished_key": null, 
+            "response_type": "O", 
+            "y": 1095, 
+            "x": 91
+          }, 
+          {
+            "uuid": "08d929c5-1e8e-4919-bf75-a332a152cc2f", 
+            "webhook_action": null, 
+            "rules": [
+              {
+                "category": "M", 
+                "uuid": "aa6b629f-4470-4283-958c-e28456e26298", 
+                "destination": "a9f648d2-31ef-4903-b735-e3fd00a64d5a", 
+                "destination_type": "A", 
+                "test": {
+                  "test": "M, Male, male, guy, man, boy", 
+                  "base": "M, Male, male, guy, man, boy", 
+                  "type": "contains_any"
+                }, 
+                "config": {
+                  "type": "contains_any", 
+                  "verbose_name": "has any of these words", 
+                  "name": "Contains any", 
+                  "localized": true, 
+                  "operands": 1
+                }
+              }, 
+              {
+                "category": "F", 
+                "uuid": "c47a74b7-8fc1-4812-b528-72fb1dd2a537", 
+                "destination": "a9f648d2-31ef-4903-b735-e3fd00a64d5a", 
+                "destination_type": "A", 
+                "test": {
+                  "test": "F, Female, female, girl, woman", 
+                  "base": "F, Female, female, girl, woman", 
+                  "type": "contains_any"
+                }, 
+                "config": {
+                  "type": "contains_any", 
+                  "verbose_name": "has any of these words", 
+                  "name": "Contains any", 
+                  "localized": true, 
+                  "operands": 1
+                }
+              }, 
+              {
+                "category": "Other", 
+                "uuid": "cdc6e583-dba4-44f5-92c5-1de4a8eeea4e", 
+                "destination": "0c6765bf-e31c-4ec4-9ae9-fdaba98ddd4d", 
+                "destination_type": "A", 
+                "test": {
+                  "test": "true", 
+                  "type": "true"
+                }, 
+                "config": {
+                  "type": "true", 
+                  "verbose_name": "contains anything", 
+                  "name": "Other", 
+                  "operands": 0
+                }
+              }
+            ], 
+            "webhook": null, 
+            "label": "Response 4", 
+            "operand": "@step.value", 
+            "finished_key": null, 
+            "response_type": "C", 
+            "y": 1356, 
+            "x": 110
+          }, 
+          {
+            "uuid": "513c8611-4543-4cf1-bd67-a27c9b0c5fec", 
+            "webhook_action": null, 
+            "rules": [
+              {
+                "category": "1 - 100", 
+                "uuid": "7c568ab6-f28d-48ff-8fa1-6c86ca843598", 
+                "destination": "3047a903-fd75-40e5-b4c0-9850d2f317aa", 
+                "destination_type": "A", 
+                "test": {
+                  "max": "100", 
+                  "type": "between", 
+                  "min": "1"
+                }, 
+                "config": {
+                  "type": "between", 
+                  "voice": true, 
+                  "verbose_name": "has a number between", 
+                  "name": "Number between", 
+                  "operands": 2
+                }
+              }, 
+              {
+                "category": "Other", 
+                "uuid": "0e1a6604-fdc7-4e9e-9026-13cd78af97c7", 
+                "destination": "eb3debbe-bb92-4c7c-8afe-5125b61ee174", 
+                "destination_type": "A", 
+                "test": {
+                  "test": "true", 
+                  "type": "true"
+                }, 
+                "config": {
+                  "type": "true", 
+                  "verbose_name": "contains anything", 
+                  "name": "Other", 
+                  "operands": 0
+                }
+              }
+            ], 
+            "webhook": null, 
+            "label": "age", 
+            "operand": "@step.value", 
+            "finished_key": null, 
+            "response_type": "N", 
+            "y": 1720, 
+            "x": 132
+          }, 
+          {
+            "uuid": "edeba6cc-2e3f-47ea-b0fa-bc1135d9af43", 
+            "webhook_action": null, 
+            "rules": [
+              {
+                "test": {
+                  "test": "poll", 
+                  "base": "poll", 
+                  "type": "starts"
+                }, 
+                "category": "Poll", 
+                "config": {
+                  "name": "Starts with", 
+                  "operands": 1, 
+                  "type": "starts", 
+                  "voice": true, 
+                  "verbose_name": "starts with", 
+                  "localized": true
+                }, 
+                "uuid": "b0f28866-89d1-41c7-bc68-5d040a0935f4"
+              }, 
+              {
+                "test": {
+                  "test": "true", 
+                  "type": "true"
+                }, 
+                "category": "Other", 
+                "config": {
+                  "type": "true", 
+                  "verbose_name": "contains anything", 
+                  "name": "Other", 
+                  "operands": 0
+                }, 
+                "uuid": "06150b32-2bf3-455c-b02e-b36ad17ee927"
+              }
+            ], 
+            "webhook": null, 
+            "label": "kickoff-poll", 
+            "operand": "@step.value", 
+            "finished_key": null, 
+            "response_type": "C", 
+            "y": 2003, 
+            "x": 157
+          }, 
+          {
+            "uuid": "93abfaaa-bfaa-43b2-b473-2c7fb583337d", 
+            "webhook_action": "GET", 
+            "rules": [
+              {
+                "category": "200", 
+                "uuid": "6b3d4791-9a5b-4227-b8eb-1a890a25a0b9", 
+                "destination": "86b50868-e9ff-46b7-a0c3-baca2572b687", 
+                "destination_type": "A", 
+                "test": {
+                  "test": "200", 
+                  "base": "200", 
+                  "type": "eq"
+                }, 
+                "config": {
+                  "type": "eq", 
+                  "voice": true, 
+                  "verbose_name": "has a number equal to", 
+                  "name": "Equal to", 
+                  "operands": 1
+                }
+              }, 
+              {
+                "category": "403", 
+                "uuid": "a1840466-d3b0-4fb9-b508-d290494d4b29", 
+                "destination": "1bfcad0b-b1e6-4977-ba33-8b0ec84ec3d4", 
+                "destination_type": "A", 
+                "test": {
+                  "test": "403", 
+                  "base": "403", 
+                  "type": "eq"
+                }, 
+                "config": {
+                  "type": "eq", 
+                  "voice": true, 
+                  "verbose_name": "has a number equal to", 
+                  "name": "Equal to", 
+                  "operands": 1
+                }
+              }, 
+              {
+                "category": "Other", 
+                "uuid": "f05827ab-d843-44a2-927d-aef414c21f0e", 
+                "destination": "1bfcad0b-b1e6-4977-ba33-8b0ec84ec3d4", 
+                "destination_type": "A", 
+                "test": {
+                  "test": "true", 
+                  "type": "true"
+                }, 
+                "config": {
+                  "type": "true", 
+                  "verbose_name": "contains anything", 
+                  "name": "Other", 
+                  "operands": 0
+                }
+              }
+            ], 
+            "webhook": null, 
+            "label": "confirm code ok", 
+            "operand": "@extra.status", 
+            "finished_key": null, 
+            "response_type": "C", 
+            "y": 937, 
+            "x": 19
+          }
+        ], 
+        "action_sets": [
+          {
+            "y": 0, 
+            "x": 94, 
+            "destination": "f02ce354-c85e-4ca0-93bc-eef5852634db", 
+            "uuid": "92b265c0-0916-4600-a567-54c2f9334212", 
+            "actions": [
+              {
+                "msg": "Welcome to U-report, where you can SPEAK UP and BE HEARD. U-report is a FREE SMS text message system where you can speak out on issues in your community. In order to register we'll need a little bit of information about you.", 
+                "type": "reply"
+              }, 
+              {
+                "msg": "What is your email address?", 
+                "type": "reply"
+              }
+            ]
+          }, 
+          {
+            "y": 528, 
+            "x": 66, 
+            "destination": "e2bf7f40-9a2b-4e48-a477-e4c741d83c7b", 
+            "uuid": "73e5a51b-8fdb-45e3-881e-1a933373f621", 
+            "actions": [
+              {
+                "msg": "Thanks! Just to confirm that you are actually you, we've sent a confirmation code to your inbox. Please enter that code here.", 
+                "type": "reply"
+              }
+            ]
+          }, 
+          {
+            "y": 559, 
+            "x": 504, 
+            "destination": "e2bf7f40-9a2b-4e48-a477-e4c741d83c7b", 
+            "uuid": "1bfcad0b-b1e6-4977-ba33-8b0ec84ec3d4", 
+            "actions": [
+              {
+                "msg": "I'm sorry, that's an invalid code. Can you enter your code again?", 
+                "type": "reply"
+              }
+            ]
+          }, 
+          {
+            "y": 933, 
+            "x": 829, 
+            "destination": "4bf838c7-8ca3-4c6f-87d8-24e2700034d2", 
+            "uuid": "5f28cc03-7655-4b4f-b713-e46abb4794b0", 
+            "actions": [
+              {
+                "msg": "Congratulations, you're now a U-Reporter! Click on the button below to take part in our latest poll.\n \nThe remaining questions are optional, but help us provide a better service.", 
+                "type": "reply"
+              }, 
+              {
+                "msg": "What country are you in?", 
+                "type": "reply"
+              }
+            ]
+          }, 
+          {
+            "y": 1219, 
+            "x": 113, 
+            "destination": "08d929c5-1e8e-4919-bf75-a332a152cc2f", 
+            "uuid": "5f441cab-b688-45b2-8153-be370adefd4d", 
+            "actions": [
+              {
+                "msg": "Are you male or female? Please enter M for male or F for female.", 
+                "type": "reply"
+              }
+            ]
+          }, 
+          {
+            "y": 1210, 
+            "x": 473, 
+            "destination": "08d929c5-1e8e-4919-bf75-a332a152cc2f", 
+            "uuid": "0c6765bf-e31c-4ec4-9ae9-fdaba98ddd4d", 
+            "actions": [
+              {
+                "msg": "I'm sorry, I didn't understand that response. Please enter M for male or F for female.", 
+                "type": "reply"
+              }
+            ]
+          }, 
+          {
+            "y": 1529, 
+            "x": 147, 
+            "destination": "513c8611-4543-4cf1-bd67-a27c9b0c5fec", 
+            "uuid": "a9f648d2-31ef-4903-b735-e3fd00a64d5a", 
+            "actions": [
+              {
+                "msg": "And how old are you?", 
+                "type": "reply"
+              }
+            ]
+          }, 
+          {
+            "y": 1588, 
+            "x": 474, 
+            "destination": "513c8611-4543-4cf1-bd67-a27c9b0c5fec", 
+            "uuid": "eb3debbe-bb92-4c7c-8afe-5125b61ee174", 
+            "actions": [
+              {
+                "msg": "I'm sorry, I didn't understand that response. Please enter your age, in numbers, e.g. 22", 
+                "type": "reply"
+              }
+            ]
+          }, 
+          {
+            "y": 1850, 
+            "x": 170, 
+            "destination": "edeba6cc-2e3f-47ea-b0fa-bc1135d9af43", 
+            "uuid": "3047a903-fd75-40e5-b4c0-9850d2f317aa", 
+            "actions": [
+              {
+                "msg": "All done! How about taking our latest poll? Respond with 'poll' to begin.", 
+                "type": "reply"
+              }
+            ]
+          }, 
+          {
+            "y": 1018, 
+            "x": 524, 
+            "destination": "5f28cc03-7655-4b4f-b713-e46abb4794b0", 
+            "uuid": "86b50868-e9ff-46b7-a0c3-baca2572b687", 
+            "actions": [
+              {
+                "type": "add_group", 
+                "groups": [
+                  {
+                    "name": "Web Registrants", 
+                    "id": 7
+                  }
+                ]
+              }
+            ]
+          }, 
+          {
+            "y": 232, 
+            "x": 639, 
+            "destination": "f02ce354-c85e-4ca0-93bc-eef5852634db", 
+            "uuid": "23c86576-829d-468a-a034-334902f60e92", 
+            "actions": [
+              {
+                "msg": "Sorry, that does not seem to be a valid email address. Please enter yours again.", 
+                "type": "reply"
+              }
+            ]
+          }, 
+          {
+            "y": 392, 
+            "x": 56, 
+            "destination": "73e5a51b-8fdb-45e3-881e-1a933373f621", 
+            "uuid": "70f452f3-32ed-4abc-87f4-a44f4b2e35e1", 
+            "actions": [
+              {
+                "action": "POST", 
+                "type": "api", 
+                "webhook": "http://localhost:8200/send-token"
+              }
+            ]
+          }, 
+          {
+            "y": 803, 
+            "x": 40, 
+            "destination": "93abfaaa-bfaa-43b2-b473-2c7fb583337d", 
+            "uuid": "a0646994-1e18-41ae-9515-e4905c05efb5", 
+            "actions": [
+              {
+                "action": "POST", 
+                "type": "api", 
+                "webhook": "http://localhost:8200/confirm-token"
+              }
+            ]
+          }
+        ], 
+        "last_saved": "2015-07-22T09:44:25.093262Z", 
+        "metadata": {
+          "notes": []
+        }
+      }, 
+      "expires": 1440, 
+      "id": 7, 
+      "flow_type": "F", 
+      "name": "Web Registration"
+    }
+  ], 
+  "triggers": [
+    {
+      "trigger_type": "K", 
+      "flow": {
+        "name": "Web Registration", 
+        "id": 7
+      }, 
+      "groups": [], 
+      "keyword": "register", 
+      "channel": null
+    }, 
+    {
+      "trigger_type": "K", 
+      "flow": {
+        "name": "Web Registration", 
+        "id": 7
+      }, 
+      "groups": [], 
+      "keyword": "webregister", 
+      "channel": null
+    }
+  ]
+}
