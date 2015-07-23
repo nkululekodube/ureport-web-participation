@@ -7,13 +7,20 @@
 </head>
 <body>
     <ul class="messages">
+    {% if last_submission %}
+        <li>{{last_submission}}</li>
+    {% endif %}
     {% for message in messages %}
         <li>{{message.msg_text}}</li>
     {% endfor %}
     </ul>
     <form action="{% url 'register' %}" method="post">
         {% csrf_token %}
+        {% if is_password %}
+        <input class="dlg-send" name="password" type="password">
+        {% else %}
         <input class="dlg-send" name="send" type="text">
+        {% endif %}
         <button type="submit">Send</button>
     </form>
 </body>

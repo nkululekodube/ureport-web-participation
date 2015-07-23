@@ -1,4 +1,5 @@
 import datetime
+import bcrypt
 from django.db import models
 from django.utils import timezone
 from random import randint
@@ -16,6 +17,15 @@ class UreportUser(models.Model):
 
     def activate_user(self):
         self.active = True
+
+    def set_password(self, password):
+        password = password.encode('utf-8')
+        salt = bcrypt.gensalt().encode('utf-8')
+        self.password = bcrypt.hashpw(password, salt)
+        return self
+
+    def is_user_valid(self, password):
+        return bcrypt.hashpw(password, self.password) == self.password
 
     email = models.EmailField(max_length=255, null=False)
     password = models.CharField(max_length=255, null=False)

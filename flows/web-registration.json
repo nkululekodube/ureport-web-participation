@@ -292,7 +292,7 @@
               {
                 "category": "True",
                 "uuid": "87552a12-f25c-4c7a-a078-83f4b91fbcc0",
-                "destination": "86b50868-e9ff-46b7-a0c3-baca2572b687",
+                "destination": "0737c039-e574-4c63-9647-ac3c2e6bd516",
                 "destination_type": "A",
                 "test": {
                   "test": "true",
@@ -346,8 +346,8 @@
             "operand": "@extra.token_ok",
             "finished_key": null,
             "response_type": "C",
-            "y": 937,
-            "x": 59
+            "y": 931,
+            "x": 57
           },
           {
             "uuid": "501f6ee1-34f5-4db9-b59c-17bf2a0ad936",
@@ -413,6 +413,53 @@
             "response_type": "C",
             "y": 386,
             "x": 444
+          },
+          {
+            "uuid": "8f3f10da-8907-40ca-a9c5-7ed3c4995d7f",
+            "webhook_action": null,
+            "rules": [
+              {
+                "category": "Next",
+                "uuid": "9a75276d-2074-47a4-b22a-dc4a92ae51fb",
+                "destination": "86b50868-e9ff-46b7-a0c3-baca2572b687",
+                "destination_type": "A",
+                "test": {
+                  "test": "next",
+                  "base": "next",
+                  "type": "contains_any"
+                },
+                "config": {
+                  "type": "contains_any",
+                  "verbose_name": "has any of these words",
+                  "name": "Contains any",
+                  "localized": true,
+                  "operands": 1
+                }
+              },
+              {
+                "category": "Other",
+                "uuid": "40db0975-a105-44ad-9d81-cdc977a51547",
+                "destination": "e7884196-a238-4b6f-8691-707204ab9919",
+                "destination_type": "A",
+                "test": {
+                  "test": "true",
+                  "type": "true"
+                },
+                "config": {
+                  "type": "true",
+                  "verbose_name": "contains anything",
+                  "name": "Other",
+                  "operands": 0
+                }
+              }
+            ],
+            "webhook": null,
+            "label": "password ok",
+            "operand": "@step.value",
+            "finished_key": null,
+            "response_type": "C",
+            "y": 921,
+            "x": 757
           }
         ],
         "action_sets": [
@@ -457,8 +504,8 @@
             ]
           },
           {
-            "y": 933,
-            "x": 829,
+            "y": 970,
+            "x": 1189,
             "destination": "4bf838c7-8ca3-4c6f-87d8-24e2700034d2",
             "uuid": "5f28cc03-7655-4b4f-b713-e46abb4794b0",
             "actions": [
@@ -533,8 +580,8 @@
             ]
           },
           {
-            "y": 1018,
-            "x": 524,
+            "y": 847,
+            "x": 1203,
             "destination": "5f28cc03-7655-4b4f-b713-e46abb4794b0",
             "uuid": "86b50868-e9ff-46b7-a0c3-baca2572b687",
             "actions": [
@@ -598,9 +645,33 @@
                 "type": "reply"
               }
             ]
+          },
+          {
+            "y": 1028,
+            "x": 437,
+            "destination": "8f3f10da-8907-40ca-a9c5-7ed3c4995d7f",
+            "uuid": "0737c039-e574-4c63-9647-ac3c2e6bd516",
+            "actions": [
+              {
+                "msg": "Please enter a password.",
+                "type": "reply"
+              }
+            ]
+          },
+          {
+            "y": 1075,
+            "x": 750,
+            "destination": "8f3f10da-8907-40ca-a9c5-7ed3c4995d7f",
+            "uuid": "e7884196-a238-4b6f-8691-707204ab9919",
+            "actions": [
+              {
+                "msg": "Password not complex enough.",
+                "type": "reply"
+              }
+            ]
           }
         ],
-        "last_saved": "2015-07-22T18:50:04.598853Z",
+        "last_saved": "2015-07-23T09:31:02.787443Z",
         "metadata": {
           "notes": []
         }

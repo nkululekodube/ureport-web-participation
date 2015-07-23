@@ -7,7 +7,6 @@ import requests
 from webparticipation.apps.ureport_user.models import UreportUser
 from webparticipation.apps.utils.views import undashify_user
 
-
 messages = []
 
 
@@ -25,11 +24,24 @@ def register(request):
             response.set_cookie(key='uuid', value=user)
 
     if request.method == 'POST':
-        requests.post(settings.RAPIDPRO_RECEIVED_PATH, data={
-            'from': undashify_user(user),
-            'text': request.POST['send']})
+        if request.POST.get('password'):
+            current_user = UreportUser.objects.get(uuid=user)
+            current_user.set_password(request.POST.get('password'))
+            current_user.save()
+            requests.post(settings.RAPIDPRO_RECEIVED_PATH, data={
+                'from': undashify_user(user),
+                'text': 'next'})
+        else:
+            requests.post(settings.RAPIDPRO_RECEIVED_PATH, data={
+                'from': undashify_user(user),
+                'text': request.POST['send']})
+        last_submission = request.POST.get('send') or None
         messages = get_messages_for_user(user)
-        response = render(request, 'register.html', {'messages': messages})
+        is_password = [message for message in messages if message['msg_text'].find('password') != -1]
+        response = render(request, 'register.html', {
+            'messages': messages,
+            'last_submission': last_submission,
+            'is_password': is_password})
 
     return response
 
