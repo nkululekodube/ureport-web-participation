@@ -13,16 +13,18 @@ class UreportUser(models.Model):
         return self.pub_date >= timezone.now() - datetime.timedelta(days=1)
 
     def invalidate_token(self):
-        self.token = None
+        self.token = 0
+        self.save()
 
     def activate_user(self):
         self.active = True
+        self.save()
 
     def set_password(self, password):
         password = password.encode('utf-8')
         salt = bcrypt.gensalt().encode('utf-8')
         self.password = bcrypt.hashpw(password, salt)
-        return self
+        self.save()
 
     def is_user_valid(self, password):
         return bcrypt.hashpw(password, self.password) == self.password

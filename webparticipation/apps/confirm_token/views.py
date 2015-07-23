@@ -14,9 +14,6 @@ def confirm_token(request):
 
         data = None
         if str(user.token) == submitted_code:
-            user.active = True
-            user.token = 0
-            user.save()
             data = {'token_ok': 'true'}
         else:
             data = {'token_ok': 'false'}

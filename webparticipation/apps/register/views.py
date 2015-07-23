@@ -5,7 +5,7 @@ from random import randint
 from time import sleep
 import requests
 from webparticipation.apps.ureport_user.models import UreportUser
-from webparticipation.apps.utils.views import undashify_user
+from webparticipation.apps.utils.views import send_message_to_rapidpro, undashify_user
 
 messages = []
 
@@ -13,38 +13,42 @@ messages = []
 def register(request):
     user = get_user(request)
     uuid = user.uuid
+    undashified_uuid = undashify_user(uuid)
     response = HttpResponse()
 
     if request.method == 'GET':
         if user_is_authenticated(request):
-            response = render(request, 'register.html', {
-                'messages': [{'msg_text': "You're already registered!"}]})
+            response = get_already_registered_message(request)
         else:
-            requests.post(settings.RAPIDPRO_RECEIVED_PATH, data={'from': undashify_user(uuid), 'text': 'webregister'})
+            send_message_to_rapidpro({'from': undashified_uuid, 'text': 'webregister'})
             response = render(request, 'register.html', {'messages': get_messages_for_user(uuid)})
             response.set_cookie(key='uuid', value=uuid)
 
     if request.method == 'POST':
         if request.POST.get('password'):
-            current_user = UreportUser.objects.get(uuid=uuid)
-            current_user.set_password(request.POST.get('password'))
-            current_user.save()
-            requests.post(settings.RAPIDPRO_RECEIVED_PATH, data={
-                'from': undashify_user(uuid),
-                'text': 'next'})
+            UreportUser.objects.get(uuid=uuid).set_password(request.POST.get('password'))
+            send_message_to_rapidpro({'from': undashified_uuid, 'text': 'next'})
+            user.invalidate_token()
+            user.activate_user()
         else:
-            requests.post(settings.RAPIDPRO_RECEIVED_PATH, data={
-                'from': undashify_user(uuid),
-                'text': request.POST['send']})
-        last_submission = request.POST.get('send') or None
+            send_message_to_rapidpro({'from': undashified_uuid, 'text': request.POST['send']})
+
         messages = get_messages_for_user(uuid)
-        is_password = [message for message in messages if message['msg_text'].find('password') != -1]
         response = render(request, 'register.html', {
             'messages': messages,
-            'last_submission': last_submission,
-            'is_password': is_password})
+            'last_submission': request.POST.get('send') or None,
+            'is_password': has_password_keyword(messages)})
 
     return response
+
+
+def has_password_keyword(messages):
+    return [message for message in messages if message['msg_text'].find('password') != -1]
+
+
+def get_already_registered_message(request):
+    return render(request, 'register.html', {'messages': [
+        {'msg_text': "You're already logged in. Why don't you take our latest poll?"}]})
 
 
 def user_is_authenticated(request):
@@ -56,14 +60,17 @@ def get_user(request):
         uuid = request.COOKIES.get('uuid')
         return UreportUser(uuid=uuid)
     else:
-        rand_seed = 'user' + str(randint(100000000, 999999999))
         contact = requests.post(settings.RAPIDPRO_API_PATH + '/contacts.json',
-                                data={'urns': ['tel:' + rand_seed]},
+                                data={'urns': ['tel:' + generate_random_seed()]},
                                 headers={'Authorization': 'Token ' + settings.RAPIDPRO_API_TOKEN})
         uuid = contact.json()['uuid']
         UreportUser(uuid=uuid).save()
         user = UreportUser(uuid=uuid)
         return user
+
+
+def generate_random_seed():
+    return 'user' + str(randint(100000000, 999999999))
 
 
 def get_messages_for_user(uuid):
