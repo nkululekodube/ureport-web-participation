@@ -38,3 +38,4 @@ Factory==1.2
 redis==2.10.3
 selenium==2.46.0
 splinter==0.7.2
+bcrypt==2.0.0

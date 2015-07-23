@@ -12,6 +12,7 @@ messages = []
 
 def register(request):
     user = get_user(request)
+    uuid = user.uuid
     response = HttpResponse()
 
     if request.method == 'GET':
@@ -19,24 +20,24 @@ def register(request):
             response = render(request, 'register.html', {
                 'messages': [{'msg_text': "You're already registered!"}]})
         else:
-            requests.post(settings.RAPIDPRO_RECEIVED_PATH, data={'from': undashify_user(user), 'text': 'webregister'})
-            response = render(request, 'register.html', {'messages': get_messages_for_user(user)})
-            response.set_cookie(key='uuid', value=user)
+            requests.post(settings.RAPIDPRO_RECEIVED_PATH, data={'from': undashify_user(uuid), 'text': 'webregister'})
+            response = render(request, 'register.html', {'messages': get_messages_for_user(uuid)})
+            response.set_cookie(key='uuid', value=uuid)
 
     if request.method == 'POST':
         if request.POST.get('password'):
-            current_user = UreportUser.objects.get(uuid=user)
+            current_user = UreportUser.objects.get(uuid=uuid)
             current_user.set_password(request.POST.get('password'))
             current_user.save()
             requests.post(settings.RAPIDPRO_RECEIVED_PATH, data={
-                'from': undashify_user(user),
+                'from': undashify_user(uuid),
                 'text': 'next'})
         else:
             requests.post(settings.RAPIDPRO_RECEIVED_PATH, data={
-                'from': undashify_user(user),
+                'from': undashify_user(uuid),
                 'text': request.POST['send']})
         last_submission = request.POST.get('send') or None
-        messages = get_messages_for_user(user)
+        messages = get_messages_for_user(uuid)
         is_password = [message for message in messages if message['msg_text'].find('password') != -1]
         response = render(request, 'register.html', {
             'messages': messages,
@@ -52,7 +53,8 @@ def user_is_authenticated(request):
 
 def get_user(request):
     if user_is_authenticated(request):
-        return request.COOKIES.get('uuid')
+        uuid = request.COOKIES.get('uuid')
+        return UreportUser(uuid=uuid)
     else:
         rand_seed = 'user' + str(randint(100000000, 999999999))
         contact = requests.post(settings.RAPIDPRO_API_PATH + '/contacts.json',
@@ -60,20 +62,21 @@ def get_user(request):
                                 headers={'Authorization': 'Token ' + settings.RAPIDPRO_API_TOKEN})
         uuid = contact.json()['uuid']
         UreportUser(uuid=uuid).save()
-        return uuid
+        user = UreportUser(uuid=uuid)
+        return user
 
 
-def get_messages_for_user(user_id):
+def get_messages_for_user(uuid):
     global messages
     while not len(messages):
         sleep(.5)
-    return filter_messages(user_id)
+    return filter_messages(uuid)
 
 
-def filter_messages(user_id):
+def filter_messages(uuid):
     global messages
-    filtered_messages = filter(lambda msg: msg['msg_to'] == undashify_user(user_id), messages)
-    messages = filter(lambda msg: msg['msg_to'] != undashify_user(user_id), messages)
+    filtered_messages = filter(lambda msg: msg['msg_to'] == undashify_user(uuid), messages)
+    messages = filter(lambda msg: msg['msg_to'] != undashify_user(uuid), messages)
     return filtered_messages
 
 
