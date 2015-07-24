@@ -3,26 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <title>Register</title>
-    <!-- <link rel="stylesheet" href="/static/css/styles.css" type="text/css"> -->
+    <link rel="stylesheet" href="/static/css/styles.css" type="text/css">
+    <link rel="stylesheet" href="/static/css/web-participation.css" type="text/css">
 </head>
-<body>
-    <ul class="messages">
-    {% if last_submission %}
-        <li>{{last_submission}}</li>
-    {% endif %}
-    {% for message in messages %}
-        <li>{{message.msg_text}}</li>
-    {% endfor %}
-    </ul>
-    <form action="{% url 'register' %}" method="post">
-        {% csrf_token %}
-        {% if is_password %}
-        <input class="form-control" name="password" type="password">
-        {% else %}
-        <input class="form-control" name="send" type="text">
-        {% endif %}
-        <button class="btn btn-default" type="submit">Send</button>
-    </form>
+<body class="wp-body">
+  <div class="container">
+    <section>
+      <img class="wp-logo" src="http://dl-ureport.s3.amazonaws.com/cache/26/f9/26f983ab836bf2fa74cd8e1d47e9c247.png" alt="">
+    </section>
+
+    <section>
+      {% if last_submission %}
+          <p class="wp-bubble wp-to">{{last_submission}}</p>
+      {% endif %}
+      {% for message in messages %}
+          <p class="wp-bubble wp-from">{{message.msg_text}}</p>
+      {% endfor %}
+
+      <form action="{% url 'register' %}" method="post">
+          {% csrf_token %}
+          {% if is_password %}
+          <input class="form-control" name="password" type="password">
+          {% else %}
+          <input class="form-control" name="send" type="text">
+          {% endif %}
+          <button class="wp-send btn btn-primary" type="submit">Send</button>
+      </form>
+    </section>
+
+  </div>
 </body>
 </html>
 

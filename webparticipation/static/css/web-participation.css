@@ -1,0 +1,28 @@
+.wp-body {
+  margin: 0 auto;
+  background: #fff;
+}
+
+.wp-logo {margin-bottom: 2em;}
+
+.wp-bubble  {
+  border-radius: 4px;
+  color: #fff;
+  padding: 5px 10px;
+}
+.wp-to {
+  background: blue;
+  margin-left: 2em;
+}
+.wp-from {
+  background: green;
+  margin-right: 2em;
+}
+
+.wp-body input.form-control { width: 100%; }
+
+.wp-send {
+  float:right;
+  position:relative;
+  top:-34px;
+}
