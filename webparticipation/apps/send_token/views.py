@@ -15,7 +15,7 @@ def send_token(request):
             existing_user = UreportUser.objects.get(email=email_address)
             existing_user.set_uuid(session_user.uuid)
             session_user.delete()
-            if existing_user.active:
+            if not existing_user.token:
                 data = {'send_token': 'exists'}
             else:
                 data = {'send_token': 'send'}

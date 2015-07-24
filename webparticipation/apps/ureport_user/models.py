@@ -5,21 +5,11 @@ from django.utils import timezone
 from random import randint
 
 
+def generate_token():
+    return str(randint(1000, 9999))
+
+
 class UreportUser(models.Model):
-
-    def generate_token():
-        return str(randint(1000, 9999))
-
-    def token_has_expired(self):
-        return self.pub_date >= timezone.now() - datetime.timedelta(days=1)
-
-    def invalidate_token(self):
-        self.token = 0
-        self.save()
-
-    def activate_user(self):
-        self.active = True
-        self.save()
 
     def set_uuid(self, uuid):
         self.uuid = uuid
@@ -35,14 +25,20 @@ class UreportUser(models.Model):
         self.password = bcrypt.hashpw(password, salt)
         self.save()
 
+    def invalidate_token(self):
+        self.token = 0
+        self.save()
+
     def is_user_valid(self, password):
         return bcrypt.hashpw(password, self.password) == self.password
 
-    email = models.EmailField(max_length=255, null=False)
-    password = models.CharField(max_length=255, null=False)
-    active = models.BooleanField(default=False)
-    token = models.IntegerField(default=generate_token)
+    def token_has_expired(self):
+        return self.pub_date >= timezone.now() - datetime.timedelta(days=1)
+
     uuid = models.CharField(max_length=36)
+    email = models.EmailField(max_length=255)
+    password = models.CharField(max_length=255)
+    token = models.IntegerField(default=generate_token)
     pub_date = models.DateTimeField(default=timezone.now)
 
     def __unicode__(self):

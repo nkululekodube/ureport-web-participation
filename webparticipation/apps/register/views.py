@@ -26,10 +26,9 @@ def register(request):
 
     if request.method == 'POST':
         if request.POST.get('password'):
-            UreportUser.objects.get(uuid=uuid).set_password(request.POST.get('password'))
-            send_message_to_rapidpro({'from': undashified_uuid, 'text': 'next'})
+            user.set_password(request.POST.get('password'))
             user.invalidate_token()
-            user.activate_user()
+            send_message_to_rapidpro({'from': undashified_uuid, 'text': 'next'})
         else:
             send_message_to_rapidpro({'from': undashified_uuid, 'text': request.POST['send']})
 
@@ -40,19 +39,6 @@ def register(request):
             'is_password': has_password_keyword(messages)})
 
     return response
-
-
-def has_password_keyword(messages):
-    return [message for message in messages if message['msg_text'].find('password') != -1]
-
-
-def get_already_registered_message(request):
-    return render(request, 'register.html', {'messages': [
-        {'msg_text': "You're already logged in. Why don't you take our latest poll?"}]})
-
-
-def user_is_authenticated(request):
-    return request.COOKIES.get('uuid')
 
 
 def get_user(request):
@@ -69,8 +55,21 @@ def get_user(request):
         return user
 
 
+def user_is_authenticated(request):
+    return request.COOKIES.get('uuid')
+
+
+def get_already_registered_message(request):
+    return render(request, 'register.html', {'messages': [
+        {'msg_text': "You're already logged in. Why don't you take our latest poll?"}]})
+
+
 def generate_random_seed():
     return 'user' + str(randint(100000000, 999999999))
+
+
+def has_password_keyword(messages):
+    return [message for message in messages if message['msg_text'].find('password') != -1]
 
 
 def get_messages_for_user(uuid):
