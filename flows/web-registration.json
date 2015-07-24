@@ -15,8 +15,8 @@
                 "destination": "70f452f3-32ed-4abc-87f4-a44f4b2e35e1",
                 "destination_type": "A",
                 "test": {
-                  "test": "@",
-                  "base": "@",
+                  "test": "(.+)@(.+)\\.(.+)",
+                  "base": "(.+)@(.+)\\.(.+)",
                   "type": "regex"
                 },
                 "config": {
@@ -671,7 +671,7 @@
             ]
           }
         ],
-        "last_saved": "2015-07-23T09:31:02.787443Z",
+        "last_saved": "2015-07-24T08:52:57.104573Z",
         "metadata": {
           "notes": []
         }
