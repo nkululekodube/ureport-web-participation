@@ -3,12 +3,12 @@
   background: #fff;
 }
 
-.wp-logo {margin-bottom: 2em;}
+.wp-logo { margin-bottom: 2em; }
 
 .wp-bubble  {
-  border-radius: 4px;
   color: #fff;
-  padding: 5px 10px;
+  border-radius: 6px;
+  padding: 10px 10px;
 }
 .wp-to {
   background: blue;
@@ -19,10 +19,20 @@
   margin-right: 2em;
 }
 
-.wp-body input.form-control { width: 100%; }
+.wp-body input.form-control {
+  width: 100%;
+  height: 40px;
+  padding-right: 110px;
+}
 
 .wp-send {
-  float:right;
-  position:relative;
-  top:-34px;
+  position: relative;
+  top: -40px;
+  float: right;
+  width: 100px;
+  height: 40px;
+  border-radius: 0 4px 4px 0;
+}
+.wp-send:hover {
+  cursor: pointer;
 }
