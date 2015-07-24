@@ -6,6 +6,7 @@ from random import randint
 
 
 class UreportUser(models.Model):
+
     def generate_token():
         return str(randint(1000, 9999))
 
@@ -20,6 +21,14 @@ class UreportUser(models.Model):
         self.active = True
         self.save()
 
+    def set_uuid(self, uuid):
+        self.uuid = uuid
+        self.save()
+
+    def set_email(self, email):
+        self.email = email
+        self.save()
+
     def set_password(self, password):
         password = password.encode('utf-8')
         salt = bcrypt.gensalt().encode('utf-8')
@@ -32,7 +41,7 @@ class UreportUser(models.Model):
     email = models.EmailField(max_length=255, null=False)
     password = models.CharField(max_length=255, null=False)
     active = models.BooleanField(default=False)
-    token = models.IntegerField(null=False, default=generate_token())
+    token = models.IntegerField(default=generate_token)
     uuid = models.CharField(max_length=36)
     pub_date = models.DateTimeField(default=timezone.now)
 

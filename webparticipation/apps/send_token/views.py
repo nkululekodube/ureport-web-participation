@@ -8,25 +8,28 @@ from . import tasks
 @csrf_exempt
 def send_token(request):
     if request.method == 'POST':
-        request_params = request.POST.dict()
-        email_address = request_params['text']
-
-        user_exists = None
-        try:
-            user_exists = UreportUser.objects.get(email=email_address)
-        except UreportUser.DoesNotExist:
-            pass
-
-        if user_exists:
-            data = {'send_token': 'exists'}
+        email_address = request.POST.get('text')
+        email_exists = UreportUser.objects.filter(email=email_address).exists()
+        if email_exists:
+            session_user = UreportUser.objects.get(uuid=get_uuid(request))
+            existing_user = UreportUser.objects.get(email=email_address)
+            existing_user.set_uuid(session_user.uuid)
+            session_user.delete()
+            if existing_user.active:
+                data = {'send_token': 'exists'}
+            else:
+                data = {'send_token': 'send'}
+                tasks.send_verification_token.delay(existing_user)
         else:
+            user = UreportUser.objects.get(uuid=get_uuid(request))
+            user.set_email(email_address)
             data = {'send_token': 'send'}
-            uuid = dashify_user(request_params['phone'])
-            user = UreportUser.objects.get(uuid=uuid)
-            user.email = email_address
-            user.save()
             tasks.send_verification_token.delay(user)
 
         response = JsonResponse(data)
         response.status_code = 200
         return response
+
+
+def get_uuid(request):
+    return dashify_user(request.POST.get('phone'))

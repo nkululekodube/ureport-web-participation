@@ -17,11 +17,11 @@
     <form action="{% url 'register' %}" method="post">
         {% csrf_token %}
         {% if is_password %}
-        <input class="dlg-send" name="password" type="password">
+        <input class="form-control" name="password" type="password">
         {% else %}
-        <input class="dlg-send" name="send" type="text">
+        <input class="form-control" name="send" type="text">
         {% endif %}
-        <button type="submit">Send</button>
+        <button class="btn btn-default" type="submit">Send</button>
     </form>
 </body>
 </html>

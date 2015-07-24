@@ -58,14 +58,14 @@ def user_is_authenticated(request):
 def get_user(request):
     if user_is_authenticated(request):
         uuid = request.COOKIES.get('uuid')
-        return UreportUser(uuid=uuid)
+        return UreportUser.objects.get(uuid=uuid)
     else:
         contact = requests.post(settings.RAPIDPRO_API_PATH + '/contacts.json',
                                 data={'urns': ['tel:' + generate_random_seed()]},
                                 headers={'Authorization': 'Token ' + settings.RAPIDPRO_API_TOKEN})
         uuid = contact.json()['uuid']
-        UreportUser(uuid=uuid).save()
         user = UreportUser(uuid=uuid)
+        user.save()
         return user
 
 
