@@ -4,7 +4,6 @@ from datetime import timedelta
 from os.path import abspath, basename, dirname, join, normpath
 from sys import path
 import dispatch
-from local_settings import *
 
 RAPIDPRO_DISPATCHER = dispatch.Signal()
 
