@@ -14,7 +14,7 @@ def rapidpro_receptor(request):
 
 
 def send_received_confirmation_to_rapidpro(request_params):
-    requests.post(os.environ.get.RAPIDPRO_RECEIVED_PATH, data={
+    requests.post(os.environ.get('RAPIDPRO_RECEIVED_PATH'), data={
         'from': request_params['from'],
         'text': request_params['text']
     })
