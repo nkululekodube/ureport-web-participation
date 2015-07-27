@@ -1,9 +1,10 @@
 from django.conf import settings
 import requests
+import os
 
 
 def send_message_to_rapidpro(data):
-    requests.post(settings.RAPIDPRO_RECEIVED_PATH, data=data)
+    requests.post(os.environ.get('RAPIDPRO_RECEIVED_PATH'), data=data)
 
 
 def undashify_user(user):
