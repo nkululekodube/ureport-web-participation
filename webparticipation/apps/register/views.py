@@ -49,7 +49,7 @@ def get_user(request):
     else:
         contact = requests.post(os.environ.get('RAPIDPRO_API_PATH') + '/contacts.json',
                                 data={'urns': ['tel:' + generate_random_seed()]},
-                                headers={'Authorization': 'Token ' + settings.RAPIDPRO_API_TOKEN})
+                                headers={'Authorization': 'Token ' + os.environ.get('RAPIDPRO_API_TOKEN')})
         uuid = contact.json()['uuid']
         user = UreportUser(uuid=uuid)
         user.save()
