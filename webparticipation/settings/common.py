@@ -13,6 +13,8 @@ SITE_ROOT = dirname(DJANGO_ROOT)
 
 SITE_NAME = basename(DJANGO_ROOT)
 
+SECRET_KEY = os.environ.get('SECRET_KEY')
+
 path.append(DJANGO_ROOT)
 
 DEBUG = False
