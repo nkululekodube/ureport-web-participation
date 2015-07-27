@@ -10,13 +10,16 @@ def deploy():
         run("git reset --hard")
         run("git pull")
 
+def activate_env():
     with cd("www/ureport-web-participation"):
-        run("source env/bin/activate && pip install -r reqs/common.txt")
+         run("source env/bin/activate && pip install -r reqs/common.txt")
 
+def migrate():
     with cd("www/ureport-web-participation"):
-        run("python manage.py makemigrations")
-        run("pyhton manage.py migrate")
+         run("python manage.py makemigrations")
+         run("pyhton manage.py migrate")
         
+def services_up():
     with cd('www/ureport-web-participation/'):
-        sudo("supervisorctl restart uwsgi-builder")
-        sudo("supervisorctl restart builder_celery")
+         sudo("supervisorctl restart uwsgi-builder")
+         sudo("supervisorctl restart builder_celery")
