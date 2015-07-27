@@ -14,7 +14,4 @@ class TestSendToken(TestCase):
     def test_get_auth_token(self):
         token = get_auth_token(self.uuid)
         self.assertEqual(str(token), self.user.token)
-
-    # @patch("EmailMessage.send")
-    # def test_send_verification_token(self, mock_email_send):
-    #     mock_email_send.assert_called_with()
+    
