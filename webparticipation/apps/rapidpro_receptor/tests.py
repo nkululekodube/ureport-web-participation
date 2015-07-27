@@ -1,7 +1,7 @@
 from django.test import TestCase
 from mock import patch
 from django.conf import settings
-
+import os
 
 class TestRapidproReceptor(TestCase):
 
@@ -26,5 +26,5 @@ class TestRapidproReceptor(TestCase):
     def test_receptor_makes_post_request(self, mocked_post_request):
         self.response = self.client.post('/rapidpro-receptor', self.params)
         mocked_post_request.assert_called_with(
-            settings.RAPIDPRO_RECEIVED_PATH,
+            os.environ.get('RAPIDPRO_RECEIVED_PATH'),
             data={'from': self.params['from'], 'text': self.params['text']})
