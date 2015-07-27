@@ -1,6 +1,7 @@
 """Development settings and globals."""
 
 from common import *
+import os
 
 DEBUG = True
 
@@ -13,9 +14,9 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'webparticipation',
         'USER': 'admin',
-        'PASSWORD': 'password123!',
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'PASSWORD': os.environ.get('DATABASE_PASSWORD'),
+        'HOST': os.environ.get('DATABASE_HOST'),
+        'PORT': os.environ.get('DATABASE_PORT'),,
     }
 }
 
@@ -38,7 +39,3 @@ INTERNAL_IPS = ('127.0.0.1',)
 MIDDLEWARE_CLASSES += (
     'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
-
-# DEBUG_TOOLBAR_CONFIG = {
-#     'INTERCEPT_REDIRECTS': False,
-# }
