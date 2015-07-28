@@ -2,6 +2,8 @@
 from __future__ import unicode_literals
 
 from django.db import models, migrations
+import django.utils.timezone
+import webparticipation.apps.ureporter.models
 
 
 class Migration(migrations.Migration):
@@ -11,15 +13,14 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='UreportUser',
+            name='Ureporter',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('uuid', models.CharField(max_length=36)),
                 ('email', models.EmailField(max_length=255)),
                 ('password', models.CharField(max_length=255)),
-                ('active', models.BooleanField(default=False)),
-                ('token', models.IntegerField(default=b'758', max_length=3)),
-                ('uuid', models.CharField(max_length=36)),
-                ('pub_date', models.DateTimeField(verbose_name=b'date published')),
+                ('token', models.IntegerField(default=webparticipation.apps.ureporter.models.generate_token)),
+                ('pub_date', models.DateTimeField(default=django.utils.timezone.now)),
             ],
         ),
     ]

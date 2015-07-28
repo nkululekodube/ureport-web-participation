@@ -9,7 +9,7 @@ def generate_token():
     return str(randint(1000, 9999))
 
 
-class UreportUser(models.Model):
+class Ureporter(models.Model):
 
     def set_uuid(self, uuid):
         self.uuid = uuid

@@ -121,9 +121,9 @@ THIRD_PARTY_APPS = (
 )
 
 LOCAL_APPS = (
+    'webparticipation.apps.ureporter',
     'webparticipation.apps.register',
     'webparticipation.apps.rapidpro_receptor',
-    'webparticipation.apps.ureport_user',
     'webparticipation.apps.send_token',
     'webparticipation.apps.confirm_token',
     'webparticipation.apps.utils',

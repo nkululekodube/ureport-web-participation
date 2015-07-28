@@ -3,9 +3,9 @@ from django.http import HttpResponse
 from django.conf import settings
 from random import randint
 from time import sleep
-from webparticipation.apps.ureport_user.models import UreportUser
-from webparticipation.apps.utils.views import send_message_to_rapidpro, undashify_user
 import requests
+from webparticipation.apps.ureporter.models import Ureporter
+from webparticipation.apps.utils.views import send_message_to_rapidpro, undashify_user
 import os
 
 messages = []
@@ -45,13 +45,13 @@ def register(request):
 def get_user(request):
     if user_is_authenticated(request):
         uuid = request.COOKIES.get('uuid')
-        return UreportUser.objects.get(uuid=uuid)
+        return Ureporter.objects.get(uuid=uuid)
     else:
         contact = requests.post(os.environ.get('RAPIDPRO_API_PATH') + '/contacts.json',
                                 data={'urns': ['tel:' + generate_random_seed()]},
                                 headers={'Authorization': 'Token ' + os.environ.get('RAPIDPRO_API_TOKEN')})
         uuid = contact.json()['uuid']
-        user = UreportUser(uuid=uuid)
+        user = Ureporter(uuid=uuid)
         user.save()
         return user
 

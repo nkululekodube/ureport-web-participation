@@ -1,6 +1,6 @@
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from webparticipation.apps.ureport_user.models import UreportUser
+from webparticipation.apps.ureporter.models import Ureporter
 from webparticipation.apps.utils.views import dashify_user
 
 
@@ -10,7 +10,7 @@ def confirm_token(request):
         request_params = request.POST.dict()
         submitted_code = request_params['text']
         uuid = dashify_user(request_params['phone'])
-        user = UreportUser.objects.get(uuid=uuid)
+        user = Ureporter.objects.get(uuid=uuid)
 
         data = None
         if str(user.token) == submitted_code:
