@@ -9,25 +9,26 @@ from . import tasks
 def send_token(request):
     if request.method == 'POST':
         email_address = request.POST.get('text')
-        email_exists = Ureporter.objects.filter(email=email_address).exists()
+        email_exists = Ureporter.objects.filter(user__email=email_address).exists()
         if email_exists:
-            session_user = Ureporter.objects.get(uuid=get_uuid(request))
-            existing_user = Ureporter.objects.get(email=email_address)
-            existing_user.set_uuid(session_user.uuid)
-            session_user.delete()
-            if not existing_user.token:
+            session_ureporter = Ureporter.objects.get(uuid=get_uuid(request))
+            existing_ureporter = Ureporter.objects.get(user__email=email_address)
+            existing_ureporter.set_uuid(session_ureporter.uuid)
+            session_ureporter.delete()
+            if not existing_ureporter.token:
                 data = {'send_token': 'exists'}
             else:
                 data = {'send_token': 'send'}
-                tasks.send_verification_token.delay(existing_user)
+                tasks.send_verification_token.delay(existing_ureporter)
         else:
-            user = Ureporter.objects.get(uuid=get_uuid(request))
-            user.set_email(email_address)
+            ureporter = Ureporter.objects.get(uuid=get_uuid(request))
+            ureporter.user.email = email_address
+            ureporter.user.save()
             data = {'send_token': 'send'}
-            tasks.send_verification_token.delay(user)
+            tasks.send_verification_token.delay(ureporter)
 
         response = JsonResponse(data)
-        response.status_code = 200
+        response.status_codecode = 200
         return response
 
 

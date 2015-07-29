@@ -7,13 +7,14 @@ import requests
 from webparticipation.apps.ureporter.models import Ureporter
 from webparticipation.apps.utils.views import send_message_to_rapidpro, undashify_user
 import os
+from django.contrib.auth.models import User
 
 messages = []
 
 
 def register(request):
-    user = get_user(request)
-    uuid = user.uuid
+    ureporter = get_user(request)
+    uuid = ureporter.uuid
     undashified_uuid = undashify_user(uuid)
     response = HttpResponse()
 
@@ -27,8 +28,10 @@ def register(request):
 
     if request.method == 'POST':
         if request.POST.get('password'):
-            user.set_password(request.POST.get('password'))
-            user.invalidate_token()
+            ureporter.user.set_password(request.POST.get('password'))
+            ureporter.invalidate_token()
+            ureporter.user.is_active = True
+            ureporter.user.save()
             send_message_to_rapidpro({'from': undashified_uuid, 'text': 'next'})
         else:
             send_message_to_rapidpro({'from': undashified_uuid, 'text': request.POST['send']})
@@ -51,9 +54,11 @@ def get_user(request):
                                 data={'urns': ['tel:' + generate_random_seed()]},
                                 headers={'Authorization': 'Token ' + os.environ.get('RAPIDPRO_API_TOKEN')})
         uuid = contact.json()['uuid']
-        user = Ureporter(uuid=uuid)
-        user.save()
-        return user
+        ureporter = Ureporter(uuid=uuid, user=User.objects.create_user(generate_random_seed()))
+        ureporter.user.is_active = False
+        ureporter.user.save()
+        ureporter.save()
+        return ureporter
 
 
 def user_is_authenticated(request):
