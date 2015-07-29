@@ -1,7 +1,7 @@
 from django.test import TestCase
 from webparticipation.apps.ureporter.models import Ureporter
+from django.contrib.auth.models import User
 from django.test.client import RequestFactory
-from webparticipation.apps.ureporter.models import Ureporter
 from views import get_uuid, send_token
 import json
 
@@ -12,7 +12,10 @@ class TestSendToken(TestCase):
         self.factory = RequestFactory()
         self.uuid = 'f3a12ae7-4f05-4fce-8135-bc51a9522116'
         self.undashified_uuid = 'f3a12ae74f054fce8135bc51a9522116'
-        self.user = Ureporter.objects.create(uuid=self.uuid)
+        Ureporter.objects.create(uuid=self.uuid, user=User.objects.create_user('username'))
+
+    def tearDown(self):
+        Ureporter.objects.get(uuid=self.uuid).delete()
 
     def test_send_token(self):
         request = self.factory.post('/send-token', {'phone': self.undashified_uuid, 'text': 'an@ok.address'})
