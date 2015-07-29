@@ -6,11 +6,22 @@ ureport web-participation
 A web-based application to facilitate registration for potential ureport users and participation in polls by registered ureporters on the ureport platform.
 
 
+###Setup:
+
+- `virtualenv env`
+- `cp env_vars.txt env_vars && chmod 755 env_vars && source ./env_vars`
+- `psql postgres`
+  - `create database webparticipation`
+- `python manage.py createsuperuser`
+- `python manage.py migrate`
+
+In RapidPro instance, /temba/settings.py:
+- SEND_WEBHOOKS = True
+- SEND_MESSAGES = True (careful: will send real emails!)
+
+
 ###Technologies:
 
 - Django>=1.7.7,<=1.8.0
 
 - PostgreSQL (9.4.1)
-
-
-
