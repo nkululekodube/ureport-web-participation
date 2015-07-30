@@ -19,9 +19,23 @@ In RapidPro instance, /temba/settings.py:
 - SEND_WEBHOOKS = True
 - SEND_MESSAGES = True (careful: will send real emails!)
 
-
 ###Technologies:
 
 - Django>=1.7.7,<=1.8.0
 
 - PostgreSQL (9.4.1)
+
+
+###Troubleshooting:
+If the application is hanging, verify that:
+- RapidPro setting for the web-participation
+- - https://rapidpro.ngrok.com/api/v1/external/received/{web-channel}
+- RapidPro channel is posting responses to the correct web-participation url
+- The organisation unit in RapidPro has credit, otherwise top up more credit.
+
+if the app hangs on submitting email for verification
+- Verify the email settings, 
+- Verify that the flow in rapidPro update
+
+
+
