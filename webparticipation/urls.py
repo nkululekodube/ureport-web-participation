@@ -12,6 +12,7 @@ urlpatterns = patterns('',
     url(r'^rapidpro-receptor', include('apps.rapidpro_receptor.urls')),
     url(r'^send-token', include('apps.send_token.urls')),
     url(r'^confirm-token', include('apps.confirm_token.urls')),
+    url(r'^forgot-password/$', 'apps.login.views.forgot_password'),
     url(r'^login/$', 'apps.login.views.login_user'),
     url(r'^logout/$','django.contrib.auth.views.logout', {'next_page': '/'}),
 )

@@ -38,3 +38,8 @@ class TestUserLogin(TestCase):
 
         response = login_user(request)
         self.assertEquals(response.status_code, 200)
+
+    def test_forgot_password_url_is_ok(self):
+        response = self.client.get('/forgot-password/')
+        self.assertEqual(200, response.status_code)
+        self.assertTemplateUsed(response, 'forgot_password.html')

@@ -11,7 +11,7 @@ def login_user(request):
 
     if request.method == 'GET':
         redirect_to = request.GET.get('next', '/')
-        return render_to_response('login.html', RequestContext(request,  {'next': redirect_to}))
+        return render_to_response('login.html', RequestContext(request, {'next': redirect_to}))
 
     if request.method == 'POST':
         email = request.POST.get('email')
@@ -34,4 +34,8 @@ def login_user(request):
             else:
                 messages.warning(request, 'Password is incorrect')
 
-        return render_to_response('login.html', RequestContext(request,  {'next': redirect_to}))
+        return render_to_response('login.html', RequestContext(request, {'next': redirect_to}))
+
+
+def forgot_password(request):
+    return render_to_response('forgot_password.html', RequestContext(request))
