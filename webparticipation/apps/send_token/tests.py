@@ -54,12 +54,6 @@ class TestSendToken(TestCase):
         uuid = get_uuid(request)
         self.assertEqual(self.uuid, uuid)
 
-    # @patch('django.core.mail.EmailMessage')
-    # def test_task_send_verification_email_constructed(self, mock_email_message_class):
-    #     send_verification_token(self.ureporter)
-    #     # instance = mock_email_message_class.return_value
-    #     mock_email_message_class.assert_called_with('Hello', 'something with token', to=[self.ureporter.user.email])
-
     @patch('django.core.mail.EmailMessage.send')
     def test_task_send_verification_message_sent(self, mock_email_send):
         send_verification_token(self.ureporter)
