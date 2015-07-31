@@ -13,7 +13,7 @@ class TestUserLogin(TestCase):
     def test_login_url_is_ok(self):
         response = self.client.get('/login/')
         self.assertEqual(200, response.status_code)
-        self.assertTemplateUsed(response, 'auth.html')
+        self.assertTemplateUsed(response, 'login.html')
 
     def test_user_is_logged_in(self):
         user = User.objects.create_user(username='jacob', email='jacob@email.com', password='top_secret')
