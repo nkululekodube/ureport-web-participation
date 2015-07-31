@@ -15,6 +15,8 @@ def send_token(request):
             existing_ureporter = Ureporter.objects.get(user__email=email_address)
             existing_ureporter.set_uuid(session_ureporter.uuid)
             session_ureporter.delete()
+            session_ureporter.user.delete()
+
             if not existing_ureporter.token:
                 data = {'send_token': 'exists'}
             else:
