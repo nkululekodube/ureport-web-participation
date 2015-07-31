@@ -4,7 +4,7 @@ import time
 
 
 def before_all(context):
-    context.server = subprocess.Popen(['python', 'manage.py', 'runserver', '8200'])
+    context.server = subprocess.Popen('python manage.py runserver 8200', shell=True)
     context.browser = Browser('chrome')
     time.sleep(5)
 

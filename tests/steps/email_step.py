@@ -1,5 +1,6 @@
 from behave import *
 import time
+import os
 
 
 email = 'mben03@gmail.com'
@@ -8,7 +9,7 @@ wrong_email = 'mben03&gmail.com'
 
 
 def go_to_u_report(browser):
-    browser.visit('http://localhost:8200/register')
+    browser.visit(os.environ.get('WEBPARTICIPATION_ROOT') + '/register')
     browser.find_by_id('djHideToolBarButton').click()
 
 
