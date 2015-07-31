@@ -5,5 +5,5 @@
 env
 *.pyc
 celerybeat-schedule.db
-webparticipation/settings/local_settings.py
 env_vars
+.coverage

@@ -1,17 +1,17 @@
 #!/bin/bash
 
-# change these if necessary
 export SECRET_KEY=''
 
-export RAPIDPRO_API_TOKEN='86c77b233b93c0fa47a4067082978799ci9070ef'
-export RAPIDPRO_PROTOCOL='http://'
-export RAPIDPRO_HOST='localhost'
-export RAPIDPRO_PORT='8000'
-export RAPIDPRO_WEB_CHANNEL='aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee'
+export WEBPARTICIPATION_ROOT='http://localhost:8200'
 
-export WEBPARTICIPATION_PROTOCOL='http://'
-export WEBPARTICIPATION_HOST='localhost'
-export WEBPARTICIPATION_PORT='8200'
+export RAPIDPRO_API_TOKEN='abcdefghijklmnopqrstuvwxyz0123456789abcd'
+export RAPIDPRO_RECEIVED_PATH='http://localhost:8000/api/v1/external/received/aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee/'
+export RAPIDPRO_API_PATH='http://localhost:8000/api/v1'
+
+export DATABASE_USER=''
+export DATABASE_PASSWORD=''
+export DATABASE_HOST=''
+export DATABASE_PORT='5432'
 
 export EMAIL_HOST='smtp.gmail.com'
 export EMAIL_HOST_USER='some.address@mail.com'
@@ -20,10 +20,3 @@ export DEFAULT_FROM_EMAIL='some.address@mail.com'
 export SERVER_EMAIL='some.address@mail.com'
 export EMAIL_USE_TLS=True
 export EMAIL_PORT=587
-
-# leave these
-export RAPIDPRO_ROOT=${RAPIDPRO_PROTOCOL}${RAPIDPRO_HOST}':'${RAPIDPRO_PORT}
-export RAPIDPRO_API_PATH=${RAPIDPRO_ROOT}'/api/v1'
-export RAPIDPRO_RECEIVED_PATH=${RAPIDPRO_API_PATH}'/external/received/'${RAPIDPRO_WEB_CHANNEL}'/'
-
-export WEBPARTICIPATION_ROOT=${WEBPARTICIPATION_PROTOCOL}${WEBPARTICIPATION_HOST}':'${WEBPARTICIPATION_PORT}

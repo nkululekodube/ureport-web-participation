@@ -9,7 +9,9 @@ A web-based application to facilitate registration for potential ureport users a
 ###Setup:
 
 - `virtualenv env`
-- `cp env_vars.txt env_vars && chmod 755 env_vars && source ./env_vars`
+- `cp env_vars.txt env_vars && chmod 755 env_vars
+- edit env_vars with your own values
+- `source ./env_vars`
 - `psql postgres`
   - `create database webparticipation`
 - `python manage.py createsuperuser`
@@ -34,7 +36,7 @@ If the application is hanging, verify that:
 - The organisation unit in RapidPro has credit, otherwise top up more credit.
 
 if the app hangs on submitting email for verification
-- Verify the email settings, 
+- Verify the email settings,
 - Verify that the flow in rapidPro update
 
 
