@@ -14,13 +14,13 @@ def login_user(request):
         return render_to_response('auth.html', RequestContext(request,  {'next': redirect_to}))
 
     if request.method == 'POST':
-        username = request.POST.get('email')
+        email = request.POST.get('email')
         password = request.POST.get('password')
         redirect_to = request.POST.get('next', '/')
         user = None
 
         try:
-            user = User.objects.get(email=username)
+            user = User.objects.get(email=email)
         except User.DoesNotExist:
             messages.warning(request, 'Email not registered. Please try again.')
 
