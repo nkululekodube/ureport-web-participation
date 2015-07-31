@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link rel="stylesheet" href="/static/css/styles.css" type="text/css">
+    <link rel="stylesheet" href="/static/css/web-participation.css" type="text/css">
+</head>
+<body class="wp-body">
+    <div class="container">
+
+        <section>
+            <img class="wp-logo" src="http://dl-ureport.s3.amazonaws.com/cache/26/f9/26f983ab836bf2fa74cd8e1d47e9c247.png" alt="">
+        </section>
+
+        <section>
+
+            {% block messages %}
+                 {% if messages %}
+                    {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        <a class="close" data-dismiss="alert">×</a>
+                        {{ message|safe }}
+                    </div>
+                    {% endfor %}
+                {% endif %}
+            {% endblock %}
+
+            <form class="form-horizontal" name="LoginForm" action="/login/?next={{redirect_to}}" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="next" value="{{next}}"/>
+                <div>
+                    <input type="email" name="email" style="height:40px;" required autofocus placeholder="Email">
+                </div>
+                <div style="margin-top:20px;">
+                    <input type="password" name="password" style="height: 40px;" required placeholder="Password">
+                </div>
+                <div>
+                    <button class="wp-send btn btn-default"
+                            style="margin-top: 20px;
+                          position:none;  float: left;
+                          margin-top: 100px;"
+                            type="submit">
+                        Login
+                    </button>
+                    <p style="float:left; margin-top: 70px; margin-left: 256px;"><a href="">Forgot password?</a></p>
+                </div>
+            </form>
+        </section>
+
+    </div>
+    <script type="text/javascript" src="/static/javascript/jquery.min.js"></script>
+    <script type="text/javascript" src="/static/javascript/bootstrap.min.js"></script>
+</body>
+</html>

@@ -1,14 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    {% block head % }
     <meta charset="UTF-8">
-    <title>{% block title %}{% endblock %}</title>
+    <title>Home</title>
     <link rel="stylesheet" href="/static/css/styles.css" type="text/css">
-    {% endblock % }
+    <link rel="stylesheet" href="/static/css/web-participation.css" type="text/css">
 </head>
-<body>
-    <h1>{% block content %}{% endblock %}</h1>
+<body class="wp-body">
+  <div class="container">
+    <section>
+      <img class="wp-logo" src="http://dl-ureport.s3.amazonaws.com/cache/26/f9/26f983ab836bf2fa74cd8e1d47e9c247.png" alt="">
+    </section>
+
+    <section>
+        <a style="float:right;" href="/logout/"> Logout</a>
+        </form>
+    </section>
+
+  </div>
 </body>
 </html>
 
