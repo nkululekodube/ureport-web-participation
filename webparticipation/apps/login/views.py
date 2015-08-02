@@ -4,6 +4,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.contrib.auth import authenticate, login
 from django.template import RequestContext
+from webparticipation.apps.login.tasks import send_forgot_password_email
 
 
 def login_user(request):
@@ -38,4 +39,14 @@ def login_user(request):
 
 
 def forgot_password(request):
+    if request.method == 'GET':
+        redirect_to = request.GET.get('next', '/')
+        return render_to_response('forgot_password.html', RequestContext(request, {'next': redirect_to}))
+
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        redirect_to = request.POST.get('next', '/')
+        send_forgot_password_email.delay(email)
+        return HttpResponseRedirect(redirect_to)
+
     return render_to_response('forgot_password.html', RequestContext(request))
