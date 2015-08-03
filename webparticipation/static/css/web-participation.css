@@ -34,3 +34,11 @@
 .wp-send:hover {
   cursor: pointer;
 }
+
+.profile-details {
+  margin-top: 1em;
+}
+
+.webparticipation-form label {
+  margin-top: 1em;
+}

@@ -1,27 +1,23 @@
 {% include 'header.html' %}
 
-<body class="wp-body">
-  <div class="container">
-    <section>
-      {% if last_submission %}
-          <p class="wp-bubble wp-to">{{last_submission}}</p>
+<section>
+  {% if last_submission %}
+      <p class="wp-bubble wp-to">{{last_submission}}</p>
+  {% endif %}
+  {% for message in messages %}
+      <p class="wp-bubble wp-from">{{message.msg_text}}</p>
+  {% endfor %}
+
+  <form action="{% url 'register' %}" method="post">
+      {% csrf_token %}
+      {% if is_password %}
+      <input class="form-control" name="password" type="password">
+      {% else %}
+      <input class="form-control" name="send" type="text">
       {% endif %}
-      {% for message in messages %}
-          <p class="wp-bubble wp-from">{{message.msg_text}}</p>
-      {% endfor %}
+      <button class="wp-send btn btn-default" type="submit">Send</button>
+  </form>
 
-      <form action="{% url 'register' %}" method="post">
-          {% csrf_token %}
-          {% if is_password %}
-          <input class="form-control" name="password" type="password">
-          {% else %}
-          <input class="form-control" name="send" type="text">
-          {% endif %}
-          <button class="wp-send btn btn-default" type="submit">Send</button>
-      </form>
-    </section>
+</section>
 
-  </div>
-</body>
-</html>
-
+{% include 'footer.html' %}
