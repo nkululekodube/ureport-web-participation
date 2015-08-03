@@ -1,44 +1,45 @@
 {% include 'header.html' %}
 
 <body class="wp-body">
-    <div class="container">
-        <section>
+  <div class="container">
+    <section>
 
-            {% block messages %}
-                 {% if messages %}
-                    {% for message in messages %}
-                    <div class="alert alert-{{ message.tags }}">
-                        <a class="close" data-dismiss="alert">×</a>
-                        {{ message|safe }}
-                    </div>
-                    {% endfor %}
-                {% endif %}
-            {% endblock %}
+      {% block messages %}
+         {% if messages %}
+          {% for message in messages %}
+          <div class="alert alert-{{message.tags}}">
+            <a class="close" data-dismiss="alert">×</a>
+            {{ message|safe }}
+          </div>
+          {% endfor %}
+        {% endif %}
+      {% endblock %}
 
-            <form class="form-horizontal" name="LoginForm" action="/login/?next={{redirect_to}}" method="post">
-                {% csrf_token %}
-                <input type="hidden" name="next" value="{{next}}"/>
-                <div>
-                    <input type="email" name="email" style="height:40px;" required autofocus placeholder="Email">
-                </div>
-                <div style="margin-top:20px;">
-                    <input type="password" name="password" style="height: 40px;" required placeholder="Password">
-                </div>
-                <div>
-                    <button class="wp-send btn btn-default"
-                            style="margin-top: 20px;
-                          position:none;  float: left;
-                          margin-top: 100px;"
-                            type="submit">
-                        Login
-                    </button>
-                    <p style="float:left; margin-top: 70px; margin-left: 256px;"><a href="/forgot-password/">Forgot password?</a></p>
-                </div>
-            </form>
-        </section>
+      <form class="form-horizontal" name="LoginForm" action="/login/?next={{redirect_to}}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{next}}"/>
+        <div>
+          <label for="email">Email</label>
+          <input type="email" name="email" class="form-control" required autofocus>
+        </div>
+        <div>
+          <label for="password">Password</label>
+          <input type="password" name="password" class="form-control" required>
+        </div>
+        <div class="clearfix">
+          <button class="wp-send btn btn-default pull-right clearfix"type="submit"> Login </button>
+        </div>
+        <div>
+          <small class="pull-right">
+          <a href="/forgot-password/">Forgot password?</a>
+          </small>
+        </div>
+      </form>
+    </section>
 
-    </div>
-    <script type="text/javascript" src="/static/javascript/jquery.min.js"></script>
-    <script type="text/javascript" src="/static/javascript/bootstrap.min.js"></script>
+  </div>
+
+  <script type="text/javascript" src="/static/javascript/jquery.min.js"></script>
+  <script type="text/javascript" src="/static/javascript/bootstrap.min.js"></script>
 </body>
 </html>
