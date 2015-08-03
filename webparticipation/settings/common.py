@@ -136,7 +136,7 @@ LOCAL_APPS = (
     'webparticipation.apps.send_token',
     'webparticipation.apps.confirm_token',
     'webparticipation.apps.utils',
-    'webparticipation.apps.login',
+    'webparticipation.apps.ureport_auth',
 )
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -196,4 +196,3 @@ COMPRESS_JS_FILTERS = [
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 EMAIL_USE_TLS = True
-
