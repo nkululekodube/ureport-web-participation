@@ -1,12 +1,11 @@
 from django.contrib.auth.models import User
-from django.test import Client, override_settings
+from django.test import Client
 from django.test import TestCase, RequestFactory
 from mock import patch
 from webparticipation.apps.ureport_auth.tasks import send_forgot_password_email
 from webparticipation.apps.ureport_auth.views import login_user, forgot_password
 from django.contrib.messages.storage.fallback import FallbackStorage
 from webparticipation.apps.ureporter.models import Ureporter
-from webparticipation.apps.utils.views import undashify_user
 
 
 class TestUserLogin(TestCase):
@@ -20,7 +19,7 @@ class TestUserLogin(TestCase):
         self.assertTemplateUsed(response, 'login.html')
 
     def test_user_is_logged_in(self):
-        user = User.objects.create_user(username='jacob', email='jacob@email.com', password='top_secret')
+        user = User.objects.create_user(username='jacob', email='john@doe.com', password='top_secret')
         user.save()
         request = self.factory.post('/login', {'email': user.email, 'password': 'top_secret'})
 
@@ -49,22 +48,22 @@ class TestUserLogin(TestCase):
         self.assertTemplateUsed(response, 'forgot_password.html')
 
     def test_forgot_password_redirects_to_password_reset(self):
-        user = User.objects.create_user(username='jacob', email='jacob@email.com', password='top_secret')
+        user = User.objects.create_user(username='jane', email='jane@murdoch.com', password='top_secret')
         user.save()
         request = self.factory.post('/forgot-password', {'email': user.email})
+        session = self.client.session
+        setattr(request, 'session', session)
+        messages = FallbackStorage(request)
+        setattr(request, '_messages', messages)
         response = forgot_password(request)
-        self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, '/home/', status_code=302)
+        self.assertEqual(response.status_code, 200)
 
     @patch('django.core.mail.EmailMessage.send')
     def test_task_password_reset_message_sent(self, mock_email_send):
-        send_forgot_password_email(self.ureporter())
-        mock_email_send.assert_called_with()
+        ureporter = Ureporter.objects.create(uuid='aaaaaaaa-bbbb-cccc-dddd-zzzzzzzzzzzz',
+                                             user=User.objects.create_user('user'))
+        ureporter.user.email = 'user@email.com'
+        ureporter.user.save()
 
-    def ureporter(self):
-        self.uuid = 'f3a12ae7-4f05-4fce-8135-bc51a9522116'
-        self.undashified_uuid = undashify_user(self.uuid)
-        self.ureporter = Ureporter.objects.create(uuid=self.uuid, user=User.objects.create_user('username'))
-        self.ureporter.user.email = 'an@existing.user'
-        self.ureporter.save()
-        return self.ureporter
+        send_forgot_password_email(ureporter.user.email)
+        mock_email_send.assert_called_with()
