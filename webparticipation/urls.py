@@ -17,9 +17,8 @@ urlpatterns = patterns(
     url(r'^forgot-password/$', 'apps.login.views.forgot_password', name='forgot password'),
     url(r'^login/$', 'apps.login.views.login_user', name='login'),
     url(r'^logout/$', 'django.contrib.auth.views.logout', {'next_page': '/'}, name='logout'),
-    url(r'^ureporter/(?P<ureporter_uuid>[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12})/$',
+    url(r'^ureporter/',
         include('apps.profile_page.urls'), name='profile'),
-    url(r'^ureporter/(?P<ureporter_uuid>[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12})/deactivate/$',
-        include('apps.profile_page.urls'), name='profile'),
-
+    # url(r'^ureporter/(?P<ureporter_uuid>[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12})/$',
+    #     include('apps.profile_page.urls'), name='deactivate account'),
 )

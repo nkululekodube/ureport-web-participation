@@ -18,7 +18,7 @@ class TestConfirmToken(TestCase):
         self.ureporter.save()
 
     def tearDown(self):
-        Ureporter.objects.get(uuid=self.uuid).delete()
+        self.ureporter.delete()
 
     def test_confirm_token_with_good_code(self):
         request = self.factory.post('/confirm-token', {'phone': self.undashified_uuid, 'text': '1234'})

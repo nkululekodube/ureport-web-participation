@@ -21,7 +21,6 @@ class TestSendToken(TestCase):
         self.ureporter.save()
 
     def tearDown(self):
-        self.ureporter.user.delete()
         self.ureporter.delete()
 
     def test_send_token_does_not_accept_get(self):

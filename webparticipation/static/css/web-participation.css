@@ -35,10 +35,10 @@
   cursor: pointer;
 }
 
-.profile-details {
+.webparticipation-form label {
   margin-top: 1em;
 }
 
-.webparticipation-form label {
-  margin-top: 1em;
+.btn-deactivate {
+  margin-top: 2em;
 }

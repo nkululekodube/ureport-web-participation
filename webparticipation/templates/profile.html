@@ -2,16 +2,14 @@
 
 <h1>Profile</h1>
 
-<section class='profile-details'>
+<section class='profile-details webparticipation-form'>
   <div><label for="email">Email</label></div>
   <div>{{email}}</div>
   <div><label for="uuid">UUID</label></div>
   <div>{{uuid}}</div>
   <div><label for="date_joined">Date joined</label></div>
   <div>{{date_joined}}</div>
-  <div><label for="is_active">Active</label></div>
-  <div>{{is_active}}</div>
-  <a href="/ureporter/{{uuid}}/deactivate/" class="btn btn-warning">Deactivate account</a>
+  <a href="/ureporter/{{uuid}}/deactivate/" class="btn btn-xs btn-danger btn-deactivate">Deactivate account</a>
 </section>
 
 {% include 'footer.html' %}

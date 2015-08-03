@@ -1,0 +1,18 @@
+{% include 'header.html' %}
+
+{% if deleted %}
+  <p>We're sorry to see you go.</p>
+  <a href="/">Take me back to the homepage</a>
+{% else %}
+  <h1>Delete Account?</h1>
+
+  <p>Are you sure you want to delete your account? Deleted accounts are non-recoverable.</p>
+
+  <form action="/ureporter/{{uuid}}/deactivate/" method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Yes, I'm sure.</button>
+    <a href="/" class="btn btn-success">No, get me out of here.</a>
+  </form>
+{% endif %}
+
+{% include 'footer.html' %}

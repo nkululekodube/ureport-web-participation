@@ -30,3 +30,12 @@ class TestUreporter(TestCase):
     #                                          user=User.objects.create_user('newUser'))
     #     expired = ureporter.token_has_expired()
     #     self.assertEqual(expired, False)
+
+    def test_delete_user(self):
+        ureporter = Ureporter.objects.create(uuid='aaaaaaaa-bbbb-cccc-dddd-zzzzzzzzzzzz',
+                                             user=User.objects.create_user('deleteMe'))
+        self.assertEqual(User.objects.filter(username='deleteMe').exists(), True)
+        self.assertEqual(Ureporter.objects.filter(uuid='aaaaaaaa-bbbb-cccc-dddd-zzzzzzzzzzzz').exists(), True)
+        ureporter.delete()
+        self.assertEqual(User.objects.filter(username='deleteMe').exists(), False)
+        self.assertEqual(Ureporter.objects.filter(uuid='aaaaaaaa-bbbb-cccc-dddd-zzzzzzzzzzzz').exists(), False)
