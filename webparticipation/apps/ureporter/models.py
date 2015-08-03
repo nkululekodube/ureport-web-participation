@@ -26,6 +26,10 @@ class Ureporter(models.Model):
     def token_has_expired(self):
         return self.user.date_joined >= timezone.now() - datetime.timedelta(days=1)
 
+    def save(self, **kwargs):
+        self.user.save()
+        super(Ureporter, self).save()
+
     def delete(self):
         self.user.delete()
         super(Ureporter, self).delete()

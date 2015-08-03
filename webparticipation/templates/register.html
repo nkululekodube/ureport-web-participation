@@ -10,6 +10,7 @@
 
   <form action="{% url 'register' %}" method="post">
       {% csrf_token %}
+      <input type="hidden" name="uuid" value="{{uuid}}"/>
       {% if is_password %}
       <input class="form-control" name="password" type="password">
       {% else %}

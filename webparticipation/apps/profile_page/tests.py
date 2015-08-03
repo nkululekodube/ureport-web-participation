@@ -6,14 +6,15 @@ from django.contrib.auth.models import User
 class TestProfilePage(TestCase):
 
     def setUp(self):
-        self.user = Ureporter.objects.create(uuid='aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee',
-                                             user=User.objects.create_user(username='legituser', password='password'))
-        self.user.save()
+        self.ureporter = Ureporter.objects.create(uuid='aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee',
+                                                  user=User.objects.create_user(username='legituser',
+                                                                                password='password'))
+        self.ureporter.save()
 
-        self.another_user = Ureporter.objects.create(uuid='ffffffff-gggg-hhhh-iiii-jjjjjjjjjjjj',
-                                                     user=User.objects.create_user(username='the_other_guy',
-                                                                                   password='anotherpw'))
-        self.another_user.save()
+        self.another_ureporter = Ureporter.objects.create(uuid='ffffffff-gggg-hhhh-iiii-jjjjjjjjjjjj',
+                                                          user=User.objects.create_user(username='the_other_guy',
+                                                                                        password='anotherpw'))
+        self.another_ureporter.save()
 
     def tearDown(self):
         self.client.logout()

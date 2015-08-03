@@ -31,6 +31,18 @@ class TestUreporter(TestCase):
     #     expired = ureporter.token_has_expired()
     #     self.assertEqual(expired, False)
 
+    def test_save_user(self):
+        ureporter = Ureporter.objects.create(uuid='aaaaaaaa-bbbb-cccc-dddd-yyyyyyyyyyyy',
+                                             user=User.objects.create_user('saveMe'))
+        self.assertEqual(User.objects.filter(email='save@this.email').exists(), False)
+        self.assertEqual(Ureporter.objects.filter(token=5852).exists(), False)
+        ureporter = Ureporter.objects.get(uuid='aaaaaaaa-bbbb-cccc-dddd-yyyyyyyyyyyy')
+        ureporter.user.email = 'save@this.email'
+        ureporter.token = 5852
+        ureporter.save()
+        self.assertEqual(User.objects.filter(email='save@this.email').exists(), True)
+        self.assertEqual(Ureporter.objects.filter(token=5852).exists(), True)
+
     def test_delete_user(self):
         ureporter = Ureporter.objects.create(uuid='aaaaaaaa-bbbb-cccc-dddd-zzzzzzzzzzzz',
                                              user=User.objects.create_user('deleteMe'))

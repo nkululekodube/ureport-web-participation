@@ -65,6 +65,5 @@ class TestUserLogin(TestCase):
         self.undashified_uuid = undashify_user(self.uuid)
         self.ureporter = Ureporter.objects.create(uuid=self.uuid, user=User.objects.create_user('username'))
         self.ureporter.user.email = 'an@existing.user'
-        self.ureporter.user.save()
         self.ureporter.save()
         return self.ureporter

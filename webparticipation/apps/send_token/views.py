@@ -24,7 +24,7 @@ def send_token(request):
         else:
             ureporter = Ureporter.objects.get(uuid=get_uuid(request))
             ureporter.user.email = email_address
-            ureporter.user.save()
+            ureporter.save()
             data = {'send_token': 'send'}
             tasks.send_verification_token.delay(ureporter)
 
