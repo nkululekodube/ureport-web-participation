@@ -15,26 +15,31 @@
         {% endif %}
       {% endblock %}
 
-      <form class="form-horizontal" name="LoginForm" action="/login/?next={{redirect_to}}" method="post">
-        {% csrf_token %}
-        <input type="hidden" name="next" value="{{next}}"/>
-        <div>
-          <label for="email">Email</label>
-          <input type="email" name="email" class="form-control" required autofocus>
-        </div>
-        <div>
-          <label for="password">Password</label>
-          <input type="password" name="password" class="form-control" required>
-        </div>
-        <div class="clearfix">
-          <button class="wp-send btn btn-default pull-right clearfix"type="submit"> Login </button>
-        </div>
-        <div>
-          <small class="pull-right">
-          <a href="/forgot-password/">Forgot password?</a>
-          </small>
-        </div>
-      </form>
+      {% if request.user.is_authenticated %}
+        <p>You're already logged in.</p>
+        <a href="/logout/">Logout</a>
+      {% else %}
+        <form class="form-horizontal" name="LoginForm" action="/login/?next={{redirect_to}}" method="post">
+          {% csrf_token %}
+          <input type="hidden" name="next" value="{{next}}"/>
+          <div>
+            <label for="email">Email</label>
+            <input type="email" name="email" class="form-control" required autofocus>
+          </div>
+          <div>
+            <label for="password">Password</label>
+            <input type="password" name="password" class="form-control" required>
+          </div>
+          <div class="clearfix">
+            <button class="wp-send btn btn-default pull-right clearfix"type="submit"> Login </button>
+          </div>
+          <div>
+            <small class="pull-right">
+              <a href="/forgot-password/">Forgot password?</a>
+            </small>
+          </div>
+        </form>
+      {% endif %}
     </section>
 
   </div>
