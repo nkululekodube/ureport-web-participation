@@ -12,6 +12,8 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 
 DJANGO_ROOT = dirname(dirname(abspath(__file__)))
 
+LOGIN_URL = '/login/'
+
 SITE_ROOT = dirname(DJANGO_ROOT)
 
 SITE_NAME = basename(DJANGO_ROOT)
