@@ -6,6 +6,10 @@ from sys import path
 import dispatch
 import os
 
+APP_HOST = ""
+
+SERVER_NAME = ""
+
 RAPIDPRO_DISPATCHER = dispatch.Signal()
 
 SECRET_KEY = os.environ.get('SECRET_KEY')
@@ -17,6 +21,8 @@ LOGIN_URL = '/login/'
 SITE_ROOT = dirname(DJANGO_ROOT)
 
 SITE_NAME = basename(DJANGO_ROOT)
+
+PASSWORD_RESET_EXPIRY_DAYS = 1
 
 TOKEN_EXPIRY_DAYS = 1
 
@@ -182,3 +188,17 @@ COMPRESS_JS_FILTERS = [
 ]
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+EMAIL_USE_TLS = True
+
+EMAIL_HOST = 'smtp.gmail.com'
+
+EMAIL_PORT = 587
+
+DEFAULT_FROM_EMAIL = 'ureport.webpro@gmail.com'
+
+SERVER_EMAIL = 'ureport.webpro@gmail.com'
+
+EMAIL_HOST_USER = 'ureport.webpro@gmail.com'
+
+EMAIL_HOST_PASSWORD = 'asdas231@##!ASDA#!@!!'
