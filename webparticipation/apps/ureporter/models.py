@@ -24,7 +24,7 @@ class Ureporter(models.Model):
         self.save()
 
     def token_has_expired(self):
-        return self.user.date_joined >= timezone.now() - datetime.timedelta(days=1)
+        return self.user.date_joined >= timezone.now() - datetime.timedelta(days=settings.TOKEN_EXPIRY_DAYS)
 
     def save(self, **kwargs):
         self.user.save()

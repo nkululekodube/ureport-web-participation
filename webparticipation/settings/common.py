@@ -18,6 +18,8 @@ SITE_ROOT = dirname(DJANGO_ROOT)
 
 SITE_NAME = basename(DJANGO_ROOT)
 
+TOKEN_EXPIRY_DAYS = 1
+
 path.append(DJANGO_ROOT)
 
 DEBUG = False
