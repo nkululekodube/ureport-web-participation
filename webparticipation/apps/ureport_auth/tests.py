@@ -2,8 +2,8 @@ from django.contrib.auth.models import User
 from django.test import Client, override_settings
 from django.test import TestCase, RequestFactory
 from mock import patch
-from webparticipation.apps.login.tasks import send_forgot_password_email
-from webparticipation.apps.login.views import login_user, forgot_password
+from webparticipation.apps.ureport_auth.tasks import send_forgot_password_email
+from webparticipation.apps.ureport_auth.views import login_user, forgot_password
 from django.contrib.messages.storage.fallback import FallbackStorage
 from webparticipation.apps.ureporter.models import Ureporter
 from webparticipation.apps.utils.views import undashify_user

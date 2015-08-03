@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.core.mail import EmailMessage
 from django.utils import timezone
 from django.conf import settings
-from webparticipation.apps.login.models import PasswordReset
+from webparticipation.apps.ureport_auth.models import PasswordReset
 from webparticipation.apps.ureporter.models import Ureporter
 
 
