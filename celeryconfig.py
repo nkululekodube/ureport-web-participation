@@ -1,6 +1,6 @@
 from django.apps import apps
 
-CELERY_IMPORTS = ("apps.send_token.tasks", )
+CELERY_IMPORTS = ("apps.send_token.tasks", "apps.login.tasks",)
 
 BROKER_URL = "redis://localhost:6379"
 
