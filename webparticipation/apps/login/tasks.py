@@ -3,8 +3,8 @@ from django.contrib.auth.models import User
 from django.core.mail import EmailMessage
 from django.utils import timezone
 from django.conf import settings
-import os
 from webparticipation.apps.login.models import PasswordReset
+from webparticipation.apps.ureporter.models import Ureporter
 
 
 @task()
@@ -17,7 +17,9 @@ def send_forgot_password_email(email):
             password_reset = PasswordReset.build(expiry, user)
             password_reset.save()
 
-            link = reset_password_url("/password-reset/%s" % password_reset.id)
+            uuid = Ureporter.objects.get(user_id=password_reset.user_id).uuid
+
+            link = reset_password_url("/password-reset/%s" % uuid)
             in_text = "<p>Please click this link to change " \
                       "your password on Ureport.in <a href='" + link + "'> Email reset link</a></p>"
             subject = 'Hi from ureport.in'
@@ -35,8 +37,6 @@ def send_forgot_password_email(email):
 
 
 def reset_password_url(path):
-    protocol = "http"
-    port = "8200"
-    server_name = "127.0.0.1"
-    return "%s://%s:%s/%s" % (protocol, server_name, port, path)
-
+    return "%s%s:%s%s" % (settings.ENV_PROTOCOL,
+                          settings.ENV_SERVER_NAME,
+                          settings.ENV_PORT, path)

@@ -169,6 +169,12 @@ LOGGING = {
     }
 }
 
+ENV_PROTOCOL = os.environ.get('RAPIDPRO_PROTOCOL')
+
+ENV_PORT = '8200'
+
+ENV_SERVER_NAME = os.environ.get('RAPIDPRO_HOST')
+
 CELERY_TASK_RESULT_EXPIRES = timedelta(minutes=30)
 
 CELERY_CHORD_PROPAGATES = True
@@ -191,14 +197,3 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 EMAIL_USE_TLS = True
 
-EMAIL_HOST = 'smtp.gmail.com'
-
-EMAIL_PORT = 587
-
-DEFAULT_FROM_EMAIL = 'ureport.webpro@gmail.com'
-
-SERVER_EMAIL = 'ureport.webpro@gmail.com'
-
-EMAIL_HOST_USER = 'ureport.webpro@gmail.com'
-
-EMAIL_HOST_PASSWORD = 'asdas231@##!ASDA#!@!!'

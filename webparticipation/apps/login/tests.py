@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User
-from django.test import Client
+from django.test import Client, override_settings
 from django.test import TestCase, RequestFactory
 from mock import patch
 from webparticipation.apps.login.tasks import send_forgot_password_email
@@ -48,12 +48,13 @@ class TestUserLogin(TestCase):
         self.assertEqual(200, response.status_code)
         self.assertTemplateUsed(response, 'forgot_password.html')
 
-    def test_redirects_to_password_reset(self):
+    def test_forgot_password_redirects_to_password_reset(self):
         user = User.objects.create_user(username='jacob', email='jacob@email.com', password='top_secret')
         user.save()
         request = self.factory.post('/forgot-password', {'email': user.email})
         response = forgot_password(request)
         self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, '/home/', status_code=302)
 
     @patch('django.core.mail.EmailMessage.send')
     def test_task_password_reset_message_sent(self, mock_email_send):

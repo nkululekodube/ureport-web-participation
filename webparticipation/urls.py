@@ -5,6 +5,8 @@ from django.views.generic import TemplateView
 
 admin.autodiscover()
 
+uuid_regex ='([a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12})'
+
 urlpatterns = patterns(
     '',
     url(r'^home/', TemplateView.as_view(template_name='base.html'), name='home'),
@@ -14,11 +16,12 @@ urlpatterns = patterns(
     url(r'^rapidpro-receptor', include('apps.rapidpro_receptor.urls'), name='rapidpro receptor'),
     url(r'^send-token', include('apps.send_token.urls'), name='send token'),
     url(r'^confirm-token', include('apps.confirm_token.urls'), name='confirm token'),
-    url(r'^forgot-password/$', 'apps.login.views.forgot_password', name='forgot password'),
+    url(r'^forgot-password/', 'apps.login.views.forgot_password', name='forgot password'),
+    url(r'^password-reset/' + uuid_regex, 'apps.login.views.password_reset', name='reset password'),
     url(r'^login/$', 'apps.login.views.login_user', name='login'),
     url(r'^logout/$', 'django.contrib.auth.views.logout', {'next_page': '/'}, name='logout'),
     url(r'^ureporter/',
         include('apps.profile_page.urls'), name='profile'),
-    # url(r'^ureporter/(?P<ureporter_uuid>[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12})/$',
-    #     include('apps.profile_page.urls'), name='deactivate account'),
+    url(r'^ureporter/(?P<ureporter_uuid>[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12})/deactivate/$',
+        include('apps.profile_page.urls'), name='profile'),
 )

@@ -12,12 +12,13 @@ def login_user(request):
     backend = 'django.contrib.auth.backends.ModelBackend'
 
     if request.method == 'GET':
-        redirect_to_url(request, 'login.html', '/')
+        redirect_to = request.GET.get('next', '/')
+        return render_to_response('login.html', RequestContext(request, {'next': redirect_to}))
 
     if request.method == 'POST':
         email = request.POST.get('email')
         password = request.POST.get('password')
-        redirect_to = request.POST.get('next', '/')
+        redirect_to = request.POST.get('next', '/home')
         user = None
 
         try:
@@ -35,7 +36,7 @@ def login_user(request):
             else:
                 messages.warning(request, 'Password is incorrect')
 
-        return render_to_response('login.html', RequestContext(request, {'next': redirect_to}))
+    return render_to_response('login.html', RequestContext(request, {'next': redirect_to}))
 
 
 def forgot_password(request):
@@ -45,32 +46,27 @@ def forgot_password(request):
             user = User.objects.get(email=email)
             if user:
                 send_forgot_password_email.delay(email)
-            messages.info(request, 'Email recovery link sent to ' + email)
+            messages.info(request, 'We have sent an email address to  ' + email)
 
         except User.DoesNotExist:
-            messages.warning(request, 'Email does not match any registered user.')
+            messages.warning(request, 'There is no registered user with sign-in email .' + email)
 
     return render_to_response('forgot_password.html', RequestContext(request))
 
 
-def password_reset(request):
-    redirect_to = request.POST.get('next', '/')
-
+def password_reset(request, ureporter_uuid):
     if request.method == 'POST':
-        redirect_to = request.POST.get('next', '/')
         password = request.POST.get('password')
         confirm_password = request.POST.get('confirm_password')
-        uuid = request.POST.get('uuid')
 
         if password == confirm_password:
-            user = User.objects.get(uuid=uuid)
-            updated_user = Ureporter.objects.get(user=user).set_password(password)
-            updated_user.save()
+            ureporter = Ureporter.objects.get(uuid=ureporter_uuid)
+            auth_user = User.objects.get(id=ureporter.user_id)
+            auth_user.set_password(password)
+            auth_user.save()
+            messages.info(request, 'Password for for user ' + auth_user.email + ' successfully changed!')
+            return render_to_response('login.html', RequestContext(request))
         else:
             messages.error(request, 'Password do not match.')
-    return render_to_response('password_reset.html', RequestContext(request, {'next': redirect_to}))
 
-
-def redirect_to_url(request, template, url):
-    redirect_to = request.GET.get('next', url)
-    return render_to_response(template, RequestContext(request, {'next': redirect_to}))
+    return render_to_response('password_reset.html', RequestContext(request))
