@@ -169,12 +169,6 @@ LOGGING = {
     }
 }
 
-ENV_PROTOCOL = os.environ.get('RAPIDPRO_PROTOCOL')
-
-ENV_PORT = '8200'
-
-ENV_SERVER_NAME = os.environ.get('RAPIDPRO_HOST')
-
 CELERY_TASK_RESULT_EXPIRES = timedelta(minutes=30)
 
 CELERY_CHORD_PROPAGATES = True
@@ -195,4 +189,16 @@ COMPRESS_JS_FILTERS = [
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
-EMAIL_USE_TLS = True
+EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS', True)
+
+EMAIL_PORT = os.environ.get('EMAIL_PORT', 587)
+
+EMAIL_HOST = os.environ.get('EMAIL_HOST')
+
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
+
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+
+DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL')
+
+SERVER_EMAIL = os.environ.get('SERVER_EMAIL')
