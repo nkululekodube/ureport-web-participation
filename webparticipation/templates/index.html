@@ -1,0 +1,11 @@
+{% include 'header.html' %}
+
+<a href="/register/">Register</a>
+{% if uuid %}
+<a href="/logout/">Logout</a>
+<a href="/ureporter/{{uuid}}/">Profile</a>
+{% else %}
+<a href="/login/">Login</a>
+{% endif %}
+
+{% include 'footer.html' %}
