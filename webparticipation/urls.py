@@ -8,6 +8,7 @@ uuid_regex = '[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}'
 
 urlpatterns = patterns(
     '',
+    url(r'^$', include('apps.home.urls'), name='home'),
     url(r'^home/', TemplateView.as_view(template_name='base.html'), name='home'),
     url(r'^admin/doc/', include('django.contrib.admindocs.urls'), name='docs'),
     url(r'^admin/', include(admin.site.urls), name='admin'),
