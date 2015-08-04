@@ -6,6 +6,7 @@ from django.contrib.auth import authenticate, login
 from django.template import RequestContext
 from webparticipation.apps.ureport_auth.tasks import send_forgot_password_email
 from webparticipation.apps.ureporter.models import Ureporter
+from webparticipation.apps.utils.views import is_valid_password
 
 
 def login_user(request):
@@ -60,12 +61,17 @@ def password_reset(request, ureporter_uuid):
         password = request.POST.get('password')
         confirm_password = request.POST.get('confirm_password')
         if password == confirm_password:
-            ureporter = Ureporter.objects.get(uuid=ureporter_uuid)
-            user = User.objects.get(id=ureporter.user_id)
-            user.set_password(password)
-            user.save()
-            messages.info(request, 'Password successfully changed for ' + ureporter.user.email)
-            return render_to_response('login.html', RequestContext(request))
+            if is_valid_password(password):
+                ureporter = Ureporter.objects.get(uuid=ureporter_uuid)
+                user = User.objects.get(id=ureporter.user_id)
+                user.set_password(password)
+                user.save()
+                messages.info(request, 'Password successfully changed for ' + ureporter.user.email)
+                return render_to_response('login.html', RequestContext(request))
+            else:
+                messages.error(request, 'Password should have at least 8 characters '
+                                        'with at least one uppercase, lowercase, '
+                                        'number and special character.')
         else:
             messages.error(request, 'Password do not match.')
     return render_to_response('password_reset.html', RequestContext(request))

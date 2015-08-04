@@ -18,15 +18,16 @@ def send_forgot_password_email(email):
             uuid = Ureporter.objects.get(user_id=password_reset.user_id).uuid
 
             link = reset_password_url("/password-reset/%s" % uuid)
-            html_text = "<p>Please click this link to change " \
-                      "your password on Ureport.in <a href='" + link + "'> Email reset link</a></p>"
             subject = 'Hi from ureport.in'
+            html_text = "<p>" + subject + "<p>You recently requested to reset your ureport account password.</p> " \
+                                          "<p>To do this, please click this password link to change " \
+                                          "your password <a href='" + link + "'>  Password recovery link</a></p>"
 
-            body = html_text + '<p>-----Thanks</p>'
+            body = html_text + '<p>-----</p><p>Thanks</p>'
             signature = '\nureport team'
             recipients = [email]
 
-            message = EmailMessage(subject, body + signature, to=recipients)
+            message = EmailMessage('Ureport Password Recovery', body + signature, to=recipients)
             message.content_subtype = "html"
             message.send()
 
