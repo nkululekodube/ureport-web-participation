@@ -1,11 +1,21 @@
 {% include 'header.html' %}
 
-<a href="/register/">Register</a>
+<ul style="list-style-type: none; padding: 0">
 {% if uuid %}
-<a href="/logout/">Logout</a>
-<a href="/ureporter/{{uuid}}/">Profile</a>
+  <li>
+    <a href="/ureporter/{{uuid}}/">Profile</a>
+  </li>
+  <li>
+    <a href="/logout/">Logout</a>
+  </li>
 {% else %}
-<a href="/login/">Login</a>
+  <li>
+    <a class="btn btn-large btn-primary" href="/register/">Register</a>
+  </li>
+  <li>
+    <a href="/login/">Login</a>
+  </li>
 {% endif %}
+</ul>
 
 {% include 'footer.html' %}
