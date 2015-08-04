@@ -1,7 +1,6 @@
 from django.test import TestCase
 from mock import patch
 import os
-from django.conf import settings
 
 
 class TestRapidproReceptor(TestCase):
