@@ -13,6 +13,7 @@ class Ureporter(models.Model):
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL)
     uuid = models.CharField(max_length=36)
+    urn_tel = models.CharField(max_length=13)
     token = models.IntegerField(default=generate_token)
 
     def set_uuid(self, uuid):
