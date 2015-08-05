@@ -20,16 +20,17 @@ def send_forgot_password_email(email):
 
             link = reset_password_url('/password-reset/%s' % uuid)
             subject = 'Hi from ureport.in'
-            html_text = "<p>" + subject + "<p>You recently requested to reset your ureport account password.</p> " \
-                                          "<p>To do this, please click this password link to change " \
-                                          "your password <a href='" + link + "'>  Password recovery link</a></p>"
-
-            body = html_text + '<p>-----</p><p>Thanks</p>'
+            html_text = "<p>" + subject + "</p>" \
+                        "<p>You recently requested to reset your ureport account password.</p>" \
+                        "<p>To do this, please click this password link to change your password " \
+                        "<a href='" + link + "'>Password recovery link</a></p>"
+            body = html_text + '<p>-----</p>' \
+                               '<p>Thanks</p>'
             signature = '\nureport team'
             recipients = [email]
 
             message = EmailMessage('Ureport Password Recovery', body + signature, to=recipients)
-            message.content_subtype = "html"
+            message.content_subtype = 'html'
             message.send()
 
     except User.DoesNotExist:

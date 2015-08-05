@@ -22,24 +22,32 @@ class TestSendToken(TestCase):
     def tearDown(self):
         self.ureporter.delete()
 
-    def test_send_token_does_not_accept_get(self):
+    @patch('webparticipation.apps.send_token.tasks.send_verification_token.delay')
+    def test_send_token_does_not_accept_get(self, mock_send_verification_token):
+        mock_send_verification_token.return_value = None
         request = self.factory.get('/send-token', {'phone': self.undashified_uuid, 'text': 'any@kinda.address'})
         response = send_token(request)
         self.assertEqual(response, None)
 
-    def test_send_token_to_new_user(self):
+    @patch('webparticipation.apps.send_token.tasks.send_verification_token.delay')
+    def test_send_token_to_new_user(self, mock_send_verification_token):
+        mock_send_verification_token.return_value = None
         request = self.factory.post('/send-token', {'phone': self.undashified_uuid, 'text': 'an@ok.address'})
         response = send_token(request)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(json.loads(response.content)['send_token'], 'send')
 
-    def test_send_token_to_user_that_has_not_finished_registration(self):
+    @patch('webparticipation.apps.send_token.tasks.send_verification_token.delay')
+    def test_send_token_to_user_that_has_not_finished_registration(self, mock_send_verification_token):
+        mock_send_verification_token.return_value = None
         request = self.factory.post('/send-token', {'phone': self.undashified_uuid, 'text': 'an@existing.user'})
         response = send_token(request)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(json.loads(response.content)['send_token'], 'send')
 
-    def test_do_not_send_token_to_existing_user(self):
+    @patch('webparticipation.apps.send_token.tasks.send_verification_token.delay')
+    def test_do_not_send_token_to_existing_user(self, mock_send_verification_token):
+        mock_send_verification_token.return_value = None
         self.ureporter.token = 0
         self.ureporter.save()
         request = self.factory.post('/send-token', {'phone': self.undashified_uuid, 'text': 'an@existing.user'})
@@ -47,7 +55,9 @@ class TestSendToken(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(json.loads(response.content)['send_token'], 'exists')
 
-    def test_get_uuid(self):
+    @patch('webparticipation.apps.send_token.tasks.send_verification_token.delay')
+    def test_get_uuid(self, mock_send_verification_token):
+        mock_send_verification_token.return_value = None
         request = self.factory.post('/send-token', {'phone': self.undashified_uuid, 'text': 'whatever'})
         uuid = get_uuid(request)
         self.assertEqual(self.uuid, uuid)
