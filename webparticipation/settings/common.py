@@ -142,7 +142,6 @@ LOCAL_APPS = (
     'webparticipation.apps.home',
     'webparticipation.apps.profile_page',
     'webparticipation.apps.ureport_auth',
-    'webparticipation.apps.poll_respond',
 )
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
