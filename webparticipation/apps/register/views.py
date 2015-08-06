@@ -3,13 +3,13 @@ from django.conf import settings
 from django.utils.translation import ugettext as _
 from django.contrib.auth.models import User
 from random import randint
-from time import sleep
 import requests
 import os
 from webparticipation.apps.ureporter.models import Ureporter
 from webparticipation.apps.utils.views import send_message_to_rapidpro, undashify_user
+from webparticipation.apps.rapidpro_receptor.views import get_messages_for_user, rapidpro_dispatcher_callback
 
-messages = []
+messages = settings.MESSAGES
 
 
 def register(request):
@@ -78,21 +78,6 @@ def get_already_registered_message(request):
         'messages': [{'msg_text': _("You're already logged in. Why don't you take our latest poll?")}]})
 
 
-def get_messages_for_user(uuid):
-    global messages
-    while not len(messages):
-        sleep(.5)
-    return filter_messages(uuid)
-
-
-def filter_messages(uuid):
-    global messages
-    undashified_uuid = undashify_user(uuid)
-    filtered_messages = filter(lambda msg: msg['msg_to'] == undashified_uuid, messages)
-    messages = filter(lambda msg: msg['msg_to'] != undashified_uuid, messages)
-    return filtered_messages
-
-
 def serve_post_response(request, uuid, ureporter):
     undashified_uuid = undashify_user(uuid)
     if request.POST.get('password'):
@@ -117,17 +102,6 @@ def activate_user(request, ureporter):
 
 def has_password_keyword(messages):
     return bool([message for message in messages if message['msg_text'].find('password') != -1])
-
-
-def rapidpro_dispatcher_callback(sender, **kwargs):
-    global messages
-    messages.append({
-        'msg_id': kwargs['param_id'],
-        'msg_channel': kwargs['param_channel'],
-        'msg_from': kwargs['param_from'],
-        'msg_to': kwargs['param_to'],
-        'msg_text': kwargs['param_text']
-    })
 
 
 settings.RAPIDPRO_DISPATCHER.connect(rapidpro_dispatcher_callback)

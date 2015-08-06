@@ -6,11 +6,13 @@ from sys import path
 import dispatch
 import os
 
+MESSAGES = []
+
+RAPIDPRO_DISPATCHER = dispatch.Signal()
+
 APP_HOST = ""
 
 SERVER_NAME = ""
-
-RAPIDPRO_DISPATCHER = dispatch.Signal()
 
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
@@ -137,7 +139,10 @@ LOCAL_APPS = (
     'webparticipation.apps.send_token',
     'webparticipation.apps.confirm_token',
     'webparticipation.apps.utils',
+    'webparticipation.apps.home',
+    'webparticipation.apps.profile_page',
     'webparticipation.apps.ureport_auth',
+    'webparticipation.apps.poll_respond',
 )
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
