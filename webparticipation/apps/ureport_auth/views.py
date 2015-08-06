@@ -67,10 +67,10 @@ def password_reset(request, ureporter_uuid):
                 user.set_password(password)
                 user.save()
                 messages.info(request, 'Password successfully changed for ' + ureporter.user.email)
-                return render_to_response('login.html', RequestContext(request))
+                return HttpResponseRedirect('/login/')
             else:
-                messages.error(request, 'Password should have at least 8 characters '
-                                        'with at least one uppercase, lowercase, '
+                messages.error(request, 'Password should have a minimum of 8 characters '
+                                        'which should contain at least one uppercase, lowercase, '
                                         'number and special character.')
         else:
             messages.error(request, 'Password do not match.')
