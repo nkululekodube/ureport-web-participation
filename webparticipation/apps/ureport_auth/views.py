@@ -53,7 +53,7 @@ def forgot_password(request):
                                 'Please check your email.',
                     'password_reset_email_sent': True})
         except User.DoesNotExist:
-            messages.error(request, 'There is no registered user with sign-in email ' + email)
+            messages.error(request, 'There is no registered user with sign-in email ' + str(email))
     return render_to_response('forgot_password.html', RequestContext(request))
 
 
