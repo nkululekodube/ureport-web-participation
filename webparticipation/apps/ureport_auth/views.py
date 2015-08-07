@@ -1,9 +1,11 @@
 from django.contrib import messages
 from django.contrib.auth.models import User
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import render_to_response, render
 from django.contrib.auth import authenticate, login
 from django.template import RequestContext
+from django.utils import timezone
+from webparticipation.apps.ureport_auth.models import PasswordReset
 from webparticipation.apps.ureport_auth.tasks import send_forgot_password_email
 from webparticipation.apps.ureporter.models import Ureporter
 from webparticipation.apps.utils.views import is_valid_password
@@ -14,7 +16,6 @@ def login_user(request):
 
     if request.method == 'GET':
         redirect_to = request.GET.get('next', '/')
-        return render_to_response('login.html', RequestContext(request, {'next': redirect_to}))
 
     if request.method == 'POST':
         email = request.POST.get('email')
@@ -48,29 +49,40 @@ def forgot_password(request):
             if user:
                 send_forgot_password_email.delay(email)
                 return render(request, 'forgot_password.html', {
-                    'messages': 'We have sent an email to ' + email + ' with recovery instructions. ' +
+                    'success_message': 'We have sent an email to ' + email + ' with recovery instructions. ' +
                                 'Please check your email.',
                     'password_reset_email_sent': True})
         except User.DoesNotExist:
             messages.error(request, 'There is no registered user with sign-in email ' + email)
-    return render_to_response('forgot_password.html', RequestContext(request), )
+    return render_to_response('forgot_password.html', RequestContext(request))
 
 
-def password_reset(request, ureporter_uuid):
+def password_reset(request, user_uuid):
+    ureport_user = Ureporter.objects.get(uuid=user_uuid)
+    user = User.objects.get(id=ureport_user.user_id)
+    reset = PasswordReset.objects.get(user_id=user.id)
+    if request.method == 'GET':
+        if not reset.expiry > timezone.now():
+            messages.error(request, 'Sorry that recovery '
+                                    'link is expired. Please Try again.')
+            return HttpResponseRedirect('/forgot-password/')
+
     if request.method == 'POST':
         password = request.POST.get('password')
         confirm_password = request.POST.get('confirm_password')
+
         if password == confirm_password:
             if is_valid_password(password):
-                ureporter = Ureporter.objects.get(uuid=ureporter_uuid)
-                user = User.objects.get(id=ureporter.user_id)
-                user.set_password(password)
                 user.save()
-                messages.info(request, 'Password successfully changed for ' + ureporter.user.email)
+                messages.info(request, 'Password successfully '
+                                       'changed for ' + ureport_user.user.email)
                 return HttpResponseRedirect('/login/')
+
             else:
-                messages.error(request, 'Password should have a minimum of 8 characters '
-                                        'which should contain at least one uppercase, lowercase, '
+                messages.error(request, 'Password should have a minimum of '
+                                        '8 characters '
+                                        'which should contain at least one '
+                                        'uppercase, lowercase, '
                                         'number and special character.')
         else:
             messages.error(request, 'Password do not match.')
