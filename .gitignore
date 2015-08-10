@@ -8,3 +8,4 @@ env
 celerybeat-schedule.db
 env_vars
 .coverage
+common.py

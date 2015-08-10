@@ -73,17 +73,14 @@ def password_reset(request, user_uuid):
 
         if password == confirm_password:
             if is_valid_password(password):
+                user.set_password(password)
                 user.save()
                 messages.info(request, 'Password successfully '
                                        'changed for ' + ureport_user.user.email)
                 return HttpResponseRedirect('/login/')
-
             else:
                 messages.error(request, 'Password should have a minimum of '
-                                        '8 characters '
-                                        'which should contain at least one '
-                                        'uppercase, lowercase, '
-                                        'number and special character.')
+                                        '8 characters.')
         else:
             messages.error(request, 'Password do not match.')
     return render_to_response('password_reset.html', RequestContext(request))
