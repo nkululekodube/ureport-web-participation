@@ -38,7 +38,7 @@ def broadcast_rapidpro_response(request_params):
 def get_messages_for_user(uuid):
     global messages
     while not len(messages):
-        sleep(10)
+        sleep(.5)
     return filter_messages(uuid)
 
 
