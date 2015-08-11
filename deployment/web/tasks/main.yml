@@ -19,7 +19,6 @@
     - python-pip
     - python-pycurl
     - supervisor
-    - uwsgi
 
   tags: packages
 
@@ -62,17 +61,7 @@
   template: src=uwsgi_conf.j2
             dest=/etc/uwsgi/conf.d/{{application_name}}.conf
             backup=yes
-
-- name: Generate ini file for uwsgi:
-  template: src=uwsgi.ini
-            dest=/etc/uwsgi/conf.d/{{application_name}}.ini
-            backup=yes
-
-- name: Genearte uwsgi params file:
-  template: src=uwsgi.ini
-            dest=/etc/uwsgi/conf.d/{{application_name}}.ini
-            backup=yes
-
+            
 - name: Create a log directory for supervisor
   file: path={{project_dir}}/supervisord
         owner='{{remote_user}}'
@@ -83,17 +72,17 @@
             dest=/etc/supervisor/conf.d/{{application_name}}.conf
             backup=yes
 
-#- name: Reload supervisor configuration files if modified
-#  command: supervisorctl reread
+- name: Reload supervisor configuration files if modified
+  command: supervisorctl reread
 
-#- name: Update Supervisor to add the app in the process group
-#  command: supervisorctl update
+- name: Update Supervisor to add the app in the process group
+  command: supervisorctl update
 
-#- name: Initialise log rotation for Supervisord
-#  template: src=supervisor_log.j2
-#            dest='/etc/logrotate.d/'{{application_name}}'-supervisor.log'
-#            owner='{{remote_user}}'
-#            group='{{remote_user}}'
+- name: Initialise log rotation for Supervisord
+  template: src=supervisor_log.j2
+            dest='/etc/logrotate.d/'{{application_name}}'-supervisor.log'
+            owner='{{remote_user}}'
+            group='{{remote_user}}'
 
 - name: Install django application requirements in virtualenv
   sudo: yes 
@@ -127,32 +116,6 @@
     - django 
     - collectstatic 
     - deploy
-
-- name: Install Nginx
-  apt: name=nginx update_cache=yes state=installed
-  tags: packages
-
-- name: Ensure that the Nginx service is stopped
-  service: name=nginx state=stopped
-
-- name: Create a directory for nginx logs
-  file: path={{project_dir}}
-        owner={{remote_user}}
-        state=directory
-
-- name: Create the Nginx configuration file
-  template: src=nginx_site_config.j2
-            dest=/etc/nginx/conf.d/{{application}}.conf
-            backup=yes
-
-- name: Ensure that the default site is disabled
-  command: rm /etc/nginx/sites-enabled/default
-           removes=/etc/nginx/sites-enabled/default
-
-- name: Ensure that the application site is enabled
-  command: ln -s /etc/nginx/sites-available/{{application_name}}
-           /etc/nginx/sites-enabled/{{application_name}}
-           creates=/etc/nginx/conf.d/{{application_name}}
 
 - name: Ensure Nginx service is started
   service: name=nginx state=started enabled=yes
