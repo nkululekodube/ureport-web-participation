@@ -3,6 +3,7 @@
   include_vars: ./main.yml
 
 - name: Install PostgreSQL
+  sudo: yes
   apt: name={{item}} update_cache=yes state=installed
   with_items:
     - postgresql-9.3
@@ -12,10 +13,12 @@
   tags: packages
 
 - name: Ensure the PostgreSQL service is running
+  sudo: yes
   service: name=postgresql state=started enabled=yes
 
 - name: Ensure database is created
   sudo_user: postgres
+  sudo: yes
   postgresql_db: db={postgresql_db}} state=present
 
 - name: Ensure user has access to the database
@@ -28,6 +31,7 @@
 
 - name: Ensure user does not have unnecessary privileges
   sudo_user: postgres
+  sudo: yes
   postgresql_user: name={{postgresql_user}}
                    role_attr_flags=SUPERUSER,CREATEDB,LOGIN
                    state=present
@@ -40,9 +44,11 @@
   tags: packages
 
 - name: Restart Postgresql
+  sudo: yes
   service: name=postgresql state=restarted enabled=yes
 
 - name: Install Postgres client components
+  sudo: yes
   apt: name={{ item }} update_cache=yes state=installed
   with_items:
     - libpq-dev
