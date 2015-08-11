@@ -10,6 +10,8 @@ MESSAGES = []
 
 RAPIDPRO_DISPATCHER = dispatch.Signal()
 
+APPEND_SLASH = True
+
 APP_HOST = ""
 
 SERVER_NAME = ""
@@ -111,6 +113,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.middleware.gzip.GZipMiddleware',
     'django.middleware.locale.LocaleMiddleware',
+    'django.middleware.common.CommonMiddleware',
 )
 
 ROOT_URLCONF = '%s.urls' % SITE_NAME
