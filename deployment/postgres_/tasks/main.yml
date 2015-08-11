@@ -29,7 +29,7 @@
 - name: Ensure user does not have unnecessary privileges
   sudo_user: postgres
   postgresql_user: name={{postgresql_user}}
-                   role_attr_flags=NOSUPERUSER,NOCREATEDB
+                   role_attr_flags=SUPERUSER,CREATEDB,LOGIN
                    state=present
 
 - name: Allow md5 authentication for local connections
