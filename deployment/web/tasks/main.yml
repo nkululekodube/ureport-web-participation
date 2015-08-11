@@ -52,11 +52,6 @@
     - git 
     - deploy
 
-- name: Create log directory for uwsgi
-  file: path={{project_dir}}/uwsgi
-        owner='{{remote_user}}'
-        state=directory
-
 - name: Generate configuration file for supervisor
   template: src=uwsgi_conf.j2
             dest=/etc/uwsgi/conf.d/{{application_name}}.conf
