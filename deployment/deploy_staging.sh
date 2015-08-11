@@ -1,3 +1,3 @@
 #! /bin/bash
 
-ansible-playbook -i hosts deploy.yml
+ansible-playbook deploy.yml -i hosts 
