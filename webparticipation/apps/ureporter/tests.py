@@ -1,9 +1,24 @@
 from django.test import TestCase
+from mock import patch
 from models import generate_token, Ureporter
 from django.contrib.auth.models import User
+from views import generate_random_urn_tel, get_user, save_new_ureporter
+from django.test.client import RequestFactory
+from webparticipation.apps.utils.views import undashify_user
 
 
 class TestUreporter(TestCase):
+
+    def setUp(self):
+        self.factory = RequestFactory()
+        self.uuid = 'octagons-help-feed-some-elephantsies'
+        self.undashified_uuid = undashify_user(self.uuid)
+        self.ureporter = Ureporter.objects.create(uuid=self.uuid, user=User.objects.create_user(username='registerMe'))
+        self.ureporter.save()
+
+    def tearDown(self):
+        self.ureporter.delete()
+
     def test_generate_token(self):
         token = generate_token()
         self.assertGreater(int(token), 999)
@@ -44,3 +59,26 @@ class TestUreporter(TestCase):
         ureporter.delete()
         self.assertEqual(User.objects.filter(username='deleteMe').exists(), False)
         self.assertEqual(Ureporter.objects.filter(uuid='aaaaaaaa-bbbb-cccc-dddd-zzzzzzzzzzzz').exists(), False)
+
+    def test_get_user_with_uuid(self):
+        request = self.factory.post('/register/', {'uuid': self.uuid})
+        ureporter = get_user(request)
+        self.assertEqual(ureporter, self.ureporter)
+
+    @patch('webparticipation.apps.ureporter.views.create_new_ureporter')
+    def test_get_user_with_no_uuid(self, mock_create_new_ureporter):
+        mock_create_new_ureporter.return_value = 'mock Ureport instance'
+        request = self.factory.post('/register/', {})
+        get_user(request)
+        mock_create_new_ureporter.assert_called_once_with()
+
+    def test_save_new_ureporter(self):
+        uuid = 'referees-runs-foot-ball-oldtraffordd'
+        urn_tel = 'user111111111'
+        ureporter = save_new_ureporter(uuid, urn_tel)
+        self.assertEqual(ureporter.uuid, uuid)
+        self.assertEqual(ureporter.urn_tel, urn_tel)
+
+    def test_generate_random_urn_tel(self):
+        urn_tel = generate_random_urn_tel()
+        self.assertRegexpMatches(urn_tel, r'user[0-9]{9}')
