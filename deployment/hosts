@@ -1,2 +1,5 @@
 [web]
- ec2-52-18-250-121.eu-west-1.compute.amazonaws.com  ansible_ssh_user=ubuntu ansible_ssh_private_key_file=wep-pro-key.pem server_name=ec2-52-18-250-121.eu-west-1.compute.amazonaws.com database_ip=172-31-5-211
+ec2-52-18-250-121.eu-west-1.compute.amazonaws.com  ansible_ssh_user=ubuntu ansible_ssh_private_key_file=wep-pro-key.pem server_name=ec2-52-18-250-121.eu-west-1.compute.amazonaws.com database_ip=172-31-5-211
+
+[staging]
+52.18.250.121 ansible_ssh_user=ubuntu ansible_ssh_private_key_file=wep-pro-key.pem
