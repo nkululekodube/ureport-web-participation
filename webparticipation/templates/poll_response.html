@@ -1,6 +1,8 @@
 {% include 'header.html' %}
 
 <section>
+  <h1> POLL #{{poll_id}} </h1>
+
   {% if submission %}
       <p class="wp-bubble wp-to">{{submission}}</p>
   {% endif %}
@@ -11,16 +13,11 @@
   {% if not is_complete %}
   <form action="" method="post">
       {% csrf_token %}
-      <input type="hidden" name="uuid" value="{{uuid}}"/>
-      {% if is_password %}
-      <input class="form-control" name="password" type="password">
-      {% else %}
       <input class="form-control" name="send" type="text">
-      {% endif %}
       <button class="wp-send btn btn-default" type="submit">Send</button>
   </form>
   {% else %}
-  <a href="/poll/latest/respond">Go To Latest Poll</a>
+  <a href="/poll/{{poll_id}}/">View Results</a>
   {% endif %}
 
 </section>

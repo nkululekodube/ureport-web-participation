@@ -13,7 +13,8 @@ class TestRegistration(TestCase):
         self.factory = RequestFactory()
         self.uuid = 'octagons-help-feed-some-elephantsies'
         self.undashified_uuid = undashify_user(self.uuid)
-        self.ureporter = Ureporter.objects.create(uuid=self.uuid, user=User.objects.create_user(username='registerMe'))
+        self.username = 'registerMe'
+        self.ureporter = Ureporter.objects.create(uuid=self.uuid, user=User.objects.create_user(username=self.username))
         self.ureporter.save()
 
     def tearDown(self):
@@ -45,7 +46,7 @@ class TestRegistration(TestCase):
         mock_get_already_registered_message.assert_called_once_with(request)
 
     def test_has_password_keyword(self):
-        messages = [{'msg_text': "lorem ipsum habeus borat"}]
-        self.assertEqual(has_password_keyword(messages), False)
-        messages = [{'msg_text': "A sentence containing password keyword"}]
-        self.assertEqual(has_password_keyword(messages), True)
+        messages = [{'msg_text': 'lorem ipsum habeus borat', 'msg_to': self.username}]
+        self.assertEqual(has_password_keyword(messages, self.username), False)
+        messages = [{'msg_text': 'A sentence containing password keyword', 'msg_to': self.username}]
+        self.assertEqual(has_password_keyword(messages, self.username), True)

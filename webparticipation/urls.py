@@ -1,6 +1,5 @@
 from django.contrib import admin
 from django.conf.urls import patterns, include, url
-from django.views.generic import TemplateView
 
 admin.autodiscover()
 
@@ -9,11 +8,10 @@ uuid_regex = '[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}'
 urlpatterns = patterns(
     '',
     url(r'^$', include('apps.home.urls'), name='home'),
-    # url(r'^home/', TemplateView.as_view(template_name='base.html'), name='home'),
     url(r'^admin/doc/', include('django.contrib.admindocs.urls'), name='docs'),
     url(r'^admin/', include(admin.site.urls), name='admin'),
     url(r'^register/', include('apps.register.urls'), name='register'),
-    url(r'^polls/(?P<poll_id>[0-9]{1,6})/respond/$', include('apps.poll.urls'), name='poll'),
+    url(r'^poll/(?P<poll_id>[0-9]{1,6})/respond/$', include('apps.poll_response.urls'), name='poll response'),
     url(r'^login/$', 'apps.ureport_auth.views.login_user', name='login'),
     url(r'^logout/$', 'django.contrib.auth.views.logout', {'next_page': '/'}, name='logout'),
     url(r'^forgot-password/', 'apps.ureport_auth.views.forgot_password', name='forgot password'),

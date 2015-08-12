@@ -5,6 +5,7 @@ from time import sleep
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
+from collections import OrderedDict
 
 messages = settings.MESSAGES
 
@@ -41,10 +42,13 @@ def get_messages_for_user(username):
 
 def filter_messages(username):
     global messages
-    print messages
-    filtered_messages = [message for message in messages if message['msg_to'] == str(username)]
-    messages = [message for message in messages if message['msg_to'] != str(username)]
+    filtered_messages = dedupe_messages([message for message in messages if message['msg_to'] == username])
+    messages = [message for message in messages if message['msg_to'] != username]
     return filtered_messages
+
+
+def dedupe_messages(msgs):
+    return OrderedDict((frozenset(msg.items()), msg) for msg in msgs).values()
 
 
 def append_rapidpro_message_to_message_bus(sender, **kwargs):
@@ -58,8 +62,8 @@ def append_rapidpro_message_to_message_bus(sender, **kwargs):
     })
 
 
-def has_password_keyword(msgs):
-    return bool([msg for msg in msgs if re.match('.+[P|p]assword.+', msg['msg_text'])])
+def has_password_keyword(msgs, username):
+    return bool([msg for msg in msgs if re.match('.+[P|p]assword.+', msg['msg_text']) and msg['msg_to'] == username])
 
 
 settings.RAPIDPRO_DISPATCHER.connect(append_rapidpro_message_to_message_bus)

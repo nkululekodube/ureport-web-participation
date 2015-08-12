@@ -1,12 +1,9 @@
 from django.shortcuts import render
-from django.conf import settings
 from django.utils.translation import ugettext as _
 from webparticipation.apps.ureporter.views import get_user, activate_user
 from webparticipation.apps.rapidpro_receptor.views import send_message_to_rapidpro, has_password_keyword, \
     get_messages_for_user
 from webparticipation.apps.ureporter.models import Ureporter
-
-messages = settings.MESSAGES
 
 
 def register(request):
@@ -33,7 +30,8 @@ def user_is_authenticated(request):
 
 def get_already_registered_message(request):
     return render(request, 'register.html', {
-        'messages': [{'msg_text': _("You're already logged in. Why don't you take our latest poll?")}]})
+        'messages': [{'msg_text': _("You're already logged in. Why don't you take our latest poll?")}],
+        'is_complete': True})
 
 
 def serve_post_response(request, uuid, ureporter):
@@ -46,6 +44,6 @@ def serve_post_response(request, uuid, ureporter):
     msgs = get_messages_for_user(username)
     return render(request, 'register.html', {
         'messages': msgs,
-        'last_submission': request.POST.get('send') or None,
-        'is_password': has_password_keyword(messages),
+        'submission': request.POST.get('send') or None,
+        'is_password': has_password_keyword(msgs, username),
         'uuid': uuid})
