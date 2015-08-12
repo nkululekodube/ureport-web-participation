@@ -1,7 +1,7 @@
 ---
 
 - name: Provisioning application 
-  hosts: web
+  hosts: all
   gather_facts: no
   sudo: yes
   sudo_user: ubuntu
