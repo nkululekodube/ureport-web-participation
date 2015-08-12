@@ -1,5 +1,6 @@
-import requests
 import os
+import re
+import requests
 from random import randint
 from django.contrib.auth.models import User
 from models import Ureporter
@@ -48,3 +49,11 @@ def activate_user(request, ureporter):
     ureporter.invalidate_token()
     ureporter.user.is_active = True
     ureporter.save()
+
+
+def is_valid_password(password_string):
+    matches_regex = re.match(r'[A-Za-z0-9-@#$%^&+=]{8,}', password_string)
+    if matches_regex:
+        return True
+    else:
+        return False

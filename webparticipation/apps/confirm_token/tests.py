@@ -21,11 +21,11 @@ class TestConfirmToken(TestCase):
         self.ureporter.delete()
 
     def test_confirm_token_with_good_code(self):
-        request = self.factory.post('/confirm-token', {'phone': self.undashified_uuid, 'text': '1234'})
+        request = self.factory.post('/confirm-token', {'phone': self.username, 'text': '1234'})
         response = confirm_token(request)
         self.assertEqual(json.loads(response.content)['token_ok'], 'true')
 
     def test_confirm_token_with_bad_code(self):
-        request = self.factory.post('/confirm-token', {'phone': self.undashified_uuid, 'text': '8888'})
+        request = self.factory.post('/confirm-token', {'phone': self.username, 'text': '8888'})
         response = confirm_token(request)
         self.assertEqual(json.loads(response.content)['token_ok'], 'false')

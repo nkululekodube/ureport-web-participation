@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth.models import User
-from django.http import HttpResponseRedirect, Http404
+from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response, render
 from django.contrib.auth import authenticate, login
 from django.template import RequestContext
@@ -8,7 +8,7 @@ from django.utils import timezone
 from webparticipation.apps.ureport_auth.models import PasswordReset
 from webparticipation.apps.ureport_auth.tasks import send_forgot_password_email
 from webparticipation.apps.ureporter.models import Ureporter
-from webparticipation.apps.utils.views import is_valid_password
+from webparticipation.apps.ureporter.views import is_valid_password
 
 
 def login_user(request):
@@ -50,7 +50,7 @@ def forgot_password(request):
                 send_forgot_password_email.delay(email)
                 return render(request, 'forgot_password.html', {
                     'success_message': 'We have sent an email to ' + email + ' with recovery instructions. ' +
-                                'Please check your email.',
+                                       'Please check your email.',
                     'password_reset_email_sent': True})
         except User.DoesNotExist:
             messages.error(request, 'There is no registered user with sign-in email ' + str(email))
