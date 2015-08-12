@@ -2,7 +2,7 @@
 
 - name: Provisioning application 
   hosts: web
-  gather_facts: no
+  gather_facts: yes
   sudo: yes
   sudo_user: ubuntu
   remote_user: ubuntu
