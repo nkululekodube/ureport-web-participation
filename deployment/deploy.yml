@@ -5,7 +5,7 @@
   gather_facts: no
   sudo: yes
   sudo_user: root
-  remote_user: '{{remote_user}}'
+  remote_user: root
 
   vars:
     - virtualenv_path: '{{virtualenv_path}}'
@@ -29,7 +29,5 @@
 
   vars_files:
     - ./vars/vars.yml
+  
 
-  roles:
-    - postgres_
- 
