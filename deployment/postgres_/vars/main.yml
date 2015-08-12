@@ -1,2 +1,5 @@
---- "postgresql_db:'' postgresql_username:'' postgresql_user:'' postgresql_user_passwd:''"
-
+--- 
+postgresql_db: ""
+postgresql_user: ""
+postgresql_user_passwd: ""
+postgresql_username: ""
