@@ -1,5 +1,5 @@
 ---
-postgresql_db: ''
-postgresql_username: ''
-postgresql_user: ''
-postgresql_user_passwd: ''
+postgresql_db: lookup('env', 'POSTGRES_DB')
+postgresql_username: lookup('env', 'POSTGRES_USERNAME')
+postgresql_user: lookup('env', 'POSTGRES_USER')
+postgresql_user_passwd: lookup('env', 'POSTGRES_USER_PASSWORD')
