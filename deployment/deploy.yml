@@ -30,4 +30,7 @@
   vars_files:
     - ./vars/vars.yml
   
+  roles:
+    - postgres_
+  
 
