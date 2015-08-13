@@ -37,10 +37,12 @@
                    state=present
 
 - name: Restart Postgresql
+  sudo_user: postgres
   sudo: yes
   service: name=postgresql state=restarted enabled=yes
 
 - name: Install Postgres client components
+  sudo_user: postgres
   sudo: yes
   apt: name={{ item }} update_cache=yes state=installed
   with_items:
