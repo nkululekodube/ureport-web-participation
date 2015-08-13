@@ -73,7 +73,7 @@
 - name: Run makemigrations command
   sudo_user: '{{remote_user}}'
   sudo: yes
-  shell: . {{virtual_env_activate}} && . {{virtual_env_postactivate}} && cd '{{project_dir}}' && python manage.py makemigrations --noinput
+  shell: . {{virtual_env_activate}} && cd '{{project_dir}}' && python manage.py makemigrations --noinput
   when: run_django_syncdb
   tags: 
    - django 
@@ -81,16 +81,14 @@
 
 - name: Run migrate command
   sudo_user: '{{remote_user}}'
-  shell: . {{virtual_env_activate}} &&  . {{virtual_env_postactivate}}
-         && cd '{{project_dir}}' && python manage.py migrate --noinput
+  shell: . {{virtual_env_activate}} && cd '{{project_dir}}' && python manage.py migrate --noinput
   when: run_django_migrations
   tags: 
     - django 
     - migrate
 
 - name: Generate static django files for application
-  shell: . {{virtual_env_activate}} && . {{virtual_env_postactivate}}
-         && cd '{{project_dir}}' && python manage.py collectstatic --noinput
+  shell: . {{virtual_env_activate}} && cd '{{project_dir}}' && python manage.py collectstatic --noinput
   when: run_django_collectstatic
   tags: 
     - django 
