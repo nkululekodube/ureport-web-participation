@@ -51,6 +51,7 @@
             backup=yes
 
 - name: Pull latest code from github
+  sudo_user: root
   git: repo={{github_repo}} dest={{project_dir}} update=yes accept_hostkey=yes
   notify: start application
   tags: 
