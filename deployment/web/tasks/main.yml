@@ -1,8 +1,9 @@
 ---
 - name: include default step variables
-  include_vars: ../vars/vars.yml
+  include_vars: ../vars/main.yml
 
 - name: Install openssl and libssl
+  sudo_user: root
   apt: name={{ item }} update_cache=yes state=latest
   with_items:
     - openssl
@@ -11,6 +12,7 @@
   tags: packages
 
 - name: Base package install
+  sudo_user: root
   apt: name={{ item }} update_cache=yes force=yes state=installed
   with_items:
     - build-essential
@@ -22,17 +24,20 @@
 
   tags: packages
 
-- name: Install virtualenv
+- name: Install virtualenv 
+  sudo_user: root
   pip: name={{ item }}
   with_items:
     - virtualenv
   tags: packages
 
 - name: Create the virtualenv
+  sudo_user: root
   command: virtualenv {{virtual_env}} --no-site-packages
            creates={{virtual_env_activate}}
 
 - name: Create the application log folder
+  sudo_user: root
   file: path={{project_dir}}
         owner='{{remote_user}}'
         group='{{remote_user}}'
@@ -56,7 +61,7 @@
   template: src=uwsgi_conf.j2
             dest=/etc/uwsgi/conf.d/{{application_name}}.conf
             backup=yes
-            
+
 - name: Create a log directory for supervisor
   file: path={{project_dir}}/supervisord
         owner='{{remote_user}}'
