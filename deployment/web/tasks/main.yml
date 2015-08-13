@@ -58,27 +58,6 @@
     - git 
     - deploy
 
-- name: Generate configuration file for supervisor
-  template: src=uwsgi_conf.j2
-            dest=/etc/uwsgi/conf.d/{{application_name}}.conf
-            backup=yes
-
-- name: Create a log directory for supervisor
-  file: path={{project_dir}}/supervisord
-        owner='{{remote_user}}'
-        state=directory
-
-- name: Generate configuration file for supervisor
-  template: src=supervisor_conf.j2
-            dest=/etc/supervisor/conf.d/{{application_name}}.conf
-            backup=yes
-
-- name: Reload supervisor configuration files if modified
-  command: supervisorctl reread
-
-- name: Update Supervisor to add the app in the process group
-  command: supervisorctl update
-
 - name: Initialise log rotation for Supervisord
   template: src=supervisor_log.j2
             dest='/etc/logrotate.d/'{{application_name}}'-supervisor.log'
