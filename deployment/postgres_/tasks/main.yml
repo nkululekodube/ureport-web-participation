@@ -3,6 +3,7 @@
   include_vars: ./vars.yml
 
 - name: Install PostgreSQL
+  sudo_user: root
   apt: name={{item}} update_cache=yes state=installed
   with_items:
     - postgresql-9.3
