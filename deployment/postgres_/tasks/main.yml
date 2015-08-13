@@ -42,8 +42,7 @@
   service: name=postgresql state=restarted enabled=yes
 
 - name: Install Postgres client components
-  sudo_user: postgres
-  sudo: yes
+  sudo_user: root
   apt: name={{ item }} update_cache=yes state=installed
   with_items:
     - libpq-dev
