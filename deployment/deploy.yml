@@ -11,7 +11,7 @@
     - virtualenv_path: '{{virtualenv_path}}'
     - django_dir: '{{django_dir}}'
     - application_log_dir: '{{application_log_dir}}'
-    - requirements_file: '{{requirements_file}}'
+    - requirements_file: '{{django_requirements}}'
     - django_settings_file: '{{django_dir}}'
     - django_secret_key: '{{django_secret_key}}'
     - run_django_syncdb: yes
