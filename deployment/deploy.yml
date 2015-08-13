@@ -18,7 +18,7 @@
     - run_django_migrations: yes
     - run_django_collectstatic: yes
     - setup_git_repo: yes
-    - git_repo: '{{git_repo}}'
+    - git_repo: '{{github_repo}}'
     - nginx_server_name: localhost
     - nginx_http_port: 80
     - nginx_https_port: 443
