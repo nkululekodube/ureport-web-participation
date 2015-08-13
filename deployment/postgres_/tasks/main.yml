@@ -1,6 +1,6 @@
 i---
 - name: include default step variables
-  include_vars: ./vars.yml
+  include_vars: ./main.yml
 
 - name: Install PostgreSQL
   sudo: yes
