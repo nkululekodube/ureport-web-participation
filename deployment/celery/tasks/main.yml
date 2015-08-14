@@ -43,6 +43,6 @@
     group={{remote_user}}
   tags: celery
 
-#- name: Re-read the Supervisor config files
-#  command: supervisorctl reread
-#  notify: restart {{application_name}}-celery
+- name: Re-read the Supervisor config files
+  command: supervisorctl reread
+  notify: restart {{application_name}}-celery
