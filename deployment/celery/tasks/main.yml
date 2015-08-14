@@ -27,10 +27,12 @@
   tags: celery
 
 - name: Create supervisor job for celery
+  sudo_user: root
   template: src=supervisor_celery_conf.j2 dest="/etc/supervisor/conf.d/{{application_name}}-celery.conf" mode=644
   tags: celery
 
 - name: Initialise log rotation for Celery logs
+  sudo_user: root
   template: src=celery_log.j2
     dest='/etc/logrotate.d/{{application_name}}-celery.log'
     owner={{remote_user}}
@@ -38,6 +40,7 @@
   tags: celery
 
 - name: Copy celery startup script to bin
+  sudo_user: root
   template: src=init_celery_conf.j2
     dest='{{virtual_env_folder}}/start_celery'
     owner={{remote_user}}
@@ -45,5 +48,6 @@
   tags: celery
 
 - name: Re-read the Supervisor config files
+  sudo_user: root
   command: supervisorctl reread
   notify: restart {{application_name}}-celery
