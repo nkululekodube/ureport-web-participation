@@ -1,8 +1,9 @@
 ---
 - name: include default step variables
-  include_vars: ./main.yml
+  include_vars: ../../main.yml
 
 - name: Ensure that redis server is installed
+  sudo_user: root
   apt: name=redis-server update_cache=yes state=installed
   tags: redis
 
