@@ -50,4 +50,4 @@
 - name: Re-read the Supervisor config files
   sudo_user: root
   command: supervisorctl reread
-  notify: restart '{{application_name}}-celery'
+  notify: restart {{application_name}}-celery
