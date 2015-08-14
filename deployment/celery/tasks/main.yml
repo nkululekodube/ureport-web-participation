@@ -42,7 +42,7 @@
 - name: Copy celery startup script to bin
   sudo_user: root
   template: src=init_celery_conf.j2
-    dest='{{virtual_env_folder}}/start_celery'
+    dest='{{virtual_env}}/start_celery'
     owner={{remote_user}}
     group={{remote_user}}
   tags: celery
