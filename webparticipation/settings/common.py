@@ -6,7 +6,7 @@ from sys import path
 import dispatch
 import os
 
-MESSAGES = []
+MESSAGE_BUS = []
 
 RAPIDPRO_DISPATCHER = dispatch.Signal()
 

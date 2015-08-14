@@ -15,7 +15,7 @@ def login_user(request):
     backend = 'django.contrib.auth.backends.ModelBackend'
 
     if request.method == 'GET':
-        redirect_to = request.GET.get('next', '/')
+        redirect_to = request.GET.get('next', '/home')
 
     if request.method == 'POST':
         email = request.POST.get('email')
@@ -26,8 +26,7 @@ def login_user(request):
         try:
             user = User.objects.get(email=email)
         except User.DoesNotExist:
-            messages.warning(request, 'There is no registered '
-                                      'user with sign-in email ' + email)
+            messages.warning(request, 'There is no registered user with sign-in email ' + email)
         if user:
             authenticated_user = authenticate(username=user.username, password=password)
             if authenticated_user is not None:

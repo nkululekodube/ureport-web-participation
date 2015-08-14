@@ -7,9 +7,8 @@ uuid_regex = '[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}'
 
 urlpatterns = patterns(
     '',
-    url(r'^$', include('apps.home.urls'), name='home'),
-    url(r'^admin/doc/', include('django.contrib.admindocs.urls'), name='docs'),
-    url(r'^admin/', include(admin.site.urls), name='admin'),
+    url(r'^$', include('apps.home.urls'), name='index'),
+    url(r'^home/', include('apps.home.urls'), name='home'),
     url(r'^register/', include('apps.register.urls'), name='register'),
     url(r'^poll/(?P<poll_id>[0-9]{1,6})/respond/$', include('apps.poll_response.urls'), name='poll response'),
     url(r'^login/$', 'apps.ureport_auth.views.login_user', name='login'),

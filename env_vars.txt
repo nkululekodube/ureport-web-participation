@@ -3,6 +3,7 @@
 export SECRET_KEY=''
 
 export WEBPARTICIPATION_ROOT='http://localhost:8200'
+export UREPORT_ROOT='http://localhost:8100'
 
 export RAPIDPRO_API_TOKEN='abcdefghijklmnopqrstuvwxyz0123456789abcd'
 export RAPIDPRO_RECEIVED_PATH='http://localhost:8000/api/v1/external/received/aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee/'

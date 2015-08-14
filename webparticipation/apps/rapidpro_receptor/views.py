@@ -7,7 +7,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
 from collections import OrderedDict
 
-messages = settings.MESSAGES
+message_bus = settings.MESSAGE_BUS
 
 
 @csrf_exempt
@@ -34,16 +34,16 @@ def broadcast_rapidpro_response(request_params):
 
 
 def get_messages_for_user(username):
-    global messages
-    while not len(messages):
+    global message_bus
+    while not len(message_bus):
         sleep(.5)
     return filter_messages(username)
 
 
 def filter_messages(username):
-    global messages
-    filtered_messages = dedupe_messages([message for message in messages if message['msg_to'] == username])
-    messages = [message for message in messages if message['msg_to'] != username]
+    global message_bus
+    filtered_messages = dedupe_messages([message for message in message_bus if message['msg_to'] == username])
+    message_bus = [message for message in message_bus if message['msg_to'] != username]
     return filtered_messages
 
 
@@ -52,8 +52,8 @@ def dedupe_messages(msgs):
 
 
 def append_rapidpro_message_to_message_bus(sender, **kwargs):
-    global messages
-    messages.append({
+    global message_bus
+    message_bus.append({
         'msg_id': kwargs['param_id'],
         'msg_channel': kwargs['param_channel'],
         'msg_from': kwargs['param_from'],
