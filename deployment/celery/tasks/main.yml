@@ -26,23 +26,10 @@
     state=directory
   tags: celery
 
-- name: Create supervisor job for celery
-  sudo_user: root
-  template: src=supervisor_celery_conf.j2 dest="/etc/supervisor/conf.d/webparticipation-celery.conf" mode=644
-  tags: celery
-
 - name: Initialise log rotation for Celery logs
   sudo_user: root
   template: src=celery_log.j2
     dest='/etc/logrotate.d/application_name.log'
-    owner={{remote_user}}
-    group={{remote_user}}
-  tags: celery
-
-- name: Copy celery startup script to bin
-  sudo_user: root
-  template: src=init_celery_conf.j2
-    dest='{{virtual_env}}/start_celery'
     owner={{remote_user}}
     group={{remote_user}}
   tags: celery
