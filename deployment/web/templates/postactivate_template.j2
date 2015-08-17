@@ -1,23 +1,23 @@
 #!/bin/bash
 
-export DJANGO_SECRET_KEY=''
-export DATABASE_NAME=''
-export DATABASE_USER=''
-export DATABASE_PASSWORD=''
-export DJANGO_SETTINGS_MODULE='webparticipation'
+export DJANGO_SECRET_KEY={{secret_key}}
+export DATABASE_NAME={{database_name}}
+export DATABASE_USER={{database_user}}
+export DATABASE_PASSWORD={{database_password}}
+export DJANGO_SETTINGS_MODULE={{settings_module}}
 
 #rapidpro vars
-export RAPIDPRO_API_TOKEN=''
-export RAPIDPRO_RECEIVED_PATH=''
-export RAPIDPRO_WEB_CHANNEL=''
-export RAPIDPRO_PORT=''
-export RAPIDPRO_PROTOCOL=''
-export RAPIDPRO_HOST=''
-export RAPIDPRO_PATH=''
+export RAPIDPRO_API_TOKEN={{rapidpro_api_token}}
+export RAPIDPRO_RECEIVED_PATH={{rapidro_received_path}}
+export RAPIDPRO_WEB_CHANNEL={{rapidpro_web_channel}}
+export RAPIDPRO_PORT={{rapidro_port}}
+export RAPIDPRO_PROTOCOL={{rapidpro_protocol}}
+export RAPIDPRO_HOST={{rapidpro_host}}
+export RAPIDPRO_PATH={{rapidpro_path}}
 
 #email vars
-export DEFAULT_FROM_EMAIL=''
-export EMAIL_HOST_PASSWORD=''
-export EMAIL_HOST_USER=''
-export EMAIL_PORT=''
-export EMAIL_HOST=''
+export DEFAULT_FROM_EMAIL={{default_from_email}}
+export EMAIL_HOST_PASSWORD={{email_host_password}}
+export EMAIL_HOST_USER={{email_host_user}}
+export EMAIL_PORT={{email_port}}
+export EMAIL_HOST={{email_host}}
