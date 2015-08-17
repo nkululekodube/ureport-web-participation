@@ -32,7 +32,7 @@
 - name: Ensure user does not have unnecessary privileges
   sudo_user: postgres
   sudo: yes
-  postgresql_user: name={{postgresql_user}}
+  postgresql_user: name={{database_user}}
                    role_attr_flags=SUPERUSER,CREATEDB,LOGIN
                    state=present
 
