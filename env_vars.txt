@@ -2,6 +2,8 @@
 
 export SECRET_KEY=''
 
+export ALLOWED_HOSTS=['localhost']
+
 export WEBPARTICIPATION_ROOT='http://localhost:8200'
 export UREPORT_ROOT='http://localhost:8100'
 
