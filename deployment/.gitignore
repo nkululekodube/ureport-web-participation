@@ -2,4 +2,3 @@ hosts
 vars/*.yml
 postgres_/vars/main.yml
 celery/vars/main.yml
-web/templates/postactivate_template.j2
