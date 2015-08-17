@@ -98,4 +98,4 @@ If application is hanging, verify that:
 
 If the app hangs on submitting email for verification
 - Verify the email settings,
-- Verify that the flow in rapidPro update
+- Verify that the flow in rapidPro update 
