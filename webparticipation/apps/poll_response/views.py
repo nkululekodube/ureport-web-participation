@@ -1,5 +1,6 @@
 import os
 import requests
+import json
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.utils.translation import ugettext as _
@@ -19,9 +20,9 @@ def poll_response(request, poll_id):
 
 
 def get_flow_uuid_from_poll_id(request, poll_id):
-    # return '480047a3-e7de-488a-92ad-31480f1b9690'  # Sample Flow -  Simple Poll
-    # return '06f8ce86-bd13-46ce-b828-8e2262178cef'  # Poll#19-World Hepatitis Day
-    return '18e85fe7-1aaf-473a-b0a1-505fe38d6717'  # Breastfeeding Poll
+    response = requests.get(os.environ.get('UREPORT_ROOT') + '/api/flow/' + poll_id)
+    flow_uuid = json.loads(response.content)['flow_uuid']
+    return flow_uuid
 
 
 def serve_get_response(request, poll_id, flow_uuid, username, uuid):
@@ -33,10 +34,9 @@ def serve_get_response(request, poll_id, flow_uuid, username, uuid):
 
 
 def is_run_complete(flow_uuid, uuid):
-    return False
     api_path = os.environ.get('RAPIDPRO_API_PATH')
     rapidpro_api_token = os.environ.get('RAPIDPRO_API_TOKEN')
-    runs = requests.get(api_path + '/runs.json?flow_uuid=' + flow_uuid + '&contacts=' + uuid,
+    runs = requests.get(api_path + '/runs.json?flow_uuid=' + flow_uuid + '&contact=' + uuid,
                         headers={'Authorization': 'Token ' + rapidpro_api_token})
     return bool([run['completed'] for run in runs.json()['results'] if run['completed'] is True])
 
