@@ -19,13 +19,13 @@
 - name: Ensure database is created
   sudo_user: postgres
   sudo: yes
-  postgresql_db: db={postgresql_db}} state=present
+  postgresql_db: db={{database_name}} state=present
 
 - name: Ensure user has access to the database
   sudo_user: postgres
-  postgresql_user: db={{postgresql_db}}
-                   name={{postgresql_username}}
-                   password={{postgresql_user_passwd}}
+  postgresql_user: db={{database_name}}
+                   name={{database_user}}
+                   password={{database_password}}
                    priv=ALL
                    state=present
 
