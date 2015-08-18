@@ -7,16 +7,16 @@ A web-based application to facilitate registration for potential ureport users a
 ###Setup:
 
 You will need instances of:
--  [ureport-web-participation](https://github.com/rapidpro/ureport-web-participation) (this app)
+- [ureport-web-participation](https://github.com/rapidpro/ureport-web-participation) (this app)
 - [ureport](https://github.com/rapidpro/ureport)
 - [rapidpro](https://github.com/rapidpro/rapidpro)
 
 Install and get all instances up and running. Instructions for ureport and rapidpro are on their own sites. The following instructions relate to ureport-web-participation only.
 
 It is recommended that you run:
-- rapidpro on `localhost:8000`
-- ureport on `localhost:8100`
 - ureport-web-participation on `localhost:8200`
+- ureport on `localhost:8100`
+- rapidpro on `localhost:8000`
 
 In RapidPro instance, `/temba/settings.py`:
 - `SEND_WEBHOOKS = True`
@@ -36,51 +36,51 @@ In project root:
 
 #### Set up reverse proxy
 
-- install nginx
+- install nginx and start with sudo `sudo nginx`
 - add this line to your hosts file (`/etc/hosts`):
   - `127.0.0.1 ureport.dev`
 - add the following server block to `nginx.conf`:
 ```
-# ureport
+    # ureport
     server {
-        listen       8080;
+        listen       80;
         server_name  ureport.dev;
 
-        location ~* ^/login/?(.+)$ {
-            proxy_set_header Host $host:8080;
-            proxy_pass http://localhost:8200/login/?$1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_read_timeout              60s;
+        proxy_pass_request_headers      on;
+
+        location /login/ {
+            proxy_pass http://localhost:8200/login/;
         }
 
         location ~* ^/poll/(\d+)/respond/$ {
-            proxy_set_header Host $host:8080;
             proxy_pass http://localhost:8200/poll/$1/respond/;
         }
 
         location ~* ^/ureporter/([\d\w-]+)$ {
-            proxy_set_header Host $host:8080;
             proxy_pass http://localhost:8200/ureporter/$1/;
         }
 
-        location ~* ^/(home|register|login|logout|forgot-password|password-reset|ureporter|rapidpro-receptor|send-token|confirm-token)/?$ {
-            proxy_set_header Host $host:8080;
+        location ~* ^/(home|register|logout|forgot-password|password-reset|ureporter|rapidpro-receptor|send-token|confirm-token)/?$ {
             proxy_pass http://localhost:8200/$1/;
         }
 
         location /static {
-            proxy_set_header Host $host:8080;
             proxy_pass http://localhost:8200/static/;
         }
 
         # fallback to ureport.in main site
         location / {
-            proxy_set_header Host $host:8080;
             proxy_pass http://localhost:8100;
         }
     }
 ```
-- and reload nginx: `nginx -s reload`
+- and reload nginx: `sudo nginx -s reload`
 
-You will now have an app on ureport.dev:8080 that serves from both ureport and ureport-web-participation
+You will now have an app on ureport.dev that serves from both ureport and ureport-web-participation
 
 
 ###Technologies:
@@ -98,4 +98,4 @@ If application is hanging, verify that:
 
 If the app hangs on submitting email for verification
 - Verify the email settings,
-- Verify that the flow in rapidPro update 
+- Verify that the flow in rapidPro update
