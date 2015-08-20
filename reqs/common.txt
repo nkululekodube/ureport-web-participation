@@ -1,4 +1,5 @@
 Django==1.8.3
+django-solo==1.1.0
 Fabric==1.6.1
 Jinja2==2.7.3
 MarkupSafe==0.23
