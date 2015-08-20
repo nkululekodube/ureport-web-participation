@@ -1,8 +1,10 @@
 import datetime
+
+from random import randint
+
+from django.conf import settings
 from django.db import models
 from django.utils import timezone
-from random import randint
-from django.conf import settings
 
 
 def generate_token():

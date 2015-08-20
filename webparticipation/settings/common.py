@@ -135,6 +135,7 @@ DJANGO_APPS = (
 THIRD_PARTY_APPS = (
     'compressor',
     'djcelery',
+    'solo',
 )
 
 LOCAL_APPS = (
@@ -147,6 +148,7 @@ LOCAL_APPS = (
     'webparticipation.apps.home',
     'webparticipation.apps.profile_page',
     'webparticipation.apps.ureport_auth',
+    'webparticipation.apps.latest_poll',
 )
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS

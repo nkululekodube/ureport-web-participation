@@ -1,36 +1,56 @@
 import os
 import requests
 import json
+
 from django.shortcuts import render
+from django.http import HttpResponseNotFound
 from django.contrib.auth.decorators import login_required
 from django.utils.translation import ugettext as _
+
 from webparticipation.apps.ureporter.models import Ureporter
 from webparticipation.apps.rapidpro_receptor.views import send_message_to_rapidpro, get_messages_for_user
 
 
 @login_required
 def poll_response(request, poll_id):
-    flow_uuid = get_flow_uuid_from_poll_id(request, poll_id)
     username = str(request.user)
     uuid = Ureporter.objects.get(user__username=username).uuid
+    flow_info = get_flow_info_from_poll_id(request, poll_id)
     if request.method == 'GET':
-        return serve_get_response(request, poll_id, flow_uuid, username, uuid)
+        return serve_get_response(request, poll_id, flow_info, username, uuid)
     if request.method == 'POST':
-        return serve_post_response(request, poll_id, flow_uuid, username)
+        return serve_post_response(request, poll_id, flow_info, username)
 
 
-def get_flow_uuid_from_poll_id(request, poll_id):
+@login_required
+def latest_poll_response(request):
+    response = requests.get(os.environ.get('UREPORT_ROOT') +
+                            '/api/poll/latest/' + os.environ.get('UREPORT_ORG_ID') + '/')
+    if response:
+        latest_poll_id = str(json.loads(response.content)['poll_id'])
+        return poll_response(request, latest_poll_id)
+    else:
+        return render(request, 'poll_response.html', {
+            'messages': [{'msg_text': _("There is no current poll available.")}],
+            'is_complete': True,
+            'no_latest': True,
+            'submission': request.POST.get('send')})
+        HttpResponseNotFound('No latest poll')
+
+
+def get_flow_info_from_poll_id(request, poll_id):
     response = requests.get(os.environ.get('UREPORT_ROOT') + '/api/flow/' + poll_id)
-    flow_uuid = json.loads(response.content)['flow_uuid']
-    return flow_uuid
+    flow_info = json.loads(response.content)
+    return flow_info
 
 
-def serve_get_response(request, poll_id, flow_uuid, username, uuid):
-    if is_run_complete(flow_uuid, uuid):
-        return serve_already_taken_poll_message(request, poll_id)
-    trigger_flow_run(flow_uuid, uuid)
+def serve_get_response(request, poll_id, flow_info, username, uuid):
+    if is_run_complete(flow_info['flow_uuid'], uuid):
+        return serve_already_taken_poll_message(request, poll_id, flow_info)
+    trigger_flow_run(flow_info['flow_uuid'], uuid)
     messages = get_messages_for_user(username)
-    return render(request, 'poll_response.html', {'messages': messages, 'poll_id': poll_id})
+    title = flow_info['title']
+    return render(request, 'poll_response.html', {'messages': messages, 'poll_id': poll_id, 'title': title})
 
 
 def is_run_complete(flow_uuid, uuid):
@@ -41,10 +61,11 @@ def is_run_complete(flow_uuid, uuid):
     return bool([run['completed'] for run in runs.json()['results'] if run['completed'] is True])
 
 
-def serve_already_taken_poll_message(request, poll_id):
+def serve_already_taken_poll_message(request, poll_id, flow_info):
     return render(request, 'poll_response.html', {
         'messages': [{'msg_text': _("You've already taken this poll.")}],
         'poll_id': poll_id,
+        'title': flow_info['title'],
         'is_complete': True,
         'submission': request.POST.get('send')})
 
@@ -57,10 +78,12 @@ def trigger_flow_run(flow_uuid, uuid):
                   headers={'Authorization': 'Token ' + rapidpro_api_token})
 
 
-def serve_post_response(request, poll_id, flow_uuid, username):
+def serve_post_response(request, poll_id, flow_info, username):
     send_message_to_rapidpro({'from': username, 'text': request.POST['send']})
     msgs = get_messages_for_user(username)
+    title = flow_info['title']
     return render(request, 'poll_response.html', {
         'messages': msgs,
         'poll_id': poll_id,
+        'title': title,
         'submission': request.POST.get('send')})

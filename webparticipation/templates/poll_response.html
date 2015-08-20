@@ -1,7 +1,7 @@
 {% include 'header.html' %}
 
 <section>
-  <h1> POLL #{{poll_id}} </h1>
+  <h1>{{title}}</h1>
 
   {% if submission %}
       <p class="wp-bubble wp-to">{{submission}}</p>
@@ -17,7 +17,11 @@
       <button class="wp-send btn btn-default" type="submit">Send</button>
   </form>
   {% else %}
-  <a href="/poll/{{poll_id}}/">View Results</a>
+    {% if no_latest %}
+      <a href="/polls/">View Polls</a>
+    {% else %}
+      <a href="/poll/{{poll_id}}/">View Results</a>
+    {% endif %}
   {% endif %}
 
 </section>
