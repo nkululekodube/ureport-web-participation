@@ -21,10 +21,10 @@ class TestPollResponse(TestCase):
         self.ureporter.delete()
 
     @patch('webparticipation.apps.poll_response.views.serve_get_response')
-    @patch('webparticipation.apps.poll_response.views.get_flow_uuid_from_poll_id')
-    def test_poll_response(self, mock_get_flow_uuid_from_poll_id, mock_serve_get_response):
+    @patch('webparticipation.apps.poll_response.views.get_flow_info_from_poll_id')
+    def test_poll_response(self, mock_get_flow_info_from_poll_id, mock_serve_get_response):
         self.client.login(username=self.username, password=self.password)
-        mock_get_flow_uuid_from_poll_id.return_value = '18e85fe7-1aaf-473a-b0a1-505fe38d6717'
+        mock_get_flow_info_from_poll_id.return_value = '18e85fe7-1aaf-473a-b0a1-505fe38d6717'
         request = self.factory.get('/poll/2/respond/')
         request.user = self.ureporter.user
         poll_response(request, 2)
