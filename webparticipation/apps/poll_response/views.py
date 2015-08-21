@@ -19,7 +19,7 @@ def poll_response(request, poll_id):
     if request.method == 'GET':
         return serve_get_response(request, poll_id, flow_info, username, uuid)
     if request.method == 'POST':
-        return serve_post_response(request, poll_id, flow_info, username)
+        return serve_post_response(request, poll_id, flow_info, username, uuid)
 
 
 @login_required
@@ -45,7 +45,7 @@ def get_flow_info_from_poll_id(request, poll_id):
 
 
 def serve_get_response(request, poll_id, flow_info, username, uuid):
-    if is_run_complete(flow_info['flow_uuid'], uuid):
+    if Ureporter.objects.get(user__username=username).is_latest_poll_taken():
         return serve_already_taken_poll_message(request, poll_id, flow_info)
     trigger_flow_run(flow_info['flow_uuid'], uuid)
     messages = get_messages_for_user(username)
@@ -78,12 +78,22 @@ def trigger_flow_run(flow_uuid, uuid):
                   headers={'Authorization': 'Token ' + rapidpro_api_token})
 
 
-def serve_post_response(request, poll_id, flow_info, username):
+def serve_post_response(request, poll_id, flow_info, username, uuid):
     send_message_to_rapidpro({'from': username, 'text': request.POST['send']})
+    run_is_complete = is_run_complete(flow_info['flow_uuid'], uuid)
+    if run_is_complete:
+        save_last_poll_taken(username, poll_id)
     msgs = get_messages_for_user(username)
     title = flow_info['title']
     return render(request, 'poll_response.html', {
         'messages': msgs,
         'poll_id': poll_id,
         'title': title,
+        'is_complete': run_is_complete,
         'submission': request.POST.get('send')})
+
+
+def save_last_poll_taken(username, poll_id):
+    ureporter = Ureporter.objects.get(user__username=username)
+    ureporter.last_poll_taken = poll_id
+    ureporter.save()

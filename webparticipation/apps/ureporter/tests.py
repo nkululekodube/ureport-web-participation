@@ -1,13 +1,17 @@
-from django.test import TestCase
 from mock import patch
-from models import generate_token, Ureporter
+
 from django.contrib.auth.models import User
-from views import generate_random_urn_tel, get_user, save_new_ureporter
+from django.test import TestCase
 from django.test.client import RequestFactory
+
 from webparticipation.apps.utils.views import undashify_user
+from webparticipation.apps.latest_poll.models import LatestPoll
+
+from models import generate_token, Ureporter
+from views import generate_random_urn_tel, get_user, save_new_ureporter
 
 
-class TestUreporter(TestCase):
+class UreporterTest(TestCase):
 
     def setUp(self):
         self.factory = RequestFactory()
@@ -30,6 +34,15 @@ class TestUreporter(TestCase):
         self.assertNotEqual(ureporter.token, 0)
         ureporter.invalidate_token()
         self.assertEqual(ureporter.token, 0)
+
+    def test_is_latest_poll_taken_for_new_user(self):
+        self.assertFalse(self.ureporter.is_latest_poll_taken())
+
+    def test_is_latest_poll_taken(self):
+        LatestPoll.objects.create(poll_id=10)
+        self.ureporter.last_poll_taken = 10
+        self.ureporter.save()
+        self.assertTrue(self.ureporter.is_latest_poll_taken())
 
     def test_set_uuid(self):
         ureporter = Ureporter.objects.create(uuid='aaaaaaaa-bbbb-cccc-dddd-000000000000',

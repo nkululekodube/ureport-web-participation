@@ -6,6 +6,8 @@ from django.conf import settings
 from django.db import models
 from django.utils import timezone
 
+from webparticipation.apps.latest_poll.models import LatestPoll
+
 
 def generate_token():
     return str(randint(1000, 9999))
@@ -17,6 +19,7 @@ class Ureporter(models.Model):
     uuid = models.CharField(max_length=36)
     urn_tel = models.CharField(max_length=13)
     token = models.IntegerField(default=generate_token)
+    last_poll_taken = models.IntegerField(default=0)
 
     def set_uuid(self, uuid):
         self.uuid = uuid
@@ -28,6 +31,10 @@ class Ureporter(models.Model):
 
     def token_has_expired(self):
         return self.user.date_joined >= timezone.now() - datetime.timedelta(days=settings.TOKEN_EXPIRY_DAYS)
+
+    def is_latest_poll_taken(self):
+        lastest_poll_id = LatestPoll.get_solo().poll_id
+        return self.last_poll_taken == lastest_poll_id
 
     def save(self, **kwargs):
         self.user.save()
