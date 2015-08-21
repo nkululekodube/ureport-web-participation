@@ -9,4 +9,4 @@
   service: name=nginx state=restarted enabled=yes
 
 - name: reload application
-  shell: "sudo service supervisor reload"
+  shell: "sudo service supervisor force-reload"
