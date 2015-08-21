@@ -6,7 +6,7 @@ from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.mail import EmailMessage
 from django.utils import timezone
-
+from django.conf import settings
 from webparticipation.apps.ureport_auth.models import PasswordReset
 from webparticipation.apps.ureporter.models import Ureporter
 
@@ -47,4 +47,4 @@ def send_forgot_password_email(email):
 
 
 def reset_password_url(path):
-    return '%s%s' % (os.environ.get('WEBPARTICIPATION_ROOT'), path)
+    return '%s%s' % (settings.WEBPARTICIPATION_ROOT, path)

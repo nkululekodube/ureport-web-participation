@@ -12,7 +12,7 @@ RAPIDPRO_DISPATCHER = dispatch.Signal()
 
 APPEND_SLASH = True
 
-WEBPARTICIPATION_ROOT= os.environ.setdefault("WEBPARTICIPATION_ROOT", "127.0.0.1")
+WEBPARTICIPATION_ROOT = os.environ.setdefault("WEBPARTICIPATION_ROOT", "127.0.0.1")
 
 ALLOWED_HOSTS = os.environ.setdefault("ALLOWED_HOSTS", "127.0.0.1")
 
