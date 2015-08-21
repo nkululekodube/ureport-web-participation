@@ -12,7 +12,7 @@ RAPIDPRO_DISPATCHER = dispatch.Signal()
 
 APPEND_SLASH = True
 
-ALLOWED_HOSTS = os.environ.setdefault("ALLOWED_HOSTS", "localhost")
+ALLOWED_HOSTS = os.environ.setdefault("ALLOWED_HOSTS", "127.0.0.1")
 
 APP_HOST = ""
 
