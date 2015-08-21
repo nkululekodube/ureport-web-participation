@@ -1,8 +1,11 @@
+import json
+
 from django.test import TestCase
 from django.test.client import RequestFactory
 from django.contrib.auth.models import User
+
 from webparticipation.apps.ureporter.models import Ureporter
-import json
+
 from views import confirm_token
 
 
