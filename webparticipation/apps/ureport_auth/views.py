@@ -6,7 +6,7 @@ from django.contrib.auth import authenticate, login
 from django.template import RequestContext
 from django.utils import timezone
 from webparticipation.apps.ureport_auth.models import PasswordReset
-from webparticipation.apps.ureport_auth.tasks import send_forgot_password_email
+from . import tasks
 from webparticipation.apps.ureporter.models import Ureporter
 from webparticipation.apps.ureporter.views import is_valid_password
 
@@ -46,7 +46,7 @@ def forgot_password(request):
         try:
             user = User.objects.get(email=email)
             if user:
-                send_forgot_password_email.delay(email)
+                tasks.send_forgot_password_email.delay(email)
                 return render(request, 'forgot_password.html', {
                     'success_message': 'We have sent an email to ' + email + ' with recovery instructions. ' +
                                        'Please check your email.',
