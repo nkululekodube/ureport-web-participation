@@ -1,14 +1,16 @@
-from django.contrib.auth.models import User
-from django.test import Client
-from django.test import TestCase, RequestFactory
 from mock import patch
+
+from django.test import TestCase, RequestFactory, Client
+from django.contrib.auth.models import User
+from django.contrib.messages.storage.fallback import FallbackStorage
+
 from webparticipation.apps.ureport_auth.tasks import send_forgot_password_email
 from webparticipation.apps.ureport_auth.views import login_user
-from django.contrib.messages.storage.fallback import FallbackStorage
 from webparticipation.apps.ureporter.models import Ureporter
 
 
 class TestUserLogin(TestCase):
+
     def setUp(self):
         self.client = Client()
         self.factory = RequestFactory()
@@ -27,11 +29,13 @@ class TestUserLogin(TestCase):
         user = User.objects.create_user(username='jacob',
                                         email='john@doe.com', password='top_secret')
         user.save()
+        Ureporter.objects.create(user=user)
         request = self.factory.post('/login', {'email': user.email, 'password': 'top_secret'})
         session = self.client.session
-        setattr(request, 'session', session)
+        request.session = session
         messages = FallbackStorage(request)
-        setattr(request, '_messages', messages)
+        request._messages = messages
+        request.user = user.username
         response = login_user(request)
         self.assertEqual(response.status_code, 302)
 

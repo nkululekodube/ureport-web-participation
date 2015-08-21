@@ -5,12 +5,15 @@ from django.shortcuts import render_to_response, render
 from django.contrib.auth import authenticate, login
 from django.template import RequestContext
 from django.utils import timezone
+
 from webparticipation.apps.ureport_auth.models import PasswordReset
 from . import tasks
 from webparticipation.apps.ureporter.models import Ureporter
 from webparticipation.apps.ureporter.views import is_valid_password
+from webparticipation.apps.latest_poll.decorators import show_untaken_latest_poll_message
 
 
+@show_untaken_latest_poll_message
 def login_user(request):
     backend = 'django.contrib.auth.backends.ModelBackend'
 
@@ -33,7 +36,11 @@ def login_user(request):
                 authenticated_user.backend = backend
                 if user.is_active:
                     login(request, authenticated_user)
-                    return HttpResponseRedirect(redirect_to)
+                    has_taken_latest_poll = Ureporter.objects.get(user__username=request.user).is_latest_poll_taken()
+                    if has_taken_latest_poll:
+                        return HttpResponseRedirect(redirect_to)
+                    else:
+                        return HttpResponseRedirect(redirect_to + '?lp=true')
             else:
                 messages.error(request, 'Password is incorrect')
 

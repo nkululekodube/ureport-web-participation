@@ -1,11 +1,15 @@
+import os
+import requests
+
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
+
 from webparticipation.apps.ureporter.models import Ureporter
-import requests
-import os
+from webparticipation.apps.latest_poll.decorators import show_untaken_latest_poll_message
 
 
 @login_required
+@show_untaken_latest_poll_message
 def view_profile(request, ureporter_uuid):
     ureporter = Ureporter.objects.get(user__username=request.user)
     if ureporter.uuid == ureporter_uuid:

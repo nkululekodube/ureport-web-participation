@@ -14,3 +14,10 @@
 
   <div class="container">
     <div class="content">
+
+    {% if request.session.lp %}
+      <div class="alert alert-info">
+        There is a new poll! <a href="/poll/latest/">Take it now!</a>
+      </div>
+    {% endif %}
+

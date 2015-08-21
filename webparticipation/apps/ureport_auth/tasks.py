@@ -1,11 +1,14 @@
+import os
+
 from celery import task
+
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.mail import EmailMessage
 from django.utils import timezone
-from django.conf import settings
+
 from webparticipation.apps.ureport_auth.models import PasswordReset
 from webparticipation.apps.ureporter.models import Ureporter
-import os
 
 
 @task()
