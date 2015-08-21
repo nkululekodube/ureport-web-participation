@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.utils.translation import ugettext as _
+
 from webparticipation.apps.ureporter.views import get_user, activate_user
 from webparticipation.apps.rapidpro_receptor.views import send_message_to_rapidpro, has_password_keyword, \
     get_messages_for_user

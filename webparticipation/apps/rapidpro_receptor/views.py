@@ -1,13 +1,14 @@
 import os
 import re
 import requests
+
 from time import sleep
+
+from django.conf import settings
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
-from django.conf import settings
-from collections import OrderedDict
 
-message_bus = settings.MESSAGE_BUS
+from webparticipation.apps.message_bus.models import MessageBus
 
 
 @csrf_exempt
@@ -34,36 +35,40 @@ def broadcast_rapidpro_response(request_params):
 
 
 def get_messages_for_user(username):
-    global message_bus
-    while not len(message_bus):
+    while not MessageBus.objects.filter(msg_to=username).exists():
         sleep(.5)
     return filter_messages(username)
 
 
 def filter_messages(username):
-    global message_bus
-    filtered_messages = dedupe_messages([message for message in message_bus if message['msg_to'] == username])
-    message_bus = [message for message in message_bus if message['msg_to'] != username]
+    filtered_messages = MessageBus.objects.filter(msg_to=username)
+    len(filtered_messages)
+    MessageBus.objects.filter(msg_to=username).delete()
     return filtered_messages
 
 
-def dedupe_messages(msgs):
-    return OrderedDict((frozenset(msg.items()), msg) for msg in msgs).values()
-
-
 def append_rapidpro_message_to_message_bus(sender, **kwargs):
-    global message_bus
-    message_bus.append({
-        'msg_id': kwargs['param_id'],
-        'msg_channel': kwargs['param_channel'],
-        'msg_from': kwargs['param_from'],
-        'msg_to': kwargs['param_to'],
-        'msg_text': kwargs['param_text']
-    })
+    if not is_duplicate_message(kwargs):
+        MessageBus.objects.create(
+            msg_id=kwargs['param_id'],
+            msg_channel=kwargs['param_channel'],
+            msg_to=kwargs['param_to'],
+            msg_from=kwargs['param_from'],
+            msg_text=kwargs['param_text'])
+
+
+def is_duplicate_message(kwargs):
+    return MessageBus.objects.filter(
+        msg_id=kwargs['param_id'],
+        msg_channel=kwargs['param_channel'],
+        msg_to=kwargs['param_to'],
+        msg_from=kwargs['param_from'],
+        msg_text=kwargs['param_text']
+    ).exists()
 
 
 def has_password_keyword(msgs, username):
-    return bool([msg for msg in msgs if re.match('.+[P|p]assword.+', msg['msg_text']) and msg['msg_to'] == username])
+    return bool([msg for msg in msgs if re.search('^.+[P|p]assword.+$', msg.msg_text)])
 
 
 settings.RAPIDPRO_DISPATCHER.connect(append_rapidpro_message_to_message_bus)

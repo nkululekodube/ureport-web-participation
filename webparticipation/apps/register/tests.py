@@ -1,10 +1,14 @@
+from mock import patch
+
 from django.test import TestCase
 from django.test.client import RequestFactory
 from django.contrib.auth.models import User
-from mock import patch
+
 from webparticipation.apps.ureporter.models import Ureporter
-from views import register, serve_get_response, has_password_keyword
 from webparticipation.apps.utils.views import undashify_user
+from webparticipation.apps.message_bus.models import MessageBus
+
+from views import register, serve_get_response, has_password_keyword
 
 
 class TestRegistration(TestCase):
@@ -19,6 +23,7 @@ class TestRegistration(TestCase):
 
     def tearDown(self):
         self.ureporter.delete()
+        MessageBus.objects.all().delete()
 
     @patch('webparticipation.apps.register.views.get_user')
     @patch('webparticipation.apps.register.views.serve_get_response')
@@ -46,7 +51,12 @@ class TestRegistration(TestCase):
         mock_get_already_registered_message.assert_called_once_with(request)
 
     def test_has_password_keyword(self):
-        messages = [{'msg_text': 'lorem ipsum habeus borat', 'msg_to': self.username}]
+        MessageBus.objects.create(msg_id=123, msg_channel=1, msg_to=self.username, msg_from='somechannel',
+                                  msg_text='no pw keyword here')
+        messages = MessageBus.objects.filter(msg_to=self.username)
         self.assertEqual(has_password_keyword(messages, self.username), False)
-        messages = [{'msg_text': 'A sentence containing password keyword', 'msg_to': self.username}]
+
+        MessageBus.objects.create(msg_id=123, msg_channel=1, msg_to=self.username, msg_from='somechannel',
+                                  msg_text='A sentence containing password keyword')
+        messages = MessageBus.objects.filter(msg_to=self.username)
         self.assertEqual(has_password_keyword(messages, self.username), True)

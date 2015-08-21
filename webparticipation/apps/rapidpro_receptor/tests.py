@@ -9,7 +9,7 @@ class TestRapidproReceptor(TestCase):
             'to': 'someone',
             'from': 'someuser',
             'channel': 1,
-            'id': 'someid',
+            'id': 123,
             'text': 'sometext'
         }
 
