@@ -1,0 +1,12 @@
+---
+
+- name: start application
+  supervisorctl: name={{application}} state=restarted
+  tags: 
+    - deploy
+
+- name: start nginx
+  service: name=nginx state=restarted enabled=yes
+
+- name: reload application
+  shell: "sudo service supervisor force-reload"
