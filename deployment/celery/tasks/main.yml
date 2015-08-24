@@ -35,6 +35,6 @@
   tags: celery
 
 - name: Re-read the Supervisor config files
-  remote_user: root
+  remote_user: ubuntu
   command: supervisorctl reread
   notify: restart webparticipation-celery
