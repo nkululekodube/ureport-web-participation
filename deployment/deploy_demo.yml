@@ -32,6 +32,6 @@
 
   roles:
     - postgres_
-    - web
+    - demo
     - celery
 
