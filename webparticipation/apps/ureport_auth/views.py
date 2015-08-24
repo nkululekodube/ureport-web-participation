@@ -64,17 +64,17 @@ def forgot_password(request):
 
 
 def password_reset(request, reset_token):
-    password_reset = PasswordReset.objects.get(token=reset_token)
-    user = User.objects.get(username=password_reset.user.username)
+    password_reset = PasswordReset.objects.filter(token=reset_token).first()
 
     if request.method == 'GET':
-        if not password_reset.expiry > timezone.now():
+        if not password_reset or not password_reset.expiry > timezone.now():
             messages.error(request, 'Sorry that recovery link is expired. Please Try again.')
             return HttpResponseRedirect('/forgot-password/')
 
     if request.method == 'POST':
         password = request.POST.get('password')
         confirm_password = request.POST.get('confirm_password')
+        user = User.objects.get(username=password_reset.user.username)
 
         if password == confirm_password:
             if is_valid_password(password):
