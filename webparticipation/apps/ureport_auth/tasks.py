@@ -8,7 +8,6 @@ from django.core.mail import EmailMessage
 from django.utils import timezone
 from django.conf import settings
 from webparticipation.apps.ureport_auth.models import PasswordReset
-from webparticipation.apps.ureporter.models import Ureporter
 
 
 @task()
@@ -20,14 +19,11 @@ def send_forgot_password_email(email):
             try:
                 password_reset = PasswordReset.objects.get(user_id=user.id)
                 if password_reset:
-                    password_reset.expiry = expiry
-                    password_reset.save()
-
+                    password_reset.set_expiry(expiry)
+                    password_reset.generate_password_reset_token()
             except PasswordReset.DoesNotExist:
-                    password_reset = PasswordReset.build(expiry, user)
-                    password_reset.save()
-            uuid = Ureporter.objects.get(user_id=password_reset.user_id).uuid
-            link = reset_password_url('/password-reset/%s' % uuid)
+                    password_reset = PasswordReset.objects.create(expiry=expiry, user=user)
+            link = reset_password_url('/password-reset/%s' % password_reset.token)
             subject = 'Hi from ureport.in'
             html_text = "<p>" + subject + "</p>" \
                                           "<p>You recently requested to reset your ureport account password.</p>" \

@@ -63,14 +63,13 @@ def forgot_password(request):
     return render_to_response('forgot_password.html', RequestContext(request))
 
 
-def password_reset(request, user_uuid):
-    ureport_user = Ureporter.objects.get(uuid=user_uuid)
-    user = User.objects.get(id=ureport_user.user_id)
-    reset = PasswordReset.objects.get(user_id=user.id)
+def password_reset(request, reset_token):
+    password_reset = PasswordReset.objects.get(token=reset_token)
+    user = User.objects.get(username=password_reset.user.username)
+
     if request.method == 'GET':
-        if not reset.expiry > timezone.now():
-            messages.error(request, 'Sorry that recovery '
-                                    'link is expired. Please Try again.')
+        if not password_reset.expiry > timezone.now():
+            messages.error(request, 'Sorry that recovery link is expired. Please Try again.')
             return HttpResponseRedirect('/forgot-password/')
 
     if request.method == 'POST':
@@ -81,8 +80,7 @@ def password_reset(request, user_uuid):
             if is_valid_password(password):
                 user.set_password(password)
                 user.save()
-                messages.info(request, 'Password successfully '
-                                       'changed for ' + ureport_user.user.email)
+                messages.info(request, 'Password successfully changed for ' + user.email)
                 return HttpResponseRedirect('/login/')
             else:
                 messages.error(request, 'Password should have a minimum of '

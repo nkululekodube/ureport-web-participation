@@ -11,7 +11,7 @@ CELERY_RESULT_BACKEND = "redis"
 CELERYBEAT_SCHEDULE = {
     'get_latest_poll': {
         'task': 'latest_poll.retrieve_latest_poll',
-        'schedule': timedelta(seconds=10),
+        'schedule': timedelta(minutes=10),
         'relative': True,
     },
 }
