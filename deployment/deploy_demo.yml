@@ -28,7 +28,7 @@
     - nginx_media_dir: '{{nginx_media_dir}}'
 
   vars_files:
-    - ./vars/main.yml
+    - ./demo_vars/main.yml
 
   roles:
     - postgres_
