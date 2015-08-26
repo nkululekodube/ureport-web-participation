@@ -32,7 +32,7 @@
     - ./vars/{{instance}}.yml
 
   roles:
-    - postgres_
+    - postgres
     - web 
     - celery
 
