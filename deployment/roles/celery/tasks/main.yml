@@ -1,6 +1,6 @@
 ---
 - name: Include default step variables
-  include_vars: ../../vars/main.yml
+  include_vars: ../../../vars/{{ instance }}.yml
 
 - name: Ensure that redis server is installed
   sudo_user: root

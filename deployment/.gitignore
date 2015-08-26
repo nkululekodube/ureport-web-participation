@@ -1,2 +1,3 @@
+vault_key
 postgres_/vars/main.yml
 celery/vars/main.yml

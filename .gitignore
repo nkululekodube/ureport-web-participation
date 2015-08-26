@@ -3,9 +3,8 @@
 *.pyc
 *.log
 *.pem
+.coverage
 env
-*.pyc
 celerybeat-schedule.db
 env_vars
-.coverage
 common.py
