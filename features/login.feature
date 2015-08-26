@@ -6,5 +6,5 @@ Feature: A registered user should be able to login to webpro
 
     Given I am a regsterd user
     When I log in to webpro
-    Then I see the home page
-     And I also see link to logout
+    Then I see the link to logout
+    And I logout

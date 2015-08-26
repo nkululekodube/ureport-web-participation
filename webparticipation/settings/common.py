@@ -8,6 +8,8 @@ import os
 
 MESSAGE_BUS = []
 
+TEST_RUNNER = 'django_behave.runner.DjangoBehaveTestSuiteRunner'
+
 RAPIDPRO_DISPATCHER = dispatch.Signal()
 
 APPEND_SLASH = True
@@ -156,7 +158,7 @@ LOCAL_APPS = (
     'webparticipation.apps.message_bus',
 )
 
-INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS + ('behave_django',)
+INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 LOGGING = {
     'version': 1,
