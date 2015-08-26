@@ -1,7 +1,7 @@
 ---
 
-- name: Provisioning application 
-  hosts: staging
+- name: Provisioning application
+  hosts: '{{instance}}'
   gather_facts: no
   sudo: yes
   sudo_user: ubuntu
@@ -28,11 +28,11 @@
     - nginx_media_dir: '{{nginx_media_dir}}'
 
   vars_files:
-    - ./vars/main.yml
+    - ./vars/common.yml
+    - ./vars/{{instance}}.yml
 
   roles:
     - postgres_
-    - web
+    - web 
     - celery
-
 

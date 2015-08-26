@@ -1,5 +1,5 @@
 ---
-- name: include default step variables
+- name: Include default step variables
   include_vars: ./vars.yml
 
 - name: Install PostgreSQL

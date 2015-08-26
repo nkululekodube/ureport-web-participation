@@ -1,4 +1,2 @@
-hosts
-vars/*.yml
 postgres_/vars/main.yml
 celery/vars/main.yml
