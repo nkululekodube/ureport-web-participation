@@ -28,6 +28,7 @@
     - nginx_media_dir: '{{nginx_media_dir}}'
 
   vars_files:
+    - ./vars/common.yml
     - ./vars/{{instance}}.yml
 
   roles:
