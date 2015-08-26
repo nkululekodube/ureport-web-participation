@@ -1,6 +1,6 @@
 ---
-- name: include default step variables
-  include_vars: ../../demo_vars/main.yml
+- name: Include default step variables
+  include_vars: ../../vars/{{ instance }}.yml
 
 - name: Install openssl and libssl
   sudo_user: root
