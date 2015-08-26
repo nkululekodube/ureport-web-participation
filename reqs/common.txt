@@ -31,7 +31,7 @@ six==1.9.0
 sqlparse==0.1.15
 wsgiref==0.1.2
 dispatcher==1.0
-behave==1.2.5
+behave-django==0.2.3
 Factory==1.2
 redis==2.10.3
 selenium==2.46.0

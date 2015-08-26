@@ -20,7 +20,7 @@ APP_HOST = ""
 
 SERVER_NAME = ""
 
-SECRET_KEY = os.environ.get('SECRET_KEY')
+SECRET_KEY = os.environ.setdefault('SECRET_KEY', 'secret key')
 
 DJANGO_ROOT = dirname(dirname(abspath(__file__)))
 
@@ -156,7 +156,7 @@ LOCAL_APPS = (
     'webparticipation.apps.message_bus',
 )
 
-INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
+INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS + ('behave_django',)
 
 LOGGING = {
     'version': 1,
