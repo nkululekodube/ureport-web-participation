@@ -20,7 +20,6 @@ CELERY_EAGER_PROPAGATES_EXCEPTIONS = True
 
 INSTALLED_APPS += (
     'debug_toolbar',
-    'behave_django',
 )
 
 INTERNAL_IPS = ('127.0.0.1',)

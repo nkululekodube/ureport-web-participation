@@ -142,6 +142,7 @@ THIRD_PARTY_APPS = (
     'compressor',
     'djcelery',
     'solo',
+    'behave_django',
 )
 
 LOCAL_APPS = (
