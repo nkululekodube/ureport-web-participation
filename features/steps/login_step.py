@@ -11,7 +11,7 @@ password = 'pass'
 @given(u'I am a regsterd user')
 def step_impl(context):
     User.objects.create(username=username, email=email, password=password)
-    context.browser.visit("http://localhost:8200/login/")
+    context.browser.visit('http://localhost:8200/login/')
     time.sleep(1)
 
 

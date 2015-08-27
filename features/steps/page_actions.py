@@ -2,7 +2,7 @@ import os
 import time
 
 def go_to_web_pro(context):
-    context.browser.visit(os.environ.get('WEBPARTICIPATION_ROOT') + '/')
+    context.browser.visit('http://localhost:8200/')
     time.sleep(1)
 
 def hide_tool_bar(context):
@@ -11,7 +11,7 @@ def hide_tool_bar(context):
 
 
 def go_to_login(context):
-    context.browser.visit(os.environ.get('WEBPARTICIPATION_ROOT') + '/login/')
+    context.browser.visit('http://localhost:8200/login/')
 
 def get_become_reporter_btn(context):
     return context.browser.find_link_by_href('/register/').first()

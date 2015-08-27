@@ -6,7 +6,6 @@ import time
 def step_impl(context):
     page_actions.go_to_web_pro(context)
 
-
 @when(u'I browse to webpro')
 def step_impl(context):
     pass
