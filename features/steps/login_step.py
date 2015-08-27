@@ -13,7 +13,6 @@ def step_impl(context):
     User.objects.create(username=username, email=email, password=password)
     context.browser.visit(os.environ.get('WEBPARTICIPATION_ROOT') + '/login/')
     time.sleep(1)
-    context.browser.find_by_id('djHideToolBarButton').click()
 
 
 @when(u'I log in to webpro')
