@@ -4,11 +4,12 @@ import time
 
 @given(u'I am a visitor to webpro')
 def step_impl(context):
-    page_actions.go_to_web_pro(context)
+    pass
 
 @when(u'I browse to webpro')
 def step_impl(context):
-    pass
+    context.browser.visit('http://localhost:8200/')
+    time.sleep(1)
 
 @then(u'I shall see a link to register')
 def step_impl(context):
