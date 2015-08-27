@@ -8,8 +8,6 @@ import os
 
 MESSAGE_BUS = []
 
-TEST_RUNNER = 'django_behave.runner.DjangoBehaveTestSuiteRunner'
-
 RAPIDPRO_DISPATCHER = dispatch.Signal()
 
 APPEND_SLASH = True
