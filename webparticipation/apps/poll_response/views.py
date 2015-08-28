@@ -39,7 +39,7 @@ def latest_poll_response(request):
 
 
 def get_flow_info_from_poll_id(request, poll_id):
-    response = requests.get(os.environ.get('UREPORT_ROOT') + '/api/flow/' + poll_id)
+    response = requests.get(os.environ.get('UREPORT_ROOT') + '/api/v1/polls/' + poll_id + '/?format=json')
     flow_info = json.loads(response.content)
     return flow_info
 
@@ -51,14 +51,6 @@ def serve_get_response(request, poll_id, flow_info, username, uuid):
     messages = get_messages_for_user(username)
     title = flow_info['title']
     return render(request, 'poll_response.html', {'messages': messages, 'poll_id': poll_id, 'title': title})
-
-
-def is_run_complete(flow_uuid, uuid):
-    api_path = os.environ.get('RAPIDPRO_API_PATH')
-    rapidpro_api_token = os.environ.get('RAPIDPRO_API_TOKEN')
-    runs = requests.get(api_path + '/runs.json?flow_uuid=' + flow_uuid + '&contact=' + uuid,
-                        headers={'Authorization': 'Token ' + rapidpro_api_token})
-    return bool([run['completed'] for run in runs.json()['results'] if run['completed'] is True])
 
 
 def serve_already_taken_poll_message(request, poll_id, flow_info):
@@ -91,6 +83,14 @@ def serve_post_response(request, poll_id, flow_info, username, uuid):
         'title': title,
         'is_complete': run_is_complete,
         'submission': request.POST.get('send')})
+
+
+def is_run_complete(flow_uuid, uuid):
+    api_path = os.environ.get('RAPIDPRO_API_PATH')
+    rapidpro_api_token = os.environ.get('RAPIDPRO_API_TOKEN')
+    runs = requests.get(api_path + '/runs.json?flow_uuid=' + flow_uuid + '&contact=' + uuid,
+                        headers={'Authorization': 'Token ' + rapidpro_api_token})
+    return bool([run['completed'] for run in runs.json()['results'] if run['completed'] is True])
 
 
 def save_last_poll_taken(username, poll_id):
