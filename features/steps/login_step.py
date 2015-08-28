@@ -11,7 +11,7 @@ password = 'pass'
 @given(u'I am a regsterd user')
 def step_impl(context):
     User.objects.create(username=username, email=email, password=password)
-    context.browser.visit('http://localhost:8200/login/')
+    context.browser.visit('http://localhost:4000/login/')
     time.sleep(1)
 
 
@@ -25,7 +25,7 @@ def step_impl(context):
 
 @then(u'I see the link to logout')
 def step_impl(context):
-    time.sleep(1)
+    time.sleep(2)
     assert context.browser.find_link_by_href('/logout/'), 'Link not found'
 
 @then(u'I logout')

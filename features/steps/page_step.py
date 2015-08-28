@@ -8,7 +8,7 @@ def step_impl(context):
 
 @when(u'I browse to webpro')
 def step_impl(context):
-    context.browser.visit('http://localhost:8200/')
+    context.browser.visit('http://localhost:4000/')
     time.sleep(1)
 
 @then(u'I shall see a link to register')
