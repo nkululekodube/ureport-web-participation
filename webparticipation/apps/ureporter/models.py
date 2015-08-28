@@ -1,3 +1,5 @@
+import os
+import requests
 import datetime
 
 from random import randint
@@ -41,6 +43,9 @@ class Ureporter(models.Model):
         super(Ureporter, self).save()
 
     def delete(self):
+        requests.delete(os.environ.get('RAPIDPRO_API_PATH') + '/contacts.json?uuid=' + self.uuid,
+                        data={'uuid': self.uuid},
+                        headers={'Authorization': 'Token ' + os.environ.get('RAPIDPRO_API_TOKEN')})
         self.user.delete()
         super(Ureporter, self).delete()
 

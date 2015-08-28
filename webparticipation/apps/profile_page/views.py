@@ -1,6 +1,3 @@
-import os
-import requests
-
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 
@@ -32,15 +29,5 @@ def deactivate_account(request, ureporter_uuid):
             return render(request, '404.html', status=404)
 
     if request.method == 'POST':
-        delete_user_from_rapidpro(request)
         Ureporter.objects.get(user__username=request.user).delete()
         return render(request, 'deactivate.html', {'deleted': True})
-
-
-def delete_user_from_rapidpro(request):
-    api_path = os.environ.get('RAPIDPRO_API_PATH')
-    rapidpro_api_token = os.environ.get('RAPIDPRO_API_TOKEN')
-    ureporter = Ureporter.objects.get(user__username=request.user)
-    requests.delete(api_path + '/contacts.json?uuid=' + ureporter.uuid,
-                    data={'uuid': ureporter.uuid},
-                    headers={'Authorization': 'Token ' + rapidpro_api_token})
