@@ -20,7 +20,9 @@ class TestSendToken(TestCase):
         self.ureporter.user.email = 'an@existing.user'
         self.ureporter.save()
 
-    def tearDown(self):
+    @patch('requests.delete')
+    def tearDown(self, mock_requests_delete):
+        mock_requests_delete.side_effect = None
         self.ureporter.delete()
 
     @patch('webparticipation.apps.send_token.tasks.send_verification_token.delay')
@@ -38,17 +40,22 @@ class TestSendToken(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(json.loads(response.content)['send_token'], 'send')
 
+    @patch('requests.delete')
     @patch('webparticipation.apps.send_token.tasks.send_verification_token.delay')
-    def test_send_token_to_user_that_has_not_finished_registration(self, mock_send_verification_token):
+    def test_send_token_to_user_that_has_not_finished_registration(
+            self, mock_send_verification_token, mock_requests_delete):
         mock_send_verification_token.return_value = None
+        mock_requests_delete.side_effect = None
         request = self.factory.post('/send-token', {'phone': self.username, 'text': 'an@existing.user'})
         response = send_token(request)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(json.loads(response.content)['send_token'], 'send')
 
+    @patch('requests.delete')
     @patch('webparticipation.apps.send_token.tasks.send_verification_token.delay')
-    def test_do_not_send_token_to_existing_user(self, mock_send_verification_token):
+    def test_do_not_send_token_to_existing_user(self, mock_send_verification_token, mock_requests_delete):
         mock_send_verification_token.return_value = None
+        mock_requests_delete.side_effect = None
         self.ureporter.token = 0
         self.ureporter.save()
         request = self.factory.post('/send-token', {'phone': self.username, 'text': 'an@existing.user'})

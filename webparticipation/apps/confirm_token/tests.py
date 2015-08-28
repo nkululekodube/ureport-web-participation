@@ -1,5 +1,7 @@
 import json
 
+from mock import patch
+
 from django.test import TestCase
 from django.test.client import RequestFactory
 from django.contrib.auth.models import User
@@ -20,7 +22,9 @@ class TestConfirmToken(TestCase):
         self.ureporter.token = 1234
         self.ureporter.save()
 
-    def tearDown(self):
+    @patch('requests.delete')
+    def tearDown(self, mock_requests_delete):
+        mock_requests_delete.side_effect = None
         self.ureporter.delete()
 
     def test_confirm_token_with_good_code(self):

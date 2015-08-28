@@ -17,7 +17,9 @@ class TestPollResponse(TestCase):
             uuid=self.uuid, user=User.objects.create_user(username=self.username, password=self.password))
         self.ureporter.save()
 
-    def tearDown(self):
+    @patch('requests.delete')
+    def tearDown(self, mock_requests_delete):
+        mock_requests_delete.side_effect = None
         self.ureporter.delete()
 
     @patch('webparticipation.apps.poll_response.views.serve_get_response')

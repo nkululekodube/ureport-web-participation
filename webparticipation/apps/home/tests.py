@@ -1,3 +1,5 @@
+from mock import patch
+
 from django.test import TestCase
 from django.test.client import RequestFactory
 from django.contrib.auth.models import User
@@ -16,7 +18,9 @@ class TestHome(TestCase):
         self.ureporter = Ureporter.objects.create(uuid=self.uuid, user=User.objects.create_user(username=self.username))
         self.ureporter.save()
 
-    def tearDown(self):
+    @patch('requests.delete')
+    def tearDown(self, mock_requests_delete):
+        mock_requests_delete.side_effect = None
         self.ureporter.delete()
 
     def test_home(self):

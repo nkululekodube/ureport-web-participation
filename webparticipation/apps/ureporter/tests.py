@@ -20,7 +20,9 @@ class UreporterTest(TestCase):
         self.ureporter = Ureporter.objects.create(uuid=self.uuid, user=User.objects.create_user(username='registerMe'))
         self.ureporter.save()
 
-    def tearDown(self):
+    @patch('requests.delete')
+    def tearDown(self, mock_requests_delete):
+        mock_requests_delete.side_effect = None
         self.ureporter.delete()
 
     def test_generate_token(self):
@@ -64,7 +66,9 @@ class UreporterTest(TestCase):
         self.assertEqual(User.objects.filter(email='save@this.email').exists(), True)
         self.assertEqual(Ureporter.objects.filter(token=5852).exists(), True)
 
-    def test_delete_user(self):
+    @patch('requests.delete')
+    def test_delete_user(self, mock_requests_delete):
+        mock_requests_delete.side_effect = None
         ureporter = Ureporter.objects.create(uuid='aaaaaaaa-bbbb-cccc-dddd-zzzzzzzzzzzz',
                                              user=User.objects.create_user('deleteMe'))
         self.assertEqual(User.objects.filter(username='deleteMe').exists(), True)
