@@ -5,8 +5,8 @@ Feature: A visitor should be able to browses webpro
     i want to browses webpro
     so that i can register or login
 
-    Scenario: A visitor browses to webpro
-    Given I am a visitor to webpro
-    When I browse to webpro
+    Scenario: A visitor browses to web-pro
+    Given I am a visitor to web-pro
+    When I browse to web-pro
     Then I shall see a link to register
-    And I shall also see a link to login
+    And I shall see a link to login

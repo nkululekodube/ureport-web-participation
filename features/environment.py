@@ -9,7 +9,6 @@ def before_all(context):
     context.browser = Browser('chrome')
     time.sleep(5)
 
-
 def after_all(context):
     context.browser.quit()
     context.browser = None
