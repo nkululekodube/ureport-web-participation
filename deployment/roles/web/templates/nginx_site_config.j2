@@ -1,5 +1,9 @@
 upstream django {
-    server 127.0.0.1:8200;
+   server 127.0.0.1:8200;
+}
+
+upstream ureport {
+   server 127.0.0.1:8200;
 }
 
 server {
@@ -22,3 +26,41 @@ server {
         uwsgi_param X-Forwarded-Proto $http_x_forwarded_proto;
     }
 }
+
+server {
+        listen 80;
+        server_name  172.31.5.2;
+
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_read_timeout              60s;
+        proxy_pass_request_headers      on;
+
+       location /login/ {
+           proxy_pass webparticipation/login/;
+       }
+
+        location ~* ^/poll/(\d+)/respond/$ {
+           proxy_pass webparticipation/poll/$1/respond/;
+       }
+
+        location ~* ^/ureporter/([\d\w-]+)$ {
+           proxy_pass webparticipation/ureporter/$1/;
+        }
+
+        location ~* ^/(home|register|logout|forgot-password|password-reset|ureporter|rapidpro-receptor|send-token|confirm-token)/?$ {
+            proxy_pass webparticipation/$1/;
+        }
+
+        location /static {
+           alias /home/ubuntu/webparticipation/ureport-web-participation/webparticipation/static;
+           #proxy_pass 127.0.0l.1:8200/static/;
+       }
+
+        # fallback to ureport.in main site
+
+        location /ureport {
+          uwsgi_pass 127.0.0.1:8100;
+       }
+  }
