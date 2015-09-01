@@ -1,8 +1,4 @@
 ---
 
-- name: Pull latest ureport application code from github
-  sudo_user: root
-  git: repo={{ureport_git_repo}} dest={{ureport_repo}} update=yes accept_hostkey=yes
-  notify: reload ureport
-  tags: 
-    - git 
+- name: reload ureport application
+  shell: "sudo supervisorctl reload ureport"

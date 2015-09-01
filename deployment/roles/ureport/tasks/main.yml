@@ -1,2 +1,18 @@
 ---
-# tasks file for ureport
+
+- name: Inlude role variables
+	include_vars: ../vars/vars.yml
+
+- name: Pull latest ureport application code from github
+  sudo_user: root
+  git: repo={{ureport_git_repo}} dest={{ureport_repo}} update=yes accept_hostkey=yes
+  notify: reload ureport
+  tags: 
+    - git 
+
+- name: copy supervisor configuration to appropriate location
+	sudo_user: root
+	template: src=supervisor_conf.j2
+            dest='/etc/supervisor/conf.d/ureport.conf'
+            owner='{{remote_user}}'
+            group='{{remote_user}}'
