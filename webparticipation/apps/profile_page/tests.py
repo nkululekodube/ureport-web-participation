@@ -9,12 +9,10 @@ class TestProfilePage(TestCase):
         self.ureporter = Ureporter.objects.create(uuid='aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee',
                                                   user=User.objects.create_user(username='legituser',
                                                                                 password='password'))
-        self.ureporter.save()
 
         self.another_ureporter = Ureporter.objects.create(uuid='ffffffff-gggg-hhhh-iiii-jjjjjjjjjjjj',
                                                           user=User.objects.create_user(username='the_other_guy',
                                                                                         password='anotherpw'))
-        self.another_ureporter.save()
 
     def tearDown(self):
         self.client.logout()
@@ -32,4 +30,18 @@ class TestProfilePage(TestCase):
     def test_user_can_view_own_profile(self):
         self.client.login(username='legituser', password='password')
         response = self.client.get('/ureporter/aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee/')
+        self.assertEqual(response.status_code, 200)
+
+    def test_user_can_unsubscribe(self):
+        self.client.login(username='legituser', password='password')
+        self.assertEqual(self.ureporter.subscribed, True)
+        response = self.client.post('/ureporter/aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee/', {'subscribed': None})
+        self.assertEqual(Ureporter.objects.get(uuid='aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee').subscribed, False)
+        self.assertEqual(response.status_code, 200)
+
+    def test_user_can_resubscribe(self):
+        self.client.login(username='legituser', password='password')
+        self.assertEqual(self.ureporter.subscribed, True)
+        response = self.client.post('/ureporter/aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee/', {'subscribed': True})
+        self.assertEqual(Ureporter.objects.get(uuid='aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee').subscribed, True)
         self.assertEqual(response.status_code, 200)

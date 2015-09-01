@@ -14,7 +14,7 @@ def view_profile(request, ureporter_uuid):
     confirm_changes = False
 
     if request.method == 'POST':
-        ureporter.subscribed = True if request.POST.get('subscribed') else False
+        ureporter.subscribed = True if request.POST.get('subscribed') == 'True' else False
         ureporter.save()
         confirm_changes = True
 
