@@ -1,8 +1,11 @@
 [program:{{application_name}}]
-autostart = true
+command=bash  /home/ubuntu/webparticipation/activate_app.sh
 user=root
-command=uwsgi --master --workers  5 --disable-logging --socket 127.0.0.1:8888 --module web --callable app
-priority=1
+directory={{project_dir}}
+startsecs=5
+autostart=true
+autoresart=unexpected
+numprocs=1
+logto=/etc/uwsgi/error.log
 redirect_stderr=true
-#stdout_logfile = {{uwsgi_logs}}
-
+unmask=007
