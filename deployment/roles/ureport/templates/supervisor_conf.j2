@@ -1,0 +1,11 @@
+[program: ureport]
+command=bash  /home/ubuntu/webparticipation/activate_ureport_app.sh
+user=root
+directory={{ureport_repo}}
+startsecs=5
+autostart=true
+autoresart=unexpected
+numprocs=1
+logto=/etc/uwsgi/ureport-error.log
+redirect_stderr=true
+unmask=007
