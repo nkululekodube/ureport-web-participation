@@ -64,6 +64,11 @@
             owner='{{remote_user}}'
             group='{{remote_user}}'
 
+- name: Initialise application uwsgi configuration
+  sudo_user: root
+  template: src=uwsgi.ini 
+            dest='/etc/uwsgi/sites/'{{application_name}}'.ini'
+
 - name: Install django application requirements in virtualenv
   sudo: yes 
   pip: virtualenv={{virtual_env}} requirements={{django_requirements}}
