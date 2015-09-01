@@ -64,6 +64,11 @@
             owner='{{remote_user}}'
             group='{{remote_user}}'
 
+- name: Generate configuration file for supervisor
+  template: src=supervisor_conf.j2
+            dest='/etc/supervisor/conf.d/'{{application_name}}'.conf'
+            backup=yes
+
 - name: Initialise application uwsgi configuration
   sudo_user: root
   template: src=uwsgi.ini 
