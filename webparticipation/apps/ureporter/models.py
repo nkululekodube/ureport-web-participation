@@ -28,6 +28,7 @@ class Ureporter(models.Model):
     urn_tel = models.CharField(max_length=13)
     token = models.IntegerField(default=generate_token)
     last_poll_taken = models.IntegerField(default=0)
+    subscribed = models.BooleanField(default=True)
 
     def set_uuid(self, uuid):
         self.uuid = uuid

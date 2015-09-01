@@ -35,3 +35,7 @@
 .btn-deactivate {
   margin-top: 2em;
 }
+
+.profile-details input[type='checkbox'] {
+  width: auto;
+}

@@ -8,11 +8,22 @@ from webparticipation.apps.latest_poll.decorators import show_untaken_latest_pol
 @login_required
 @show_untaken_latest_poll_message
 def view_profile(request, ureporter_uuid):
+
     ureporter = Ureporter.objects.get(user__username=request.user)
+
+    confirm_changes = False
+
+    if request.method == 'POST':
+        ureporter.subscribed = True if request.POST.get('subscribed') else False
+        ureporter.save()
+        confirm_changes = True
+
     if ureporter.uuid == ureporter_uuid:
         return render(request, 'profile.html', {'uuid': ureporter_uuid,
                                                 'email': ureporter.user.email,
-                                                'date_joined': ureporter.user.date_joined})
+                                                'date_joined': ureporter.user.date_joined,
+                                                'subscribed': ureporter.subscribed,
+                                                'confirm_changes': confirm_changes})
     else:
         return render(request, '404.html', status=404)
 

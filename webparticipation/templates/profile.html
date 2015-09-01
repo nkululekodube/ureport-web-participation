@@ -1,13 +1,40 @@
 {% include 'header.html' %}
 
+{% if confirm_changes %}
+  <div class="alert alert-info">
+    Changes successfully saved.
+  </div>
+{% endif %}
+
 <h1>Profile</h1>
 
 <section class='profile-details webparticipation-form'>
-  <div><label for="email">Email</label></div>
-  <div>{{email}}</div>
-  <div><label for="date_joined">Date joined</label></div>
-  <div>{{date_joined}}</div>
-  <a href="/ureporter/{{uuid}}/deactivate/" class="btn btn-xs btn-danger btn-deactivate">Deactivate account</a>
+
+  <form action="" method="post">
+    {% csrf_token %}
+
+    <div><label for="email">Email</label></div>
+    <div>{{email}}</div>
+
+    <div><label for="date_joined">Date joined</label></div>
+    <div>{{date_joined}}</div>
+
+    <div><label for="email_reminders">Email new poll reminders</label></div>
+    <div><input type="checkbox"
+                name="subscribed"
+                value="True"
+                {% if subscribed %}checked{% endif %}>
+                  Subscribed
+    </div>
+
+    <div>
+      <button href="/ureporter/{{uuid}}/" type="submit" class="btn btn-success btn-deactivate">Save</button>
+    </div>
+  </form>
+
+  <div>
+    <a href="/ureporter/{{uuid}}/deactivate/" class="btn btn-xs btn-danger btn-deactivate">Deactivate account</a>
+  </div>
 </section>
 
 {% include 'footer.html' %}
