@@ -66,7 +66,7 @@
 
 - name: Generate configuration file for supervisor
   template: src=supervisor_conf.j2
-            dest='/etc/supervisor/conf.d/'{{application_name}}'.conf'
+            dest=/etc/supervisor/conf.d/{{application_name}}.conf
             backup=yes
 
 - name: Copy uwsgi parameters to appropriate location
@@ -78,7 +78,7 @@
 - name: Initialise application uwsgi configuration
   sudo_user: root
   template: src=uwsgi.j2 
-            dest='/etc/uwsgi/sites/'{{application_name}}'.ini'
+            dest=/etc/uwsgi/sites/{{application_name}}.ini
 
 - name: Install django application requirements in virtualenv
   sudo: yes 
