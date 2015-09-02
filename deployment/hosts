@@ -3,3 +3,6 @@ ec2-52-18-250-121.eu-west-1.compute.amazonaws.com ansible_ssh_user=ubuntu ansibl
 
 [demo]
 ec2-52-18-73-186.eu-west-1.compute.amazonaws.com ansible_ssh_user=ubuntu ansible_ssh_private_key_file=wep-pro-key.pem server_name=ec2-52-18-73-186.eu-west-1.compute.amazonaws.com
+
+[scratch]
+ec2-52-19-174-210.eu-west-1.compute.amazonaws.com ansible_ssh_user=ubuntu ansible_ssh_private_key_file=wep-pro-key.pem server_name=ec2-52-19-174-210.eu-west-1.compute.amazonaws.com

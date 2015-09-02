@@ -13,6 +13,7 @@
   tags: packages
 
 - name: Ensure the PostgreSQL service is running
+  sudo_user: root
   sudo: yes
   service: name=postgresql state=started enabled=yes
 
