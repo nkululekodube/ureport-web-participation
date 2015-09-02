@@ -1,9 +1,9 @@
-upstream django {
+upstream webparticipation {
    server 127.0.0.1:8200;
 }
 
 upstream ureport {
-   server 127.0.0.1:8200;
+   server 127.0.0.1:8100;
 }
 
 server {
@@ -19,7 +19,7 @@ server {
 
     location / {
         include {{project_dir}}/uwsgi_params;
-        uwsgi_pass 127.0.0.1:8001;
+        uwsgi_pass 127.0.0.1:8200;
         uwsgi_param Host $host;
         uwsgi_param X-Real-IP $remote_addr;
         uwsgi_param X-Forwarded-For $proxy_add_x_forwarded_for;
