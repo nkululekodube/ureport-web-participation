@@ -24,7 +24,7 @@ def poll_response(request, poll_id):
 @login_required
 def latest_poll_response(request):
     response = requests.get(os.environ.get('UREPORT_ROOT') +
-                            '/api/v1/polls/org/' + os.environ.get('UREPORT_ORG_ID') + '/featured/?format=json')
+                            '/api/v1/polls/org/' + os.environ.get('UREPORT_ORG_ID') + '/featured/')
     response_json = response.json()
     if response_json['count']:
         latest_poll_id = response_json['results'][0]['id']
@@ -39,7 +39,7 @@ def latest_poll_response(request):
 
 
 def get_flow_info_from_poll_id(request, poll_id):
-    response = requests.get(os.environ.get('UREPORT_ROOT') + '/api/v1/polls/' + str(poll_id) + '/?format=json')
+    response = requests.get(os.environ.get('UREPORT_ROOT') + '/api/v1/polls/' + str(poll_id) + '/')
     flow_info = response.json()
     return flow_info
 
