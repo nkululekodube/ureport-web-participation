@@ -82,7 +82,7 @@
             dest=/etc/uwsgi/sites/{{application_name}}.ini
 
 - name: Install django application requirements in virtualenv
-  sudo: yes
+  sudo_user: root
   pip: virtualenv={{virtual_env}} requirements={{django_requirements}}
   tags:
     - requirements
