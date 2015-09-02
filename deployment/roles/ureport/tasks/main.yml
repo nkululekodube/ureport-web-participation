@@ -1,18 +1,24 @@
 ---
 
 - name: Inlude role variables
-	include_vars: ../vars/vars.yml
+  include_vars: ../vars/vars.yml
 
-- name: Pull latest ureport application code from github
+- name: Copy supervisor configuration to appropriate location
   sudo_user: root
-  git: repo={{ureport_git_repo}} dest={{ureport_repo}} update=yes accept_hostkey=yes
-  notify: reload ureport
-  tags: 
-    - git 
-
-- name: copy supervisor configuration to appropriate location
-	sudo_user: root
-	template: src=supervisor_conf.j2
+  template: src=supervisor_conf.j2
             dest='/etc/supervisor/conf.d/ureport.conf'
             owner='{{remote_user}}'
             group='{{remote_user}}'
+
+- name: Add uwsgi configuration to appropriate location
+  sudo_user: root
+  template: src=ureport.j2
+            dest='/etc/uwsgi/sites/conf.d/ureport.ini'
+
+- name: Pull latest ureport repository code from github
+  sudo_user: root
+  git: repo={{ureport_git_repo}} dest={{ureport_repo}} update=yes accept_hostkey=yes
+  notify: reload ureport application
+  tags: 
+    - git 
+
