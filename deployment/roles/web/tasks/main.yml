@@ -24,7 +24,7 @@
 
   tags: packages
 
-- name: Install virtualenv 
+- name: Install virtualenv
   sudo_user: root
   pip: name={{ item }}
   with_items:
@@ -49,13 +49,14 @@
             owner='{{remote_user}}'
             group='{{remote_user}}'
             backup=yes
+  sudo_user: root
 
 - name: Pull latest code from github
   sudo_user: root
   git: repo={{github_repo}} dest={{project_dir}} update=yes accept_hostkey=yes
   notify: reload application
-  tags: 
-    - git 
+  tags:
+    - git
     - deploy
 
 - name: Initialise log rotation for Supervisord
@@ -77,38 +78,38 @@
 
 - name: Initialise application uwsgi configuration
   sudo_user: root
-  template: src=uwsgi.j2 
+  template: src=uwsgi.j2
             dest=/etc/uwsgi/sites/{{application_name}}.ini
 
 - name: Install django application requirements in virtualenv
-  sudo: yes 
+  sudo: yes
   pip: virtualenv={{virtual_env}} requirements={{django_requirements}}
   tags:
-    - requirements 
+    - requirements
 
 - name: Run makemigrations command
   sudo_user: '{{remote_user}}'
   sudo: yes
   shell: . {{virtual_env_activate}} && . {{virtual_env_postactivate}} && cd '{{project_dir}}' && python manage.py makemigrations --noinput
   when: run_django_syncdb
-  tags: 
-   - django 
+  tags:
+   - django
    - syncdb
 
 - name: Run migrate command
   sudo_user: '{{remote_user}}'
   shell: . {{virtual_env_activate}} && . {{virtual_env_postactivate}} && cd '{{project_dir}}' && python manage.py migrate --noinput
   when: run_django_migrations
-  tags: 
-    - django 
+  tags:
+    - django
     - migrate
 
 - name: Generate static django files for application
   shell: . {{virtual_env_activate}} && . {{virtual_env_postactivate}} && cd '{{project_dir}}' && python manage.py collectstatic --noinput
   when: run_django_collectstatic
-  tags: 
-    - django 
-    - collectstatic 
+  tags:
+    - django
+    - collectstatic
     - deploy
 
 - name: Create the Nginx configuration file
