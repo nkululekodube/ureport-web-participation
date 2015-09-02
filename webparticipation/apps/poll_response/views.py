@@ -1,6 +1,5 @@
 import os
 import requests
-import json
 
 from django.shortcuts import render
 from django.http import HttpResponseNotFound
@@ -25,9 +24,10 @@ def poll_response(request, poll_id):
 @login_required
 def latest_poll_response(request):
     response = requests.get(os.environ.get('UREPORT_ROOT') +
-                            '/api/poll/latest/' + os.environ.get('UREPORT_ORG_ID') + '/')
-    if response:
-        latest_poll_id = str(json.loads(response.content)['poll_id'])
+                            '/api/v1/polls/org/' + os.environ.get('UREPORT_ORG_ID') + '/featured/?format=json')
+    response_json = response.json()
+    if response_json['count']:
+        latest_poll_id = response_json['results'][0]['id']
         return poll_response(request, latest_poll_id)
     else:
         return render(request, 'poll_response.html', {
@@ -39,8 +39,8 @@ def latest_poll_response(request):
 
 
 def get_flow_info_from_poll_id(request, poll_id):
-    response = requests.get(os.environ.get('UREPORT_ROOT') + '/api/v1/polls/' + poll_id + '/?format=json')
-    flow_info = json.loads(response.content)
+    response = requests.get(os.environ.get('UREPORT_ROOT') + '/api/v1/polls/' + str(poll_id) + '/?format=json')
+    flow_info = response.json()
     return flow_info
 
 
