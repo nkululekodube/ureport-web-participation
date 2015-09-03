@@ -73,12 +73,6 @@
             dest=/etc/supervisor/conf.d/{{application_name}}.conf
             backup=yes
 
-- name: Copy uwsgi parameters to appropriate location
-  sudo_user: root
-  template: src=uwsgi.j2
-            dest={{project_dir}}
-            backup=yes
-
 - name: Initialise application uwsgi configuration
   sudo_user: root
   template: src=uwsgi.j2
@@ -115,9 +109,14 @@
     - collectstatic
     - deploy
 
+- name: Overwrite Nginx configuration http file
+  template: src=nginx_http_config.j2
+            dest=/etc/nginx/nginx.conf
+            backup=yes
+
 - name: Create the Nginx configuration file
   template: src=nginx_site_config.j2
-            dest=/etc/nginx/conf.d/{{application}}.conf
+            dest=/etc/nginx/conf.d/{{application_name}}.conf
             backup=yes
 
 - name: Ensure that the default site is disabled

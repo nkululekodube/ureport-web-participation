@@ -1,0 +1,59 @@
+upstream webparticipation {
+   server 127.0.0.1:8200;
+}
+
+upstream ureport {
+   server 127.0.0.1:8100;
+}
+
+server {
+    listen 80;
+    server_name ec2-52-18-73-186.eu-west-1.compute.amazonaws.com 173.31.5.2;
+
+    charset utf-8;
+    error_log /var/log/nginx/webparticipation.error.log debug;
+    client_max_body_size 75M;
+
+    proxy_set_header            Host            $host;
+    proxy_set_header            X-Real-IP       $remote_addr;
+    proxy_set_header            X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_read_timeout                          60s;
+    proxy_pass_request_headers                  on;
+
+    uwsgi_param Host              $host;
+    uwsgi_param X-Real-IP         $remote_addr;
+    uwsgi_param X-Forwarded-For   $proxy_add_x_forwarded_for;
+    uwsgi_param X-Forwarded-Proto $http_x_forwarded_proto;
+
+    #location /static {
+    #   alias /home/ubuntu/webparticipation/ureport-web-participation/webparticipation/static;
+    #}
+
+    location /sitestatic {
+       alias /home/ubuntu/webparticipation/ureport/sitestatic;
+    }
+
+    location / {
+        include uwsgi_params;
+        #uwsgi_pass webparticipation;
+        uwsgi_pass ureport;
+    }
+
+    location /login/ {
+        proxy_pass http://webparticipation/login/;
+    }
+
+    location ~* ^/poll/(\d+)/respond/$ {
+        proxy_pass webparticipation/poll/$1/respond/;
+    }
+
+    location ~* ^/ureporter/([\d\w-]+)$ {
+       proxy_pass webparticipation/ureporter/$1/;
+    }
+
+    #location ~* ^/(home|register|logout|forgot-password|password-reset|ureporter|rapidpro-receptor|send-token|confirm-token)/?$ {
+    location ~* ^/(register|logout|forgot-password|password-reset|ureporter|rapidpro-receptor|send-token|confirm-token)/?$ {
+        proxy_pass webparticipation/$1/;
+    }
+
+}

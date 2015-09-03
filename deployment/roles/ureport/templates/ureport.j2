@@ -1,16 +1,15 @@
 [uwsgi]
 
-chdir={{ureport_repo}}}
-mountpoint={{ureport_repo}}
-uid=www-data
-gid=www-data
-virtualenv={{ureport_repo_env}}
-master=true
+chdir={{ureport_project_dir}}}
+mountpoint={{ureport_project_dir}}
+uid=ubuntu
+gid=ubuntu
+virtualenv={{ureport_virtualenv}}
 harakiri=20
-pythonpath={{ureport_repo}}
+pythonpath={{ureport_project_dir}}
 vacuum=true
 module=ureport
-env=DJANGO_SETTINGS_MODULE=ureport
+env=DJANGO_SETTINGS_MODULE=ureport.settings
 wsgi-file={{ureport_app}}
 autostart=true
 autorestart=true

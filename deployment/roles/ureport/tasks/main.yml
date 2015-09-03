@@ -15,10 +15,54 @@
   template: src=ureport.j2
             dest='/etc/uwsgi/sites/conf.d/ureport.ini'
 
+- name: Install compile dependencies
+  sudo_user: root
+  apt: name={{item}} update_cache=yes state=installed
+  with_items:
+    - node-less
+    - coffeescript
+
+- name: Create the virtualenv
+  sudo_user: root
+  command: virtualenv {{ureport_virtual_env}} --no-site-packages
+           creates={{ureport_virtual_env_activate}}
+
+- name: Create the application log folder
+  sudo_user: root
+  file: path={{ureport_project_dir}}
+        owner='{{remote_user}}'
+        group='{{remote_user}}'
+        state=directory
+
 - name: Pull latest ureport repository code from github
   sudo_user: root
-  git: repo={{ureport_git_repo}} dest={{ureport_repo}} update=yes accept_hostkey=yes
+  git: repo={{ureport_git_repo}} dest={{ureport_project_dir}} update=yes accept_hostkey=yes
   notify: reload ureport application
-  tags: 
-    - git 
+  tags:
+    - git
 
+- name: Initialise application uwsgi configuration
+  sudo_user: root
+  template: src=ureport.j2
+            dest=/etc/uwsgi/sites/{{ureport_application_name}}.ini
+
+- name: Install django application requirements in virtualenv
+  sudo: yes
+  pip: virtualenv={{ureport_virtual_env}} requirements={{ureport_django_requirements}}
+  tags:
+    - requirements
+
+- name: Run makemigrations command
+  sudo_user: '{{remote_user}}'
+  sudo: yes
+  shell: . {{ureport_virtual_env_activate}} && cd '{{ureport_project_dir}}' && python manage.py makemigrations --noinput
+  when: run_django_syncdb
+
+- name: Run migrate command
+  sudo_user: '{{remote_user}}'
+  shell: . {{ureport_virtual_env_activate}} && cd '{{ureport_project_dir}}' && python manage.py migrate --noinput
+  when: run_django_migrations
+
+- name: Generate static django files for application
+  shell: . {{ureport_virtual_env_activate}} && cd '{{ureport_project_dir}}' && python manage.py collectstatic --noinput
+  when: run_django_collectstatic

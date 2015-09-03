@@ -2,16 +2,15 @@
 
 chdir={{project_dir}}
 mountpoint={{project_dir}}
-uid=www-data
-gid=www-data
+uid=ubuntu
+gid=ubuntu
 socket=127.0.0.1:8200
 virtualenv={{virtual_env}}
-master=true
 harakiri=20
 pythonpath={{project_dir}}
 vacuum=true
 module={{application_name}}
-env=DJANGO_SETTINGS_MODULE={{settings_module}}
+env=DJANGO_SETTINGS_MODULE={{django_settings_module}}
 wsgi-file=/home/ubuntu/webparticipation/ureport-web-participation/wsgi.py
 autostart=true
 autorestart=true
