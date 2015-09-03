@@ -8,7 +8,7 @@
   remote_user: ubuntu
 
   vars:
-    - virtualenv_path: '{{virtualenv_path}}'
+    - virtualenv_path: '{{virtualenv}}'
     - django_dir: '{{django_dir}}'
     - application_log_dir: '{{application_log_dir}}'
     - requirements_file: '{{django_requirements}}'
