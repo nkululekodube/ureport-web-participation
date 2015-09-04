@@ -21,15 +21,19 @@ def send_forgot_password_email(email):
                 if password_reset:
                     password_reset.set_expiry(expiry)
                     password_reset.generate_password_reset_token()
+                    # link = reset_password_url('/password-reset/%s' % password_reset.token)
             except PasswordReset.DoesNotExist:
-                    password_reset = PasswordReset.objects.create(expiry=expiry, user=user)
+                password_reset = PasswordReset.objects.create(expiry=expiry, user=user)
+                password_reset.generate_password_reset_token()
+
             link = reset_password_url('/password-reset/%s' % password_reset.token)
+
             subject = 'Hi from ureport.in'
             html_text = "<p>" + subject + "</p>" \
                                           "<p>You recently requested to reset your ureport account password.</p>" \
                                           "<p>To do this, please click this password link to change your password " \
                                           "<a href='" + link + "'>Password recovery link</a></p>"
-            body = html_text + '<p>-----</p>' \
+            body = html_text + '<p>------</p>' \
                                '<p>Thanks</p>'
             signature = '\nureport team'
             recipients = [email]
