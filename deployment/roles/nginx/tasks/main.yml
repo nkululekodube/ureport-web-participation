@@ -28,6 +28,7 @@
 
 - name: Ensure Nginx service is started
   service: name=nginx state=started enabled=yes
+  notify: start nginx
 
 - name: Initialise log rotation for nginx
   sudo_user: root

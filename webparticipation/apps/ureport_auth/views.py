@@ -18,12 +18,12 @@ def login_user(request):
     backend = 'django.contrib.auth.backends.ModelBackend'
 
     if request.method == 'GET':
-        redirect_to = request.GET.get('next', '/home')
+        redirect_to = request.GET.get('next', '/index')
 
     if request.method == 'POST':
         email = request.POST.get('email')
         password = request.POST.get('password')
-        redirect_to = request.POST.get('next', '/home')
+        redirect_to = request.POST.get('next', '/index')
         user = None
 
         try:

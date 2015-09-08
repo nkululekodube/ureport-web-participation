@@ -1,8 +1,8 @@
 [staging]
-ec2-52-18-250-121.eu-west-1.compute.amazonaws.com ansible_ssh_user=ubuntu ansible_ssh_private_key_file=wep-pro-key.pem server_name=ec2-52-18-250-121.eu-west-1.compute.amazonaws.com
+52.18.250.121 ansible_ssh_user=ubuntu ansible_ssh_private_key_file=wep-pro-key.pem server_name=52.18.250.121
 
 [demo]
-ec2-52-18-73-186.eu-west-1.compute.amazonaws.com ansible_ssh_user=ubuntu ansible_ssh_private_key_file=wep-pro-key.pem server_name=ec2-52-18-73-186.eu-west-1.compute.amazonaws.com
+52.18.73.186 ansible_ssh_user=ubuntu ansible_ssh_private_key_file=wep-pro-key.pem server_name=52.18.73.186
 
 [scratch]
 52.19.204.42 ansible_ssh_user=ubuntu ansible_ssh_private_key_file=wep-pro-key.pem server_name=52.19.204.42
