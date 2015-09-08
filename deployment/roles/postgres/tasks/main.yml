@@ -1,6 +1,26 @@
 ---
+
 - name: Include default step variables
-  include_vars: ./vars.yml
+  include_vars: ../../../vars/{{instance}}.yml
+
+- name: Suppress locale errors
+  sudo: yes
+  sudo_user: root
+  lineinfile: dest=/etc/environment line='LC_ALL="en_US.utf8"'
+
+- name: Install openssl and libssl
+  sudo_user: root
+  apt: name=postgresql update_cache=yes state=latest
+
+- name: Listen on all addresses
+  sudo: yes
+  sudo_user: root
+  lineinfile: dest=/etc/postgresql/9.3/main/postgresql.conf line="listen_addresses = '*'"
+
+- name: Allow all connections with password over TCP/IP
+  sudo: yes
+  sudo_user: root
+  replace: dest=/etc/postgresql/9.3/main/pg_hba.conf regexp='^local\s+all\s+all\s+peer$' replace='local all all trust' backup=yes
 
 - name: Install PostgreSQL
   sudo_user: root
@@ -17,12 +37,12 @@
   sudo: yes
   service: name=postgresql state=started enabled=yes
 
-- name: Ensure database is created
+- name: Ensure webparticipation database is created
   sudo_user: postgres
   sudo: yes
   postgresql_db: db={{database_name}} state=present
 
-- name: Ensure user has access to the database
+- name: Ensure webparticipation user has access to the webparticipation  database
   sudo_user: postgres
   postgresql_user: db={{database_name}}
                    name={{database_user}}
@@ -30,10 +50,30 @@
                    priv=ALL
                    state=present
 
-- name: Ensure user does not have unnecessary privileges
+- name: Ensure webparticipation user does not have unnecessary privileges
   sudo_user: postgres
   sudo: yes
   postgresql_user: name={{database_user}}
+                   role_attr_flags=SUPERUSER,CREATEDB,LOGIN
+                   state=present
+
+- name: Ensure ureport database is created
+  sudo_user: postgres
+  sudo: yes
+  postgresql_db: db={{ureport_database_name}} state=present
+
+- name: Ensure ureport user has access to ureport database
+  sudo_user: postgres
+  postgresql_user: db={{ureport_database_name}}
+                   name={{ureport_database_user}}
+                   password={{ureport_database_password}}
+                   priv=ALL
+                   state=present
+
+- name: Ensure ureport user does not have unnecessary privileges
+  sudo_user: postgres
+  sudo: yes
+  postgresql_user: name={{ureport_database_user}}
                    role_attr_flags=SUPERUSER,CREATEDB,LOGIN
                    state=present
 
@@ -44,7 +84,7 @@
 
 - name: Install Postgres client components
   sudo_user: root
-  apt: name={{ item }} update_cache=yes state=installed
+  apt: name={{item}} update_cache=yes state=installed
   with_items:
     - libpq-dev
     - python-psycopg2

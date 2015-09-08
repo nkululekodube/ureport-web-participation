@@ -1,19 +1,19 @@
 [uwsgi]
 
-chdir={{ureport_project_dir}}}
+chdir={{ureport_project_dir}}
 mountpoint={{ureport_project_dir}}
 uid=ubuntu
 gid=ubuntu
+socket=127.0.0.1:8100
 virtualenv={{ureport_virtual_env}}
 harakiri=20
 pythonpath={{ureport_project_dir}}
 vacuum=true
 module=ureport
-env=DJANGO_SETTINGS_MODULE=ureport.settings
-wsgi-file={{ureport_app}}
+env=DJANGO_SETTINGS_MODULE={{ureport_django_settings_module}}
+wsgi-file={{ureport_wsgi}}
 autostart=true
 autorestart=true
-socket=127.0.0.1:8100
 max-requests=5000
 processes=5
 logto=/etc/uwsgi/ureport-error.log

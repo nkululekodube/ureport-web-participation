@@ -13,7 +13,7 @@
 - name: Add uwsgi configuration to appropriate location
   sudo_user: root
   template: src=ureport.j2
-            dest='/etc/uwsgi/sites/conf.d/ureport.ini'
+            dest=/etc/uwsgi/sites/conf.d/ureport.ini
 
 - name: Install compile dependencies
   sudo_user: root
@@ -22,35 +22,40 @@
     - node-less
     - coffeescript
 
+- name: Pull ureport repository code from github
+  sudo_user: root
+  git: repo={{ureport_github_repo}} dest={{ureport_project_dir}} update=yes accept_hostkey=yes
+  notify: reload ureport application
+  tags: git
+
 - name: Create the virtualenv
   sudo_user: root
   command: virtualenv {{ureport_virtual_env}} --no-site-packages
            creates={{ureport_virtual_env_activate}}
 
-- name: Create the application log folder
+- name: Create the application folder
   sudo_user: root
   file: path={{ureport_project_dir}}
         owner='{{remote_user}}'
         group='{{remote_user}}'
         state=directory
 
-- name: Pull latest ureport repository code from github
+- name: Copy production settings file
   sudo_user: root
-  git: repo={{ureport_git_repo}} dest={{ureport_project_dir}} update=yes accept_hostkey=yes
-  notify: reload ureport application
-  tags:
-    - git
-
-- name: Initialise application uwsgi configuration
-  sudo_user: root
-  template: src=ureport.j2
-            dest=/etc/uwsgi/sites/{{ureport_application_name}}.ini
+  template: src=settings.py.j2
+            dest=/home/ubuntu/webparticipation/ureport/ureport/settings.py
 
 - name: Install django application requirements in virtualenv
   sudo: yes
+  sudo_user: root
   pip: virtualenv={{ureport_virtual_env}} requirements={{ureport_django_requirements}}
   tags:
     - requirements
+
+- name: Install uwsgi
+  sudo: yes
+  sudo_user: root
+  pip: virtualenv={{ureport_virtual_env}} name=uwsgi
 
 - name: Run makemigrations command
   sudo_user: '{{remote_user}}'
@@ -60,6 +65,7 @@
 
 - name: Run migrate command
   sudo_user: '{{remote_user}}'
+  sudo: yes
   shell: . {{ureport_virtual_env_activate}} && cd '{{ureport_project_dir}}' && python manage.py migrate --noinput
   when: run_django_migrations
 

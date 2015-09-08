@@ -1,5 +1,0 @@
-#!/bin/bash
-source {{virtual_env_activate}}
-source {{virtual_env_postactivate}}
-cd {{project_dir}}  && exec {{virtual_env}}/bin/celery --app={{application_name}}._celery:app worker --loglevel=DEBUG -n {{application_name}}-worker.%%h
-

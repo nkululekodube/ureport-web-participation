@@ -1,5 +1,6 @@
-[program: ureport]
-command=bash  /home/ubuntu/webparticipation/activate_ureport_app.sh
+[program:{{ureport_application_name}}]
+
+command=/home/ubuntu/webparticipation/ureport/env/bin/uwsgi --ini /etc/uwsgi/sites/conf.d/ureport.ini --wsgi-file /home/ubuntu/webparticipation/ureport/ureport/wsgi.py
 user=root
 directory={{ureport_project_dir}}
 startsecs=5

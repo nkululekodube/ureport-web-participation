@@ -1,4 +1,5 @@
 ---
+
 - name: Include default step variables
   include_vars: ../../../vars/{{instance}}.yml
 
@@ -23,7 +24,6 @@
     - python-pycurl
     - supervisor
     - uwsgi
-
   tags: packages
 
 - name: Install virtualenv
@@ -33,37 +33,36 @@
     - virtualenv
   tags: packages
 
+- name: Pull latest code from github
+  sudo_user: root
+  git: repo={{github_repo}} dest={{project_dir}} update=yes accept_hostkey=yes force=yes
+  notify: reload application
+  tags: git
+
 - name: Create the virtualenv
   sudo_user: root
   command: virtualenv {{virtual_env}} --no-site-packages
            creates={{virtual_env_activate}}
 
-- name: Create the application log folder
-  sudo_user: root
-  file: path={{project_dir}}
-        owner='{{remote_user}}'
-        group='{{remote_user}}'
-        state=directory
-
 - name: Create the virtualenv postactivate script to set environment variables
+  sudo_user: root
   template: src=postactivate_template.j2
             dest={{virtual_env_postactivate}}
             owner='{{remote_user}}'
             group='{{remote_user}}'
             backup=yes
 
-- name: Pull latest code from github
+- name: Create the application folder
   sudo_user: root
-  git: repo={{github_repo}} dest={{project_dir}} update=yes accept_hostkey=yes
-  notify: reload application
-  tags:
-    - git
-    - deploy
+  file: path={{project_dir}}
+        owner='{{remote_user}}'
+        group='{{remote_user}}'
+        state=directory
 
 - name: Initialise log rotation for Supervisord
   sudo_user: root
   template: src=supervisor_log.j2
-            dest='/etc/logrotate.d/'{{application_name}}'-supervisor.log'
+            dest='/etc/logrotate.d/{{application_name}}-supervisor.log'
             owner='{{remote_user}}'
             group='{{remote_user}}'
 
@@ -73,16 +72,30 @@
             dest=/etc/supervisor/conf.d/{{application_name}}.conf
             backup=yes
 
+
+- name: Ensure uwsgi conf.d folder exists
+  sudo_user: root
+  file: path=/etc/uwsgi/sites/conf.d
+        owner='{{remote_user}}'
+        group='{{remote_user}}'
+        state=directory
+
 - name: Initialise application uwsgi configuration
   sudo_user: root
   template: src=uwsgi.j2
-            dest=/etc/uwsgi/sites/{{application_name}}.ini
+            dest=/etc/uwsgi/sites/conf.d/{{application_name}}.ini
 
 - name: Install django application requirements in virtualenv
   sudo: yes
+  sudo_user: root
   pip: virtualenv={{virtual_env}} requirements={{django_requirements}}
   tags:
     - requirements
+
+- name: Install uwsgi
+  sudo: yes
+  sudo_user: root
+  pip: virtualenv={{virtual_env}} name=uwsgi
 
 - name: Run makemigrations command
   sudo_user: '{{remote_user}}'
@@ -95,6 +108,7 @@
 
 - name: Run migrate command
   sudo_user: '{{remote_user}}'
+  sudo: yes
   shell: . {{virtual_env_activate}} && . {{virtual_env_postactivate}} && cd '{{project_dir}}' && python manage.py migrate --noinput
   when: run_django_migrations
   tags:
@@ -102,36 +116,11 @@
     - migrate
 
 - name: Generate static django files for application
+  sudo_user: root
+  sudo: yes
   shell: . {{virtual_env_activate}} && . {{virtual_env_postactivate}} && cd '{{project_dir}}' && python manage.py collectstatic --noinput
   when: run_django_collectstatic
   tags:
     - django
     - collectstatic
     - deploy
-
-- name: Overwrite Nginx configuration http file
-  sudo_user: root
-  template: src=nginx_http_config.j2
-            dest=/etc/nginx/nginx.conf
-            backup=yes
-
-- name: Create the Nginx configuration file
-  template: src=nginx_site_config.j2
-            dest=/etc/nginx/conf.d/{{application_name}}.conf
-            backup=yes
-
-- name: Ensure that the default site is disabled
-  command: rm /etc/nginx/sites-enabled/default
-           removes=/etc/nginx/sites-enabled/default
-
-- name: Ensure Nginx service is started
-  service: name=nginx state=started enabled=yes
-
-- name: Initialise log rotation for nginx
-  sudo_user: '{{remote_user}}'
-  sudo: yes
-  template: src=nginx_log.j2
-            dest='/etc/logrotate.d/{{application_name}}-nginx.log'
-            owner={{remote_user}}
-            group={{remote_user}}
-  tags: backup

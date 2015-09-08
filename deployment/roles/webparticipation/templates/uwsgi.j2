@@ -16,6 +16,27 @@ autostart=true
 autorestart=true
 max-requests=5000
 processes=5
-logto=/etc/uwsgi/error.log
+logto=/etc/uwsgi/webparticipation-error.log
 enable-threads=true
 master=true
+
+env=SECRET_KEY={{secret_key}}
+env=DATABASE_NAME={{database_name}}
+env=DATABASE_USER={{database_user}}
+env=DATABASE_PASSWORD={{database_password}}
+env=DJANGO_SETTINGS_MODULE={{django_settings_module}}
+env=ALLOWED_HOSTS={{allowed_hosts}}
+env=WEBPARTICIPATION_ROOT={{web_participation_root}}
+
+#rapidpro vars
+env=RAPIDPRO_API_TOKEN={{rapidpro_api_token}}
+env=RAPIDPRO_RECEIVED_PATH={{rapidro_received_path}}
+env=RAPIDPRO_WEB_CHANNEL={{rapidpro_web_channel}}
+env=RAPIDPRO_API_PATH={{rapidpro_api_path}}
+
+#email vars
+env=DEFAULT_FROM_EMAIL={{default_from_email}}
+env=EMAIL_HOST_PASSWORD={{email_host_password}}
+env=EMAIL_HOST_USER={{email_host_user}}
+env=EMAIL_PORT={{email_port}}
+env=EMAIL_HOST={{email_host}}

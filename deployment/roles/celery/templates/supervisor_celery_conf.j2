@@ -1,13 +1,17 @@
-[program:{{application_name}}-celery]
-command=bash /home/ubuntu/webparticipation/activate_celery.sh
-directory={{project_dir}}
-user=ubuntu
-numprocs=1
-stdout_logfile={{project_dir}}/celery/celery-worker-stout.log
-stderr_logfile={{project_dir}}/celery/celery-worker-errors.log
-autostart=true
-autorestart=unexpected
-priority=1
-redirect_stderr=true
-unmask=007
+[program:celery]
 
+command={{virtual_env}}/bin/python manage.py celery worker --loglevel=INFO
+directory={{project_dir}}
+env=DJANGO_SETTINGS_MODULE=webparticipation.settings.common
+user=root
+numprocs=1
+logto=/etc/uwsgi/celery-error.log
+redirect_stderr=true
+autostart=true
+autorestart=true
+priority=1
+startsecs=10
+stopsignal=KILL
+stopwaitsecs = 600
+unmask=007
+killasgroup=true

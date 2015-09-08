@@ -8,10 +8,10 @@ upstream ureport {
 
 server {
     listen 80;
-    server_name ec2-52-18-73-186.eu-west-1.compute.amazonaws.com 173.31.5.2;
+    server_name {{web_participation_root_bare}};
 
     charset utf-8;
-    error_log /var/log/nginx/webparticipation.error.log debug;
+    error_log /var/log/nginx/error.log debug;
     client_max_body_size 75M;
 
     proxy_set_header            Host            $host;
@@ -25,9 +25,9 @@ server {
     uwsgi_param X-Forwarded-For   $proxy_add_x_forwarded_for;
     uwsgi_param X-Forwarded-Proto $http_x_forwarded_proto;
 
-    #location /static {
-    #   alias /home/ubuntu/webparticipation/ureport-web-participation/webparticipation/static;
-    #}
+    location /static {
+       alias /home/ubuntu/webparticipation/ureport-web-participation/webparticipation/static;
+    }
 
     location /sitestatic {
        alias /home/ubuntu/webparticipation/ureport/sitestatic;
@@ -35,25 +35,27 @@ server {
 
     location / {
         include uwsgi_params;
-        #uwsgi_pass webparticipation;
         uwsgi_pass ureport;
     }
 
-    location /login/ {
-        proxy_pass http://webparticipation/login/;
+    location /poll/latest/ {
+        include uwsgi_params;
+        uwsgi_pass webparticipation;
     }
 
     location ~* ^/poll/(\d+)/respond/$ {
-        proxy_pass webparticipation/poll/$1/respond/;
+        include uwsgi_params;
+        uwsgi_pass webparticipation;
     }
 
     location ~* ^/ureporter/([\d\w-]+)$ {
-       proxy_pass webparticipation/ureporter/$1/;
+        include uwsgi_params;
+        uwsgi_pass webparticipation;
     }
 
-    #location ~* ^/(home|register|logout|forgot-password|password-reset|ureporter|rapidpro-receptor|send-token|confirm-token)/?$ {
-    location ~* ^/(register|logout|forgot-password|password-reset|ureporter|rapidpro-receptor|send-token|confirm-token)/?$ {
-        proxy_pass webparticipation/$1/;
+    location ~* ^/(home|login|logout|register|forgot-password|password-reset|ureporter|rapidpro-receptor|send-token|confirm-token)/?$ {
+        include uwsgi_params;
+        uwsgi_pass webparticipation;
     }
 
 }

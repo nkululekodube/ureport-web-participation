@@ -1,11 +1,12 @@
 [program:{{application_name}}]
-command=bash  /home/ubuntu/webparticipation/activate_app.sh
+
+command=/home/ubuntu/webparticipation/ureport-web-participation/env/bin/uwsgi --ini /etc/uwsgi/sites/conf.d/webparticipation.ini --wsgi-file /home/ubuntu/webparticipation/ureport-web-participation/wsgi.py
 user=root
 directory={{project_dir}}
 startsecs=5
 autostart=true
 autoresart=unexpected
 numprocs=1
-logto=/etc/uwsgi/error.log
+logto=/etc/uwsgi/webparticipation-error.log
 redirect_stderr=true
 unmask=007

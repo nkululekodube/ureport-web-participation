@@ -1,0 +1,54 @@
+---
+
+- name: Install build requirements
+  sudo_user: root
+  sudo: yes
+  apt: name={{item}} update_cache=yes state=latest
+  with_items:
+    - build-essential
+    - checkinstall
+
+- name: Install build tools
+  sudo_user: root
+  sudo: yes
+  apt: name={{item}} update_cache=yes state=latest
+  with_items:
+    - libreadline-gplv2-dev
+    - libncursesw5-dev
+    - libssl-dev
+    - libsqlite3-dev
+    - tk-dev
+    - libgdbm-dev
+    - libc6-dev
+    - libbz2-dev
+
+- name: Download Python 2.7.9
+  get_url: url=http://python.org/ftp/python/2.7.9/Python-2.7.9.tgz dest=/tmp/Python-2.7.9.tgz
+  register: download_python
+
+- name: Unzip Python archive
+  shell: tar -xvf Python-2.7.9.tgz
+  args:
+    chdir: /tmp
+  when: download_python|changed
+  register: python_unarchive
+
+- name: Configure Python 2.7.9
+  command: sudo ./configure
+  args:
+    chdir: /tmp/Python-2.7.9
+  when: python_unarchive|changed
+  register: config_python
+
+- name: Make Python 2.7.9
+  command: sudo make
+  args:
+    chdir: /tmp/Python-2.7.9
+  when: config_python|changed
+  register: make_python
+
+- name: Make install Python 2.7.9
+  command: sudo make install
+  args:
+    chdir: /tmp/Python-2.7.9
+  when: make_python|changed

@@ -1,6 +1,7 @@
 ---
+
 - name: Include default step variables
-  include_vars: ../../../vars/{{ instance }}.yml
+  include_vars: ../../../vars/{{instance}}.yml
 
 - name: Ensure that redis server is installed
   sudo_user: root
@@ -8,10 +9,14 @@
   tags: redis
 
 - name: Switch to using upstart
-  template: src=redis_conf.j2 dest="/etc/init/redis-server.conf" 
+  sudo: yes
+  sudo_user: root
+  template: src=redis_conf.j2 dest="/etc/init/redis-server.conf"
   tags: redis
 
-- name: Append 'daemonizie=no' to config 
+- name: Append 'daemonizie=no' to config
+  sudo: yes
+  sudo_user: root
   lineinfile: >
     dest='/etc/redis/redis.conf'
     line='daemonize no'
@@ -20,21 +25,24 @@
   tags: redis
 
 - name: Create log directory for celery
-  file: path={{project_dir}}/celery
+  sudo: yes
+  sudo_user: root
+  file: path=/var/log/celery
     owner={{remote_user}}
     group={{remote_user}}
     state=directory
   tags: celery
 
-- name: Initialise log rotation for Celery logs
+- name: Generate configuration file for supervisor
   sudo_user: root
-  template: src=celery_log.j2
-    dest='/etc/logrotate.d/application_name.log'
-    owner={{remote_user}}
-    group={{remote_user}}
-  tags: celery
+  template: src=supervisor_celery_conf.j2
+            dest=/etc/supervisor/conf.d/celery.conf
+            backup=yes
+  tags: bleh
 
 - name: Re-read the Supervisor config files
   remote_user: ubuntu
+  sudo_user: root
+  sudo: yes
   command: supervisorctl reread
   notify: restart webparticipation-celery
