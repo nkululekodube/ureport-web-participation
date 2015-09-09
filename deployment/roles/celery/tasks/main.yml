@@ -41,14 +41,12 @@
             backup=yes
             owner=ubuntu
             mode=u+rx
-  tags: bleh
 
 - name: Generate configuration file for supervisor
   sudo_user: root
   template: src=supervisor_celery_conf.j2
             dest=/etc/supervisor/conf.d/celery.conf
             backup=yes
-  tags: bleh
 
 - name: Re-read the Supervisor config files
   remote_user: ubuntu

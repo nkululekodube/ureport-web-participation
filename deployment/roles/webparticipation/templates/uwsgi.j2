@@ -21,12 +21,17 @@ enable-threads=true
 master=true
 
 env=SECRET_KEY={{secret_key}}
+
+env=WEBPARTICIPATION_ROOT={{web_participation_root}}
+
+env=UREPORT_ORG_ID={{ureport_org_id}}
+
+env=DJANGO_SETTINGS_MODULE={{django_settings_module}}
+env=ALLOWED_HOSTS={{allowed_hosts}}
+
 env=DATABASE_NAME={{database_name}}
 env=DATABASE_USER={{database_user}}
 env=DATABASE_PASSWORD={{database_password}}
-env=DJANGO_SETTINGS_MODULE={{django_settings_module}}
-env=ALLOWED_HOSTS={{allowed_hosts}}
-env=WEBPARTICIPATION_ROOT={{web_participation_root}}
 
 #rapidpro vars
 env=RAPIDPRO_API_TOKEN={{rapidpro_api_token}}
