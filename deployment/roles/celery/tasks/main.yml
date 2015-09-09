@@ -33,6 +33,16 @@
     state=directory
   tags: celery
 
+- name: Environment variables
+  sudo: yes
+  sudo_user: root
+  template: src=run_celery.sh.j2
+            dest=/home/ubuntu/webparticipation/run_celery.sh
+            backup=yes
+            owner=ubuntu
+            mode=u+rx
+  tags: bleh
+
 - name: Generate configuration file for supervisor
   sudo_user: root
   template: src=supervisor_celery_conf.j2

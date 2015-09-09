@@ -1,17 +1,11 @@
 [program:celery]
 
-command={{virtual_env}}/bin/python manage.py celery worker --loglevel=INFO
+command=/home/ubuntu/webparticipation/run_celery.sh
 directory={{project_dir}}
-env=DJANGO_SETTINGS_MODULE=webparticipation.settings.common
-user=root
+user=ubuntu
 numprocs=1
 logto=/etc/uwsgi/celery-error.log
 redirect_stderr=true
 autostart=true
 autorestart=true
-priority=1
-startsecs=10
-stopsignal=KILL
-stopwaitsecs = 600
 unmask=007
-killasgroup=true

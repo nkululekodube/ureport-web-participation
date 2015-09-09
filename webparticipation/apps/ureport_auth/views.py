@@ -19,11 +19,13 @@ def login_user(request):
 
     if request.method == 'GET':
         redirect_to = request.GET.get('next', '/index')
+        # redirect_to = request.GET.get('next', '/home')
 
     if request.method == 'POST':
         email = request.POST.get('email')
         password = request.POST.get('password')
         redirect_to = request.POST.get('next', '/index')
+        # redirect_to = request.POST.get('next', '/home')
         user = None
 
         try:

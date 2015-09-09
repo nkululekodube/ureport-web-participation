@@ -9,8 +9,8 @@ password_reset_regex = '[\w\d]{32}'
 urlpatterns = patterns(
     '',
     url(r'^$', include('apps.home.urls'), name='index'),
-    url(r'^index/', include('apps.home.urls'), name='home'),
-    url(r'^register/', include('apps.register.urls'), name='register'),
+    url(r'^index/$', include('apps.home.urls'), name='home'),
+    url(r'^register/$', include('apps.register.urls'), name='register'),
     url(r'^poll/', include('apps.poll_response.urls'), name='poll response'),
     url(r'^login/$', 'apps.ureport_auth.views.login_user', name='login'),
     url(r'^logout/$', 'django.contrib.auth.views.logout', {'next_page': '/'}, name='logout'),
