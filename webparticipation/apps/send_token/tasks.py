@@ -1,5 +1,6 @@
 from celery import task
 from django.core.mail import EmailMessage
+from webparticipation.apps.ureporter.models import delete_user_from_rapidpro as delete_from
 
 
 @task()
@@ -13,3 +14,8 @@ def send_verification_token(ureporter):
         recipients = [ureporter.user.email]
         message = EmailMessage(subject, body + signature, to=recipients)
         message.send()
+
+
+@task()
+def delete_user_from_rapidpro(ureporter):
+    delete_from(ureporter)

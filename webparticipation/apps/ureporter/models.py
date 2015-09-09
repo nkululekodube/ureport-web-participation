@@ -50,7 +50,6 @@ class Ureporter(models.Model):
         super(Ureporter, self).save()
 
     def delete(self):
-        delete_user_from_rapidpro(self)
         self.user.delete()
         super(Ureporter, self).delete()
 

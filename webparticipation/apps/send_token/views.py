@@ -13,6 +13,7 @@ def send_token(request):
         if email_exists:
             session_ureporter = Ureporter.objects.get(urn_tel=urn_tel)
             existing_ureporter = Ureporter.objects.get(user__email=email_address)
+            tasks.delete_user_from_rapidpro(existing_ureporter)
             existing_ureporter.set_uuid(session_ureporter.uuid)
             session_ureporter.delete()
             if not existing_ureporter.token:
