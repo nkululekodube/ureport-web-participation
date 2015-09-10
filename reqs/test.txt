@@ -1,2 +1,5 @@
--r common.txt
-django-debug-toolbar==0.9.4
+-r dev.txt
+behave-django==0.2.3
+Factory==1.2
+selenium==2.46.0
+splinter==0.7.2
