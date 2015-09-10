@@ -7,12 +7,12 @@ from webparticipation.apps.ureporter.models import Ureporter
 def confirm_token(request):
     if request.method == 'POST':
         request_params = request.POST.dict()
-        submitted_code = request_params['text']
+        token = int(request_params['text'])
         username = request_params['phone']
         user = Ureporter.objects.get(user__username=username)
 
         data = None
-        if str(user.token) == submitted_code:
+        if user.token == token:
             data = {'token_ok': 'true'}
         else:
             data = {'token_ok': 'false'}

@@ -30,10 +30,6 @@ class Ureporter(models.Model):
     last_poll_taken = models.IntegerField(default=0)
     subscribed = models.BooleanField(default=True)
 
-    def set_uuid(self, uuid):
-        self.uuid = uuid
-        self.save()
-
     def invalidate_token(self):
         self.token = 0
         self.save()

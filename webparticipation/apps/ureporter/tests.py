@@ -46,14 +46,6 @@ class UreporterTest(TestCase):
         self.ureporter.save()
         self.assertTrue(self.ureporter.is_latest_poll_taken())
 
-    def test_set_uuid(self):
-        ureporter = Ureporter.objects.create(uuid='aaaaaaaa-bbbb-cccc-dddd-000000000000',
-                                             user=User.objects.create_user('changeMyUuid'))
-        self.assertEqual(ureporter.uuid, 'aaaaaaaa-bbbb-cccc-dddd-000000000000')
-        ureporter.set_uuid('aaaaaaaa-bbbb-cccc-dddd-111111111111')
-        self.assertNotEqual(ureporter.uuid, 'aaaaaaaa-bbbb-cccc-dddd-000000000000')
-        self.assertEqual(ureporter.uuid, 'aaaaaaaa-bbbb-cccc-dddd-111111111111')
-
     def test_save_user(self):
         ureporter = Ureporter.objects.create(uuid='aaaaaaaa-bbbb-cccc-dddd-yyyyyyyyyyyy',
                                              user=User.objects.create_user('saveMe'))
