@@ -1,0 +1,11 @@
+{% include 'header.html' %}
+{% load bootstrap3 %}
+<section>
+ <form action="{% url 'shout' %}" method="post">
+      {% csrf_token %}
+       {% bootstrap_form form %}
+      <button class="wp-send btn btn-default" type="submit">Send</button>
+  </form>
+</section>
+
+{% include 'footer.html' %}

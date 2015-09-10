@@ -23,4 +23,5 @@ urlpatterns = patterns(
     url(r'^rapidpro-receptor', include('apps.rapidpro_receptor.urls'), name='rapidpro receptor'),
     url(r'^send-token', include('apps.send_token.urls'), name='send token'),
     url(r'^confirm-token', include('apps.confirm_token.urls'), name='confirm token'),
+    url(r'^shout', include('apps.shout.urls')),
 )

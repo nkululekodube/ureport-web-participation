@@ -32,4 +32,5 @@ sqlparse==0.1.15
 wsgiref==0.1.2
 dispatcher==1.0
 redis==2.10.3
-
+django-braces==1.8.1
+django-bootstrap3==6.2.2
