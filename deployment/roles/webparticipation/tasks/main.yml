@@ -84,6 +84,7 @@
   sudo_user: root
   template: src=uwsgi.j2
             dest=/etc/uwsgi/sites/conf.d/{{application_name}}.ini
+  tags: bleh
 
 - name: Install django application requirements in virtualenv
   sudo: yes
