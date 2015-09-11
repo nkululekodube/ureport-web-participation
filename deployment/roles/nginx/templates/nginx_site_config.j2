@@ -48,7 +48,7 @@ server {
         uwsgi_pass webparticipation;
     }
 
-    location ~* ^/ureporter/([\d\w-]+) {
+    location ~* ^/ureporter/([\d\w-]+)/ {
         include uwsgi_params;
         uwsgi_pass webparticipation;
     }
