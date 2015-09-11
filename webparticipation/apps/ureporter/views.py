@@ -1,10 +1,9 @@
-import os
 import re
-import requests
-
 from random import randint
 
+import requests
 from django.contrib.auth.models import User
+from django.conf import settings
 
 from models import Ureporter
 
@@ -26,8 +25,8 @@ def create_new_ureporter():
 
 
 def create_new_rapidpro_contact():
-    api_path = os.environ.get('RAPIDPRO_API_PATH')
-    rapidpro_api_token = os.environ.get('RAPIDPRO_API_TOKEN')
+    api_path = settings.RAPIDPRO_API_PATH
+    rapidpro_api_token = settings.RAPIDPRO_API_TOKEN
     while True:
         urn_tel = generate_random_urn_tel()
         if not Ureporter.objects.filter(urn_tel=urn_tel).exists():

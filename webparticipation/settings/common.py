@@ -3,8 +3,9 @@
 from datetime import timedelta
 from os.path import abspath, basename, dirname, join, normpath
 from sys import path
-import dispatch
 import os
+
+import dispatch
 
 MESSAGE_BUS = []
 
@@ -215,3 +216,10 @@ EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL')
 SERVER_EMAIL = os.environ.get('SERVER_EMAIL')
+
+UREPORT_ROOT = os.environ.get('UREPORT_ROOT')
+UREPORT_ORG_ID = os.environ.get('UREPORT_ORG_ID')
+WEBPARTICIPATION_ROOT = os.environ.get('WEBPARTICIPATION_ROOT')
+RAPIDPRO_API_PATH = os.environ.get('RAPIDPRO_API_PATH')
+RAPIDPRO_API_TOKEN = os.environ.get('RAPIDPRO_API_TOKEN')
+RAPIDPRO_RECEIVED_PATH = os.environ.get('RAPIDPRO_RECEIVED_PATH')

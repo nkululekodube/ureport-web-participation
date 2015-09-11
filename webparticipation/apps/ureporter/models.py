@@ -1,9 +1,7 @@
-import os
 import datetime
-import requests
-
 from random import randint
 
+import requests
 from django.conf import settings
 from django.db import models
 from django.utils import timezone
@@ -12,9 +10,9 @@ from webparticipation.apps.latest_poll.models import LatestPoll
 
 
 def delete_user_from_rapidpro(ureporter):
-    requests.delete(os.environ.get('RAPIDPRO_API_PATH') + '/contacts.json?uuid=' + ureporter.uuid,
+    requests.delete(settings.RAPIDPRO_API_PATH + '/contacts.json?uuid=' + ureporter.uuid,
                     data={'uuid': ureporter.uuid},
-                    headers={'Authorization': 'Token ' + os.environ.get('RAPIDPRO_API_TOKEN')})
+                    headers={'Authorization': 'Token ' + settings.RAPIDPRO_API_TOKEN})
 
 
 def generate_token():
@@ -22,7 +20,6 @@ def generate_token():
 
 
 class Ureporter(models.Model):
-
     user = models.ForeignKey(settings.AUTH_USER_MODEL)
     uuid = models.CharField(max_length=36)
     urn_tel = models.CharField(max_length=13)

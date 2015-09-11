@@ -1,9 +1,7 @@
-import os
 import re
-import requests
-
 from time import sleep
 
+import requests
 from django.conf import settings
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -20,7 +18,7 @@ def rapidpro_receptor(request):
 
 
 def send_message_to_rapidpro(data):
-    response = requests.post(os.environ.get('RAPIDPRO_RECEIVED_PATH'), data=data)
+    response = requests.post(settings.RAPIDPRO_RECEIVED_PATH, data=data)
     return response
 
 

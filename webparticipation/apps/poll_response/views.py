@@ -1,9 +1,9 @@
-import os
+from django.conf import settings
 import requests
-
 from django.shortcuts import render
 from django.http import HttpResponseNotFound
 from django.contrib.auth.decorators import login_required
+
 from django.utils.translation import ugettext as _
 
 from webparticipation.apps.ureporter.models import Ureporter
@@ -23,8 +23,8 @@ def poll_response(request, poll_id):
 
 @login_required
 def latest_poll_response(request):
-    response = requests.get(os.environ.get('UREPORT_ROOT') +
-                            '/api/v1/polls/org/' + os.environ.get('UREPORT_ORG_ID') + '/featured/')
+    response = requests.get(settings.UREPORT_ROOT +
+                            '/api/v1/polls/org/' + settings.UREPORT_ORG_ID + '/featured/')
     response_json = response.json()
     if response_json['count']:
         latest_poll_id = response_json['results'][0]['id']
@@ -39,7 +39,7 @@ def latest_poll_response(request):
 
 
 def get_flow_info_from_poll_id(request, poll_id):
-    response = requests.get(os.environ.get('UREPORT_ROOT') + '/api/v1/polls/' + str(poll_id) + '/')
+    response = requests.get(settings.UREPORT_ROOT + '/api/v1/polls/' + str(poll_id) + '/')
     flow_info = response.json()
     return flow_info
 
@@ -63,8 +63,8 @@ def serve_already_taken_poll_message(request, poll_id, flow_info):
 
 
 def trigger_flow_run(flow_uuid, uuid):
-    api_path = os.environ.get('RAPIDPRO_API_PATH')
-    rapidpro_api_token = os.environ.get('RAPIDPRO_API_TOKEN')
+    api_path = settings.RAPIDPRO_API_PATH
+    rapidpro_api_token = settings.RAPIDPRO_API_TOKEN
     requests.post(api_path + '/runs.json',
                   data={'flow_uuid': flow_uuid, 'contacts': uuid},
                   headers={'Authorization': 'Token ' + rapidpro_api_token})
@@ -86,8 +86,8 @@ def serve_post_response(request, poll_id, flow_info, username, uuid):
 
 
 def is_run_complete(flow_uuid, uuid):
-    api_path = os.environ.get('RAPIDPRO_API_PATH')
-    rapidpro_api_token = os.environ.get('RAPIDPRO_API_TOKEN')
+    api_path = settings.RAPIDPRO_API_PATH
+    rapidpro_api_token = settings.RAPIDPRO_API_TOKEN
     runs = requests.get(api_path + '/runs.json?flow_uuid=' + flow_uuid + '&contact=' + uuid,
                         headers={'Authorization': 'Token ' + rapidpro_api_token})
     return bool([run['completed'] for run in runs.json()['results'] if run['completed'] is True])
