@@ -21,4 +21,7 @@ CELERY_EAGER_PROPAGATES_EXCEPTIONS = True
 INTERNAL_IPS = ('127.0.0.1',)
 INSTALLED_APPS += (
     'behave_django',
+    'django_coverage'
 )
+
+COVERAGE_MODULE_EXCLUDES = ('solo', 'kombu', 'djcelery', 'django','bootstrap3', 'compressor')

@@ -61,3 +61,9 @@ If application is hanging, verify:
 If the app hangs on submitting email for verification
 - Verify the email settings
 - Verify that the flow in RapidPro
+
+
+### Run tests with coverage
+
+    pip install -r reqs/test
+    python manage.py test_coverage --settings=webparticipation.settings.test
