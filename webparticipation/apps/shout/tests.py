@@ -1,7 +1,6 @@
 from django.contrib.auth.models import User
 
 from django.core.urlresolvers import reverse
-from django.test import RequestFactory
 from django_webtest import WebTest
 
 
@@ -12,7 +11,6 @@ class ShoutViewTestCase(WebTest):
         return reverse(self.url_name)
 
     def setUp(self):
-        self.factory = RequestFactory()
         self.user = User.objects.create(username="mainuser", email="me@email.com")
 
     def test_requires_user_to_be_logged_in(self):
