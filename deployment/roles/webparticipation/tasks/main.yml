@@ -59,6 +59,12 @@
         group='{{remote_user}}'
         state=directory
 
+- name: Copy supervisord config
+  sudo_user: root
+  template: src=supervisord.conf.j2
+            dest=/etc/supervisor/supervisord.conf
+            backup=yes
+
 - name: Initialise log rotation for Supervisord
   sudo_user: root
   template: src=supervisor_log.j2
@@ -71,7 +77,6 @@
   template: src=supervisor_conf.j2
             dest=/etc/supervisor/conf.d/{{application_name}}.conf
             backup=yes
-
 
 - name: Ensure uwsgi conf.d folder exists
   sudo_user: root
