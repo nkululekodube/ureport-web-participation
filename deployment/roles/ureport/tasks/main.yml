@@ -59,12 +59,6 @@
   sudo_user: root
   pip: virtualenv={{ureport_virtual_env}} name=uwsgi
 
-- name: Run makemigrations command
-  sudo_user: root
-  sudo: yes
-  shell: . {{ureport_virtual_env_activate}} && cd '{{ureport_project_dir}}' && python manage.py makemigrations --noinput
-  when: run_django_syncdb
-
 - name: Run migrate command
   sudo_user: '{{remote_user}}'
   sudo: yes

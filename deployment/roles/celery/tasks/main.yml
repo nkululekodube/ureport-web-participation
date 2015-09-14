@@ -14,7 +14,7 @@
 
 - name: Generate configuration file for supervisor
   sudo_user: root
-  notify: reload restart webparticipation-celery
+  notify: restart webparticipation-celery
   template: src=supervisor_celery_conf.j2
             dest=/etc/supervisor/conf.d/celery.conf
             backup=yes

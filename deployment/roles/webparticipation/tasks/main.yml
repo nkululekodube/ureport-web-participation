@@ -103,15 +103,6 @@
   sudo_user: root
   pip: virtualenv={{virtual_env}} name=uwsgi
 
-- name: Run makemigrations command
-  sudo_user: '{{remote_user}}'
-  sudo: yes
-  shell: . {{virtual_env_activate}} && . {{virtual_env_postactivate}} && cd '{{project_dir}}' && python manage.py makemigrations --noinput
-  when: run_django_syncdb
-  tags:
-   - django
-   - syncdb
-
 - name: Run migrate command
   sudo_user: '{{remote_user}}'
   sudo: yes
