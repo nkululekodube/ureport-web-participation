@@ -8,3 +8,4 @@ env
 celerybeat-schedule.db
 env_vars
 common.py
+celerybeat-schedule*
