@@ -26,7 +26,7 @@ def send_forgot_password_email(email):
                 password_reset = PasswordReset.objects.create(expiry=expiry, user=user)
                 password_reset.generate_password_reset_token()
 
-            link = reset_password_url('/password-reset/%s' % password_reset.token)
+            link = reset_password_url('/password-reset/%s/' % password_reset.token)
 
             subject = 'Hi from ureport.in'
             html_text = "<p>" + subject + "</p>" \
