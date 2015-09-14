@@ -130,3 +130,6 @@
     - django
     - collectstatic
     - deploy
+
+- name: Ensure Supervisor service is restarted
+  service: name=supervisor state=restarted enabled=yes

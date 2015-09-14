@@ -1,4 +1,4 @@
 ---
 
 - name: reload application
-  shell: "sudo service supervisor force-reload"
+  shell: "sudo service supervisor restart"
