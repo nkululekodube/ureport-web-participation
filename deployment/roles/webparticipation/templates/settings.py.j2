@@ -1,0 +1,35 @@
+from os import environ
+from common import *
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+SECRET_KEY='{{secret_key}}'
+
+WEBPARTICIPATION_ROOT='{{web_participation_root}}'
+
+UREPORT_ROOT='{{ureport_root}}'
+UREPORT_ORG_ID='{{ureport_org_id}}'
+
+ALLOWED_HOSTS='{{allowed_hosts}}'
+
+RAPIDPRO_API_TOKEN='{{rapidpro_api_token}}'
+RAPIDPRO_RECEIVED_PATH='{{rapidro_received_path}}'
+RAPIDPRO_WEB_CHANNEL='{{rapidpro_web_channel}}'
+RAPIDPRO_API_PATH='{{rapidpro_api_path}}'
+
+DEFAULT_FROM_EMAIL='{{default_from_email}}'
+EMAIL_HOST_PASSWORD='{{email_host_password}}'
+EMAIL_HOST_USER='{{email_host_user}}'
+EMAIL_PORT='{{email_port}}'
+EMAIL_HOST='{{email_host}}'
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'webparticipation',
+        'USER': '{{database_user}}',
+        'PASSWORD': '{{database_password}}',
+        'HOST': '{{database_host}}',
+        'PORT': '{{database_port}}',
+    }
+}

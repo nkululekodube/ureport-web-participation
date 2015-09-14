@@ -1,6 +1,5 @@
-[program:celery]
-
-command=/home/ubuntu/webparticipation/run_celery.sh
+[program:webparticipation-celery]
+command={{project_dir}}/env/bin/python {{project_dir}}/manage.py celery worker --settings=webparticipation.settings.deploy --loglevel=INFO --beat
 directory={{project_dir}}
 user=ubuntu
 numprocs=1

@@ -1,0 +1,12 @@
+[program:ureport-celery]
+
+command=/home/ubuntu/webparticipation/ureport/env/bin/python manage.py celery worker --beat
+user=ubuntu
+directory={{ureport_project_dir}}
+startsecs=5
+autostart=true
+autoresart=unexpected
+numprocs=1
+logto=/etc/uwsgi/ureport-celery-error.log
+redirect_stderr=true
+unmask=007

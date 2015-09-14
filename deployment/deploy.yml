@@ -31,5 +31,6 @@
     - postgres
     - webparticipation
     - ureport
+    - redis
     - celery
     - nginx

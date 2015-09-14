@@ -1,0 +1,25 @@
+---
+
+- name: Include default step variables
+  include_vars: ../../../vars/{{instance}}.yml
+
+- name: Ensure that redis server is installed
+  sudo_user: root
+  apt: name=redis-server update_cache=yes state=installed
+  tags: redis
+
+- name: Switch to using upstart
+  sudo: yes
+  sudo_user: root
+  template: src=redis_conf.j2 dest="/etc/init/redis-server.conf"
+  tags: redis
+
+- name: Append 'daemonizie=no' to config
+  sudo: yes
+  sudo_user: root
+  lineinfile: >
+    dest='/etc/redis/redis.conf'
+    line='daemonize no'
+    insertafter=EOF
+    backup='yes'
+  tags: redis

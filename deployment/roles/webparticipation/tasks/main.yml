@@ -39,18 +39,19 @@
   notify: reload application
   tags: git
 
+- name: Setup settings file for the application
+  sudo_user: root
+  template: src=settings.py.j2
+            dest={{django_dir}}/settings/deploy.py
+            owner='{{remote_user}}'
+            group='{{remote_user}}'
+            backup=yes
+
+
 - name: Create the virtualenv
   sudo_user: root
   command: virtualenv {{virtual_env}} --no-site-packages
            creates={{virtual_env_activate}}
-
-- name: Create the virtualenv postactivate script to set environment variables
-  sudo_user: root
-  template: src=postactivate_template.j2
-            dest={{virtual_env_postactivate}}
-            owner='{{remote_user}}'
-            group='{{remote_user}}'
-            backup=yes
 
 - name: Create the application folder
   sudo_user: root
