@@ -35,14 +35,37 @@ def broadcast_rapidpro_response(request_params):
 def get_messages_for_user(username):
     while not MessageBus.objects.filter(msg_to=username).exists():
         sleep(.5)
-    return filter_messages(username)
+    sorted_message_ids = get_sorted_message_ids(username)
+    messages_from_rapidpro = get_messages_from_rapidpro_api(sorted_message_ids)
+    full_text_messages = [msg['results'][0]['text'] for msg in messages_from_rapidpro]
+    return full_text_messages
 
 
-def filter_messages(username):
+def get_sorted_message_ids(username):
+    filtered_messages = get_filtered_messages(username)
+    sorted_message_ids = sorted(list(set([msg.msg_id for msg in filtered_messages])))
+    remove_messages_from_message_bus(username)
+    return sorted_message_ids
+
+
+def get_filtered_messages(username):
     filtered_messages = MessageBus.objects.filter(msg_to=username)
     len(filtered_messages)
-    MessageBus.objects.filter(msg_to=username).delete()
     return filtered_messages
+
+
+def remove_messages_from_message_bus(username):
+    MessageBus.objects.filter(msg_to=username).delete()
+
+
+def get_messages_from_rapidpro_api(sorted_message_ids):
+    messages = [get_message_from_rapidpro_api_by_id(id) for id in sorted_message_ids]
+    return messages
+
+
+def get_message_from_rapidpro_api_by_id(id):
+    return requests.get(settings.RAPIDPRO_API_PATH + '/messages.json?id=' + str(id),
+                        headers={'Authorization': 'Token ' + settings.RAPIDPRO_API_TOKEN}).json()
 
 
 def append_rapidpro_message_to_message_bus(sender, **kwargs):

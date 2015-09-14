@@ -31,7 +31,7 @@ def user_is_authenticated(request):
 
 def get_already_registered_message(request):
     return render(request, 'register.html', {
-        'messages': [{'msg_text': _("You're already logged in. Why don't you take our latest poll?")}],
+        'messages': [_("You're already logged in. Why don't you take our latest poll?")],
         'is_complete': True})
 
 
