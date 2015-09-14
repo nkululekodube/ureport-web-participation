@@ -8,6 +8,14 @@ TEMPLATE_DEBUG = DEBUG
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
+INSTALLED_APPS += (
+    'django_pdb',
+)
+
+MIDDLEWARE_CLASSES += (
+    'django_pdb.middleware.PdbMiddleware',
+)
+
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
