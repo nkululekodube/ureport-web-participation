@@ -42,12 +42,14 @@
 
 - name: Copy production settings file
   sudo_user: root
+  notify: reload ureport application
   template: src=settings.py.j2
             dest=/home/ubuntu/webparticipation/ureport/ureport/settings.py
 
 - name: Install django application requirements in virtualenv
   sudo: yes
   sudo_user: root
+  notify: reload ureport application
   pip: virtualenv={{ureport_virtual_env}} requirements={{ureport_django_requirements}}
   tags:
     - requirements
@@ -78,7 +80,3 @@
   template: src=ureport-celery.conf.j2
             dest=/etc/supervisor/conf.d/ureport-celery.conf
             backup=yes
-
-- name: Ensure Supervisor service is restarted
-  sudo: yes
-  service: name=supervisor state=restarted enabled=yes

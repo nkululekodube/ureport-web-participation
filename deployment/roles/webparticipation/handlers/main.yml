@@ -1,4 +1,6 @@
 ---
 
 - name: reload application
-  shell: "sudo service supervisor restart"
+  sudo_user: root
+  sudo: yes
+  shell: "sudo supervisorctl reread && sudo supervisorctl update"
