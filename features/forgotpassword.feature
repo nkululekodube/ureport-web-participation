@@ -35,7 +35,7 @@ Feature: A registered user has forgotten the password
 
   Scenario: Resetting password for web-pro with  passwords that do not match
     Given I am a registered user
-    When I change visit reset password page
+    When I visit reset password page
     And I submit my un matching passwords
     Then I see a notification of passwords do not match
     And I shall login with the old password

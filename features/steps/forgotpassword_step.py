@@ -101,8 +101,17 @@ def step_impl(context):
     assert context.browser.find_link_by_href('/logout/'), 'Logout link not found'
     context.browser.find_link_by_href('/logout/').click()
 
-@when(u'I change visit reset password page')
+@when(u'I visit reset password page')
 def step_impl(context):
+    time.sleep(2)
+    user = User.objects.get(username=username)
+    PasswordReset.objects.create(expiry=expiry, user=user, token=uuid.uuid4().hex)
+    password_reset = PasswordReset.objects.all()[0]
+    url = context.base_url + '/password-reset/' + str(password_reset.token)
+    print(password_reset.token, "Reset Password - token \n")
+    print(url, "URL \n")
+    print(password_reset.__dict__, "Reset Password \n")
+    context.browser.visit(url)
     time.sleep(2)
 
 @when(u'I submit my un matching passwords')
@@ -120,10 +129,10 @@ def step_impl(context):
 
 @then(u'I shall login with the old password')
 def step_impl(context):
-    context.browser.visit(context.base_url + 'login/')
+    context.browser.visit(context.base_url + '/login/')
     time.sleep(1)
     context.browser.fill('email', 'mben03@gmail.com')
-    context.browser.fill('password', 'pass')
+    context.browser.fill('password', 'password')
     time.sleep(2)
     context.browser.find_by_css('.wp-send.btn').click()
     time.sleep(5)
