@@ -132,4 +132,5 @@
     - deploy
 
 - name: Ensure Supervisor service is restarted
+  sudo: yes
   service: name=supervisor state=restarted enabled=yes
