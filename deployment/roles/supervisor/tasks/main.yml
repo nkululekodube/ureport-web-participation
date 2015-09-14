@@ -1,0 +1,59 @@
+- name: Ensure that supervisor is not installed via apt
+  sudo_user: root
+  apt: name=supervisor update_cache=yes state=absent purge=yes
+  tags:
+    - supervisor
+
+- name: Make sure the supervisor directories are available
+  sudo_user: root
+  file: path=/etc/supervisor state=directory
+  tags:
+    - supervisor
+
+- name: Make sure the supervisor conf directories are available
+  sudo_user: root
+  file: path=/etc/supervisor/conf.d state=directory
+  tags:
+    - supervisor
+
+- name: Install supervisor using pip
+  pip: name=supervisor
+  sudo_user: root
+  sudo: yes
+  tags:
+    - supervisor
+
+- name: Create supervisor defaults
+  sudo_user: root
+  sudo: yes
+  template: src=supervisor.default.j2 dest='/etc/default/supervisor'
+  tags:
+    - supervisor
+
+- name: Create supervisor init script
+  sudo_user: root
+  sudo: yes
+  template: src=supervisor.init.j2 dest='/etc/init.d/supervisor' mode='755'
+  tags:
+    - supervisor
+
+- name: Create supervisor config
+  sudo_user: root
+  sudo: yes
+  template: src=supervisor.conf.j2 dest='/etc/supervisor/supervisord.conf'
+  tags:
+    - supervisor
+
+- name: Link supervisor config
+  sudo_user: root
+  sudo: yes
+  file: src=/etc/supervisor/supervisord.conf dest=/etc/supervisord.conf state=link
+  tags:
+    - supervisor
+
+- name: Ensure Supervisor service is started
+  sudo_user: root
+  sudo: yes
+  service: name=supervisor state=started enabled=yes
+  tags:
+    - supervisor
