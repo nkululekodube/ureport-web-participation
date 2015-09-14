@@ -1,11 +1,10 @@
 import uuid
-
 from django.conf import settings
 from django.db import models
-
+from django.contrib.auth.models import User
 
 class PasswordReset(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL)
+    user = models.ForeignKey(User, default=settings.AUTH_USER_MODEL)
     expiry = models.DateTimeField()
     token = models.CharField(max_length=32, default=0)
 
