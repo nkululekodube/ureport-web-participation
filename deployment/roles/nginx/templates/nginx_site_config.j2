@@ -58,7 +58,7 @@ server {
         uwsgi_pass webparticipation;
     }
 
-    location ~* ^/(index|login|logout|register|forgot-password|ureporter|rapidpro-receptor|send-token|confirm-token)/?$ {
+    location ~* ^/(index|login|logout|register|forgot-password|ureporter|shout|rapidpro-receptor|send-token|confirm-token)/?$ {
         include uwsgi_params;
         uwsgi_pass webparticipation;
     }
