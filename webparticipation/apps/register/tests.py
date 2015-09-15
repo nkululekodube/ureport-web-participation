@@ -55,10 +55,10 @@ class TestRegistration(TestCase):
     def test_has_password_keyword(self):
         MessageBus.objects.create(msg_id=123, msg_channel=1, msg_to=self.username, msg_from='somechannel',
                                   msg_text='no pw keyword here')
-        messages = MessageBus.objects.filter(msg_to=self.username)
+        messages = [msg.msg_text for msg in MessageBus.objects.filter(msg_to=self.username)]
         self.assertEqual(has_password_keyword(messages, self.username), False)
 
         MessageBus.objects.create(msg_id=123, msg_channel=1, msg_to=self.username, msg_from='somechannel',
                                   msg_text='A sentence containing password keyword')
-        messages = MessageBus.objects.filter(msg_to=self.username)
+        messages = [msg.msg_text for msg in MessageBus.objects.filter(msg_to=self.username)]
         self.assertEqual(has_password_keyword(messages, self.username), True)
