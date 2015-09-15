@@ -89,7 +89,7 @@ def is_duplicate_message(kwargs):
 
 
 def has_password_keyword(msgs, username):
-    return bool([msg for msg in msgs if re.search('^.+[P|p]assword.+$', msg.msg_text)])
+    return bool([msg for msg in msgs if re.search('^.+[P|p]assword.+$', msg)])
 
 
 settings.RAPIDPRO_DISPATCHER.connect(append_rapidpro_message_to_message_bus)
