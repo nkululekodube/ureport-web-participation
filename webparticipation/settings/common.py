@@ -11,6 +11,8 @@ MESSAGE_BUS = []
 
 RAPIDPRO_DISPATCHER = dispatch.Signal()
 
+SESSION_COOKIE_NAME = "webparticipationsession"
+
 APPEND_SLASH = True
 
 WEBPARTICIPATION_ROOT = os.environ.setdefault("WEBPARTICIPATION_ROOT", "127.0.0.1")

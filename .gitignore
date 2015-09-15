@@ -9,3 +9,5 @@ celerybeat-schedule.db
 env_vars
 common.py
 celerybeat-schedule*
+celeryconfig.py.db
+djcelery.schedulers.DatabaseScheduler.db
