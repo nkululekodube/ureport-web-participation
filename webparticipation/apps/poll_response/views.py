@@ -55,7 +55,7 @@ def serve_get_response(request, poll_id, flow_info, username, uuid):
 
 def serve_already_taken_poll_message(request, poll_id, flow_info):
     return render(request, 'poll_response.html', {
-        'messages': [{'msg_text': _("You've already taken this poll.")}],
+        'messages': [_("You've already taken this poll.")],
         'poll_id': poll_id,
         'title': flow_info['title'],
         'is_complete': True,
