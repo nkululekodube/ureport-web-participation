@@ -28,11 +28,9 @@ def before_scenario(context, scenario):
     Ureporter.objects.create(uuid=uid1,
                              user=User.objects.create_user(username=username1, email=email1, password=password))
 
-
 def after_scenario(context, scenario):
     User.objects.all().delete()
     PasswordReset.objects.all().delete()
-
 
 def after_all(context):
     context.browser.quit()

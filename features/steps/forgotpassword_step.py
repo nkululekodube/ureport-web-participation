@@ -45,13 +45,11 @@ def step_impl(context):
 
 @when(u'I see the page requesting me for an email address')
 def step_impl(context):
-    # pass
     time.sleep(2)
     assert context.browser.find_by_name('email'), 'Email field not found'
 
 @when(u'I shall input my email address')
 def step_impl(context):
-    pass
     time.sleep(2)
     context.browser.fill('email', 'mben03@gmail.com')
     context.browser.find_by_css('.wp-send.btn').click()
@@ -61,7 +59,6 @@ def step_impl(context):
 
 @when(u'I shall see a notification \'We have sent an email ...\'')
 def step_impl(context):
-    # pass
     time.sleep(2)
     assert context.browser.is_text_present('We have sent an email to mben03@gmail.com'), 'Email notification not found'
 
@@ -88,7 +85,9 @@ def step_impl(context):
 
 @then(u'I see a notification of password changed')
 def step_impl(context):
-    pass
+    time.sleep(2)
+    assert context.browser.is_text_present('Password successfully changed for mben03@gmail.com'), 'password_changed not found'
+
 
 @then(u'I shall login with the new password')
 def step_impl(context):
@@ -125,7 +124,8 @@ def step_impl(context):
 
 @then(u'I see a notification of passwords do not match')
 def step_impl(context):
-    pass
+    time.sleep(2)
+    assert context.browser.is_text_present('Password do not match'), 'passwords-do-not-match not found'
 
 @then(u'I shall login with the old password')
 def step_impl(context):
