@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.utils.translation import ugettext as _
+from django.conf import settings
 
 from webparticipation.apps.ureporter.views import get_user, activate_user
 from webparticipation.apps.rapidpro_receptor.views import send_message_to_rapidpro, has_password_keyword, \
@@ -21,7 +22,7 @@ def serve_get_response(request, uuid):
     if user_is_authenticated(request):
         return get_already_registered_message(request)
     else:
-        send_message_to_rapidpro({'from': username, 'text': 'webregister'})
+        send_message_to_rapidpro({'from': username, 'text': settings.RAPIDPRO_REGISTER_TRIGGER})
         return render(request, 'register.html', {'messages': get_messages_for_user(username), 'uuid': uuid})
 
 

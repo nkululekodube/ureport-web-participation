@@ -10,6 +10,7 @@ export UREPORT_ORG_ID='1'
 export RAPIDPRO_API_TOKEN='abcdefghijklmnopqrstuvwxyz0123456789abcd'
 export RAPIDPRO_API_PATH='http://localhost:8000/api/v1'
 export RAPIDPRO_RECEIVED_PATH='http://localhost:8000/api/v1/external/received/aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee/'
+export RAPIDPRO_REGISTER_TRIGGER='webregister'
 
 export DATABASE_USER=''
 export DATABASE_PASSWORD=''
