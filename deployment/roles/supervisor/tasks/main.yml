@@ -16,6 +16,12 @@
   tags:
     - supervisor
 
+- name: Make sure the supervisor log directories are available
+  sudo_user: root
+  file: path=/var/log/supervisor/ state=directory
+  tags:
+    - supervisor
+
 - name: Install supervisor using pip
   pip: name=supervisor
   sudo_user: root

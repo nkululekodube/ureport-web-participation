@@ -106,7 +106,7 @@
 - name: Run migrate command
   sudo_user: '{{remote_user}}'
   sudo: yes
-  shell: . {{virtual_env_activate}} && . {{virtual_env_postactivate}} && cd '{{project_dir}}' && python manage.py migrate --noinput
+  shell: cd '{{project_dir}}' && /home/ubuntu/webparticipation/ureport-web-participation/env/bin/python manage.py migrate --noinput --settings={{django_settings_module}}
   when: run_django_migrations
   tags:
     - django
@@ -115,7 +115,7 @@
 - name: Generate static django files for application
   sudo_user: root
   sudo: yes
-  shell: . {{virtual_env_activate}} && . {{virtual_env_postactivate}} && cd '{{project_dir}}' && python manage.py collectstatic --noinput
+  shell: cd '{{project_dir}}' && /home/ubuntu/webparticipation/ureport-web-participation/env/bin/python manage.py collectstatic --noinput --settings={{django_settings_module}}
   when: run_django_collectstatic
   tags:
     - django

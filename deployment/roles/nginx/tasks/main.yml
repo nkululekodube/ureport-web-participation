@@ -27,7 +27,7 @@
            removes=/etc/nginx/sites-enabled/default
 
 - name: Ensure Nginx service is started
-  service: name=nginx state=started enabled=yes
+  service: name=nginx state=restarted enabled=yes
   notify: start nginx
 
 - name: Initialise log rotation for nginx
