@@ -20,7 +20,9 @@ def retrieve_latest_poll():
 
 
 def notify_users_of_new_poll(latest_poll_id):
+
     flow_info = requests.get(settings.UREPORT_ROOT + '/api/v1/polls/' + str(latest_poll_id) + '/').json()
+    unsubscribe_link = get_url('/ureporter/unsubscribe/')
 
     subject = 'New Ureport poll "' + flow_info['title'] + '" now available'
 
@@ -30,7 +32,14 @@ def notify_users_of_new_poll(latest_poll_id):
            settings.WEBPARTICIPATION_ROOT + '/poll/' + str(latest_poll_id) + '/respond/' + '\n\n' \
            '-----'
     signature = '\nYour friendly Ureport team'
+
+    footer = "<p>__________________</p>" \
+             "Please click <a href='" + unsubscribe_link + "'>unsubscribe</a> to stop email notifications</p>"
+
     active_users = User.objects.filter(is_active=True)
     recipients = [user.email for user in active_users]
-    message = EmailMessage(subject, body + signature, bcc=recipients)
+    message = EmailMessage(subject, body + signature + footer, bcc=recipients)
     message.send()
+
+def get_url(path):
+        return '%s%s' % (settings.WEBPARTICIPATION_ROOT, path)

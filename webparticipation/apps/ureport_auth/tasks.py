@@ -2,7 +2,6 @@ import os
 
 from celery import task
 
-from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.mail import EmailMessage
 from django.utils import timezone
@@ -26,19 +25,23 @@ def send_forgot_password_email(email):
                 password_reset = PasswordReset.objects.create(expiry=expiry, user=user)
                 password_reset.generate_password_reset_token()
 
-            link = reset_password_url('/password-reset/%s/' % password_reset.token)
+            link = get_url('/password-reset/%s/' % password_reset.token)
+            unsubscribe_link = get_url('/ureporter/unsubscribe/')
 
             subject = 'Hi from ureport.in'
             html_text = "<p>" + subject + "</p>" \
                                           "<p>You recently requested to reset your ureport account password.</p>" \
                                           "<p>To do this, please click this password link to change your password " \
                                           "<a href='" + link + "'>Password recovery link</a></p>"
-            body = html_text + '<p>------</p>' \
+            body = html_text + '<p>__________________</p>' \
                                '<p>Thanks</p>'
             signature = '\nureport team'
-            recipients = [email]
 
-            message = EmailMessage('Ureport Password Recovery', body + signature, to=recipients)
+            footer = "<p>__________________</p>" \
+                       "Please click <a href='" + unsubscribe_link + "'>unsubscribe</a> to stop email notifications</p>"
+
+            recipients = [email]
+            message = EmailMessage('Ureport Password Recovery', body + signature + footer, to=recipients)
             message.content_subtype = 'html'
             message.send()
 
@@ -46,5 +49,5 @@ def send_forgot_password_email(email):
         print 'no user found'
 
 
-def reset_password_url(path):
+def get_url(path):
     return '%s%s' % (settings.WEBPARTICIPATION_ROOT, path)

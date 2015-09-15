@@ -20,6 +20,7 @@ urlpatterns = patterns(
     url(r'^ureporter/', include('apps.profile_page.urls'), name='profile'),
     url(r'^ureporter/(?P<ureporter_uuid>' + uuid_regex + ')/deactivate/$', include('apps.profile_page.urls'),
         name='profile'),
+    url(r'^ureporter/unsubscribe/$', include('apps.profile_page.urls'),name='unsubscribe'),
     url(r'^rapidpro-receptor', include('apps.rapidpro_receptor.urls'), name='rapidpro receptor'),
     url(r'^send-token', include('apps.send_token.urls'), name='send token'),
     url(r'^confirm-token', include('apps.confirm_token.urls'), name='confirm token'),
