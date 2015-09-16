@@ -1,21 +1,26 @@
 {% include 'header.html' %}
 
 <ul style="list-style-type: none; padding: 0">
-{% if uuid %}
-  <li>
-    <a href="/ureporter/{{uuid}}/">Profile</a>
-  </li>
-  <li>
-    <a href="/logout/">Logout</a>
-  </li>
-{% else %}
-  <li>
-    <a class="btn btn-lg btn-primary" href="/register/">Become a UReporter Today</a>
-  </li>
-  <li>
-    <a href="/login/?next={{request.path}}">Login</a>
-  </li>
-{% endif %}
+    {% if user.is_authenticated %}
+    <li>
+        <a href="{% url 'shout' %}">Send us a message</a>
+    </li>
+    {% endif %}
+    {% if uuid %}
+    <li>
+        <a href="/ureporter/{{uuid}}/">Profile</a>
+    </li>
+    <li>
+        <a href="/logout/">Logout</a>
+    </li>
+    {% else %}
+    <li>
+        <a class="btn btn-lg btn-primary" href="/register/">Become a UReporter Today</a>
+    </li>
+    <li>
+        <a href="/login/?next={{request.path}}">Login</a>
+    </li>
+    {% endif %}
 </ul>
 
 {% include 'footer.html' %}
