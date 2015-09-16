@@ -40,7 +40,6 @@ class TestLatestPoll(TestCase):
     def test_retrieve_latest_poll_when_latest_poll_not_updated(self, mock_notify_users_of_new_poll, mock_requests_get):
         mock_notify_users_of_new_poll.return_value = None
         mock_requests_get.return_value = mock_response = Mock()
-
         mock_response.json.return_value = {'results': [{'id': self.lastest_poll_singleton.poll_id}]}
         retrieve_latest_poll()
         mock_notify_users_of_new_poll.assert_not_called()
@@ -50,7 +49,6 @@ class TestLatestPoll(TestCase):
     def test_retrieve_latest_poll_when_latest_poll_updated(self, mock_notify_users_of_new_poll, mock_requests_get):
         mock_notify_users_of_new_poll.return_value = None
         mock_requests_get.return_value = mock_response = Mock()
-
         mock_response.json.return_value = {'results': [{'id': self.latest_poll_id}]}
         retrieve_latest_poll()
         mock_notify_users_of_new_poll.assert_called_once_with(2)
