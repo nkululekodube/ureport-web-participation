@@ -1,7 +1,7 @@
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from webparticipation.apps.ureporter.models import Ureporter
-from . import tasks
+from webparticipation.apps.send_token import tasks
 
 
 @csrf_exempt
