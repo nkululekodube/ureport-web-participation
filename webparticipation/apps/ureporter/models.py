@@ -35,8 +35,8 @@ class Ureporter(models.Model):
         return self.user.date_joined >= timezone.now() - datetime.timedelta(days=settings.TOKEN_EXPIRY_DAYS)
 
     def is_latest_poll_taken(self):
-        lastest_poll_id = LatestPoll.get_solo().poll_id
-        return self.last_poll_taken == lastest_poll_id
+        latest_poll_id = LatestPoll.get_solo().poll_id
+        return self.last_poll_taken == latest_poll_id
 
     def save(self, **kwargs):
         self.user.save()

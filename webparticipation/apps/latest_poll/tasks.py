@@ -1,9 +1,9 @@
 import requests
-from django.contrib.auth.models import User
 from django.core.mail import EmailMessage
 from django.conf import settings
 from celery import task
 
+from webparticipation.apps.ureporter.models import Ureporter
 from webparticipation.apps.latest_poll.models import LatestPoll
 
 
@@ -13,33 +13,39 @@ def retrieve_latest_poll():
                             '/api/v1/polls/org/' + settings.UREPORT_ORG_ID + '/featured/?format=json').json()
     latest_poll_id = response['results'][0]['id']
     lastest_poll_singleton = LatestPoll.get_solo()
-    if lastest_poll_singleton != latest_poll_id:
+    if lastest_poll_singleton.poll_id != latest_poll_id:
         lastest_poll_singleton.poll_id = latest_poll_id
         lastest_poll_singleton.save()
         notify_users_of_new_poll(latest_poll_id)
 
 
 def notify_users_of_new_poll(latest_poll_id):
-
     flow_info = requests.get(settings.UREPORT_ROOT + '/api/v1/polls/' + str(latest_poll_id) + '/').json()
-    unsubscribe_link = get_url('/ureporter/unsubscribe/')
 
     subject = 'New Ureport poll "' + flow_info['title'] + '" now available'
+    email_content = construct_new_poll_email(flow_info, latest_poll_id)
 
-    body = 'Hello Ureporter,' + '\n\n'\
-           'We have published a new poll, "' + flow_info['title'] + '". ' + \
-           'Take the poll by clicking the link below:' + '\n' + \
-           settings.WEBPARTICIPATION_ROOT + '/poll/' + str(latest_poll_id) + '/respond/' + '\n\n' \
+    active_users = Ureporter.objects \
+                            .filter(user__is_active=True, subscribed=True) \
+                            .exclude(last_poll_taken=latest_poll_id)
+    recipients = [user.user.email for user in active_users]
+
+    message = EmailMessage(subject, email_content, bcc=recipients)
+    message.send()
+    return message
+
+
+def construct_new_poll_email(flow_info, latest_poll_id):
+    unsubscribe_link = '%s%s' % (settings.WEBPARTICIPATION_ROOT, '/ureporter/unsubscribe/')
+    body = 'Hello Ureporter,\n' \
+           '\n' \
+           'We have published a new poll, "' + flow_info['title'] + '". ' \
+           'Take the poll by clicking the link below:\n' + \
+           settings.WEBPARTICIPATION_ROOT + '/poll/' + str(latest_poll_id) + '/respond/\n' \
+           '\n' \
            '-----'
     signature = '\nYour friendly Ureport team'
-
-    footer = "<p>__________________</p>" \
-             "Please click <a href='" + unsubscribe_link + "'>unsubscribe</a> to stop email notifications</p>"
-
-    active_users = User.objects.filter(is_active=True)
-    recipients = [user.email for user in active_users]
-    message = EmailMessage(subject, body + signature + footer, bcc=recipients)
-    message.send()
-
-def get_url(path):
-        return '%s%s' % (settings.WEBPARTICIPATION_ROOT, path)
+    footer = '\n\n' \
+             '__________________\n' \
+             'Please click <a href="' + unsubscribe_link + '">unsubscribe</a> to stop email notifications</p>'
+    return '%s%s%s' % (body, signature, footer)
