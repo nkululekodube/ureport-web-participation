@@ -45,7 +45,7 @@ def get_flow_info_from_poll_id(request, poll_id):
 
 
 def serve_get_response(request, poll_id, flow_info, username, uuid):
-    if Ureporter.objects.get(user__username=username).is_latest_poll_taken():
+    if is_run_complete(flow_info['flow_uuid'], uuid):
         return serve_already_taken_poll_message(request, poll_id, flow_info)
     trigger_flow_run(flow_info['flow_uuid'], uuid)
     messages = get_messages_for_user(username)
