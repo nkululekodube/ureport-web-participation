@@ -12,12 +12,13 @@ from webparticipation.apps.latest_poll.models import LatestPoll
 def retrieve_latest_poll():
     response = requests.get(settings.UREPORT_ROOT +
                             '/api/v1/polls/org/' + settings.UREPORT_ORG_ID + '/featured/?format=json').json()
-    latest_poll_id = response['results'][0]['id']
-    lastest_poll_singleton = LatestPoll.get_solo()
-    if lastest_poll_singleton.poll_id != latest_poll_id:
-        lastest_poll_singleton.poll_id = latest_poll_id
-        lastest_poll_singleton.save()
-        notify_users_of_new_poll(latest_poll_id)
+    latest_poll_id_from_api = response['results'][0]['id']
+    latest_poll_singleton = LatestPoll.get_solo()
+    if not latest_poll_singleton.poll_id == latest_poll_id_from_api \
+       and not latest_poll_singleton.has_in_previous_featured_polls(latest_poll_id_from_api):
+        latest_poll_singleton.set_poll_id(latest_poll_id_from_api)
+        latest_poll_singleton.add_featured_poll(latest_poll_id_from_api)
+        notify_users_of_new_poll(latest_poll_id_from_api)
 
 
 def notify_users_of_new_poll(latest_poll_id):

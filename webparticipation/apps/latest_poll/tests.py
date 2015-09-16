@@ -11,9 +11,9 @@ from webparticipation.apps.latest_poll.models import LatestPoll
 class TestLatestPoll(TestCase):
 
     def setUp(self):
-        self.lastest_poll_singleton = LatestPoll.get_solo()
-        self.lastest_poll_singleton.poll_id = 1
-        self.lastest_poll_singleton.save()
+        self.latest_poll_singleton = LatestPoll.get_solo()
+        self.latest_poll_singleton.poll_id = 1
+        self.latest_poll_singleton.save()
 
         self.latest_poll_id = 2
         self.should_receive_email_user = Ureporter.objects \
@@ -33,14 +33,35 @@ class TestLatestPoll(TestCase):
         self.should_receive_email_user.delete()
         self.already_taken_poll_user.delete()
         self.not_subscribed_user.delete()
-        self.lastest_poll_singleton.delete()
+        self.latest_poll_singleton.delete()
+        self.latest_poll_singleton.featured_polls = '0'
+        self.latest_poll_singleton.save()
+
+    def test_get_featured_polls_set_with_default(self):
+        self.latest_poll_singleton.featured_polls = '0'
+        self.assertFalse(self.latest_poll_singleton.has_in_previous_featured_polls(self.latest_poll_id))
+
+    def test_get_featured_polls_set_with_same_poll_id(self):
+        self.latest_poll_singleton.featured_polls = '0,1'
+        featured_polls_set = self.latest_poll_singleton.get_featured_polls_set()
+        self.assertEqual(featured_polls_set, set([0, 1]))
+
+    def test_has_in_previous_featured_polls(self):
+        self.latest_poll_singleton.featured_polls = '0,1,2'
+        self.assertTrue(self.latest_poll_singleton.has_in_previous_featured_polls(1))
+        self.assertFalse(self.latest_poll_singleton.has_in_previous_featured_polls(6))
+
+    def test_add_featured_poll(self):
+        self.latest_poll_singleton.featured_polls = '0,1,2'
+        self.latest_poll_singleton.add_featured_poll(5)
+        self.assertEqual(self.latest_poll_singleton.featured_polls, '0,1,2,5')
 
     @patch('requests.get')
     @patch('webparticipation.apps.latest_poll.tasks.notify_users_of_new_poll')
     def test_retrieve_latest_poll_when_latest_poll_not_updated(self, mock_notify_users_of_new_poll, mock_requests_get):
         mock_notify_users_of_new_poll.return_value = None
         mock_requests_get.return_value = mock_response = Mock()
-        mock_response.json.return_value = {'results': [{'id': self.lastest_poll_singleton.poll_id}]}
+        mock_response.json.return_value = {'results': [{'id': self.latest_poll_singleton.poll_id}]}
         retrieve_latest_poll()
         mock_notify_users_of_new_poll.assert_not_called()
 
