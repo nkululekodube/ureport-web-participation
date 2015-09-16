@@ -38,7 +38,7 @@ class TestLatestPoll(TestCase):
     @patch('requests.get')
     @patch('webparticipation.apps.latest_poll.tasks.notify_users_of_new_poll')
     def test_retrieve_latest_poll_when_latest_poll_not_updated(self, mock_notify_users_of_new_poll, mock_requests_get):
-        notify_users_of_new_poll.return_value = None
+        mock_notify_users_of_new_poll.return_value = None
         mock_requests_get.return_value = mock_response = Mock()
 
         mock_response.json.return_value = {'results': [{'id': self.lastest_poll_singleton.poll_id}]}
@@ -48,7 +48,7 @@ class TestLatestPoll(TestCase):
     @patch('requests.get')
     @patch('webparticipation.apps.latest_poll.tasks.notify_users_of_new_poll')
     def test_retrieve_latest_poll_when_latest_poll_updated(self, mock_notify_users_of_new_poll, mock_requests_get):
-        notify_users_of_new_poll.return_value = None
+        mock_notify_users_of_new_poll.return_value = None
         mock_requests_get.return_value = mock_response = Mock()
 
         mock_response.json.return_value = {'results': [{'id': self.latest_poll_id}]}
