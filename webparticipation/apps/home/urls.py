@@ -1,5 +1,6 @@
 from django.conf.urls import url
-from . import views
+
+from webparticipation.apps.home import views
 
 urlpatterns = [
     url(r'^', views.home, name='index'),

@@ -1,5 +1,6 @@
 from django.conf.urls import url
-from . import views
+
+from webparticipation.apps.profile_page import views
 
 urlpatterns = [
     url(r'^(?P<ureporter_uuid>[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12})/$',

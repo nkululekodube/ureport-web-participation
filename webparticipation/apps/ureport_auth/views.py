@@ -6,8 +6,8 @@ from django.contrib.auth import authenticate, login
 from django.template import RequestContext
 from django.utils import timezone
 
+from webparticipation.apps.ureport_auth import tasks
 from webparticipation.apps.ureport_auth.models import PasswordReset
-from . import tasks
 from webparticipation.apps.ureporter.models import Ureporter
 from webparticipation.apps.ureporter.views import is_valid_password
 from webparticipation.apps.latest_poll.decorators import show_untaken_latest_poll_message

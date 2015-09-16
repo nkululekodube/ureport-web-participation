@@ -1,5 +1,6 @@
 from django.conf.urls import url
-from . import views
+
+from webparticipation.apps.poll_response import views
 
 urlpatterns = [
     url(r'^(?P<poll_id>[0-9]{1,6})/respond/', views.poll_response, name='poll response'),
