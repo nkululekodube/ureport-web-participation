@@ -130,6 +130,43 @@ class TestUserInFlow(TestCase):
         self.assertEqual(True, user_in_flow(self.user)[0])
         self.assertEqual('the-test-flow-uid', user_in_flow(self.user)[1])
 
+    @responses.activate
+    def test_flow_complete_if_one_run_completed(self):
+        url = "%s/runs.json" % settings.RAPIDPRO_API_PATH
+        responses.add(responses.GET, url,
+                      body="""
+                      {
+  "count": 1,
+  "next": null,
+  "previous": null,
+  "results": [
+    {
+      "flow_uuid": "the-test-flow-uid",
+      "flow": 5,
+      "run": 48,
+      "completed": false
+    },
+    {
+      "flow_uuid": "the-test-flow-uid",
+      "flow": 5,
+      "run": 49,
+      "completed": true
+    },
+    {
+      "flow_uuid": "05c66a1e-ff50-4b46-8e7efeb699b0",
+      "flow": 6,
+      "run": 50,
+      "completed": true
+    }
+  ]
+}
+                      """,
+                      status=200,
+                      content_type='application/json')
+        self.assertEqual(False, user_in_flow(self.user)[0])
+        self.assertEqual('', user_in_flow(self.user)[1])
+
+
 
 class TestGetPollId(TestCase):
     @responses.activate

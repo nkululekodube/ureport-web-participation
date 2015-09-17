@@ -1,3 +1,5 @@
+from itertools import groupby
+
 from braces.views import LoginRequiredMixin
 from django import forms
 from django.conf import settings
@@ -29,10 +31,16 @@ def user_in_flow(user):
     data = requests.get(url, params=params, headers=headers).json()
     in_flow = False
     flow_uuid = ''
-    for run in data.get('results'):
-        if not run.get('completed'):
+    flows = {}
+    for key, group in groupby(data.get('results'), lambda x: x.get('flow_uuid')):
+        if any([item.get('completed') for item in group]):
+            flows[key] = False
+        else:
+            flows[key] = True
+    for key, value in flows.iteritems():
+        if value:
             in_flow = True
-            flow_uuid = run.get('flow_uuid')
+            flow_uuid = key
             break
     return in_flow, flow_uuid
 
