@@ -114,14 +114,13 @@ TEMPLATE_LOADERS = (
 TEMPLATE_DIRS = (
     normpath(join(DJANGO_ROOT, 'templates')),
 )
-
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.middleware.gzip.GZipMiddleware',
-    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
 )
 
@@ -226,3 +225,11 @@ RAPIDPRO_API_PATH = os.environ.get('RAPIDPRO_API_PATH')
 RAPIDPRO_API_TOKEN = os.environ.get('RAPIDPRO_API_TOKEN')
 RAPIDPRO_RECEIVED_PATH = os.environ.get('RAPIDPRO_RECEIVED_PATH')
 RAPIDPRO_REGISTER_TRIGGER = os.environ.get('RAPIDPRO_REGISTER_TRIGGER')
+LOCALE_PATHS = (
+    os.path.join(DJANGO_ROOT, 'locale'),
+)
+
+ugettext = lambda s: s
+LANGUAGES = (
+    ('en', ugettext('English')),
+)

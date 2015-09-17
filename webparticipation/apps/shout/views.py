@@ -9,14 +9,14 @@ from django.forms import Form
 from django.http import HttpResponseRedirect
 from django.views.generic import FormView
 import requests
+from django.utils.translation import ugettext_lazy as _
 
 from webparticipation.apps.rapidpro_receptor.views import send_message_to_rapidpro
 from webparticipation.apps.ureporter.models import Ureporter
 
-
 def validate_not_spaces(value):
     if value.strip() == '':
-        raise ValidationError(u"Please enter a message.")
+        raise ValidationError(_(u"Please enter a message."))
 
 
 class ShoutForm(Form):
@@ -76,12 +76,12 @@ class ShoutView(LoginRequiredMixin, FormView):
             context['poll_id'] = poll_id
             context['has_poll'] = poll_id is not None
 
-            messages.info(self.request, 'Please complete the poll before you can send us a message')
+            messages.info(self.request, _('Please complete the poll before you can send us a message'))
             return self.render_to_response(context)
 
     def form_valid(self, form):
         reporter = Ureporter.objects.get(user=self.request.user)
         data = {'text': form.cleaned_data['message'], 'from': reporter.urn_tel}
         send_message_to_rapidpro(data)
-        messages.info(self.request, 'Thank you change maker for sending ureport this message')
+        messages.info(self.request, _('Thank you change maker for sending ureport this message'))
         return HttpResponseRedirect(self.get_success_url())
