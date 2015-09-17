@@ -9,7 +9,6 @@ from django.views.generic import FormView
 import requests
 
 from webparticipation.apps.rapidpro_receptor.views import send_message_to_rapidpro
-
 from webparticipation.apps.ureporter.models import Ureporter
 
 
@@ -22,20 +21,34 @@ class ShoutForm(Form):
     message = forms.CharField(required=True, validators=[validate_not_spaces])
 
 
-def reduce_run(accumulator, item):
-    if not item.get('completed'):
-        accumulator[0] = True
-        accumulator[1] = item.get('flow_uuid', '')
-    return accumulator
-
-
 def user_in_flow(user):
     reporter = Ureporter.objects.get(user=user)
     params = {'contact': reporter.uuid}
     headers = {'Authorization': 'Token %s' % settings.RAPIDPRO_API_TOKEN}
     url = '%s/runs.json' % settings.RAPIDPRO_API_PATH
     data = requests.get(url, params=params, headers=headers).json()
-    return reduce(reduce_run, data['results'], [False, ''])
+    in_flow = False
+    flow_uuid = ''
+    for run in data.get('results'):
+        if not run.get('completed'):
+            in_flow = True
+            flow_uuid = run.get('flow_uuid')
+            break
+    return in_flow, flow_uuid
+
+
+def get_poll_id(flow_id):
+    url = '%s/api/v1/polls/org/%s/' % (settings.UREPORT_ROOT, settings.UREPORT_ORG_ID)
+    params = {'flow_uuid': flow_id}
+    try:
+        data = requests.get(url, params=params).json()
+        if len(data['results']) > 0:
+            return data['results'][0]['id']
+    except requests.exceptions.RequestException as e:
+        print e
+        pass
+
+    return None
 
 
 class ShoutView(LoginRequiredMixin, FormView):
@@ -50,8 +63,13 @@ class ShoutView(LoginRequiredMixin, FormView):
             return self.render_to_response(self.get_context_data(form=form))
         else:
             self.template_name = "user_in_flow.html"
+            context = self.get_context_data()
+            poll_id = get_poll_id(flow_id)
+            context['poll_id'] = poll_id
+            context['has_poll'] = poll_id is not None
+
             messages.info(self.request, 'Please complete the poll before you can send us a message')
-            return self.render_to_response(self.get_context_data())
+            return self.render_to_response(context)
 
     def form_valid(self, form):
         reporter = Ureporter.objects.get(user=self.request.user)

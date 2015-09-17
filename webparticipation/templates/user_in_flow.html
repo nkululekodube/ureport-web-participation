@@ -1,13 +1,15 @@
 {% include 'header.html' %}
- {% if messages %}
-  {% for message in messages %}
-  <div class="alert alert-{{message.tags}}">
+{% if messages %}
+{% for message in messages %}
+<div class="alert alert-{{message.tags}}">
     {{ message|safe }}
-  </div>
-  {% endfor %}
+</div>
+{% endfor %}
 {% endif %}
 <section>
-
+    {% if has_poll %}
+    <a href="{% url 'poll_response' poll_id %}">Click here to continue with the poll</a>
+    {% endif %}
 </section>
 
 {% include 'footer.html' %}
