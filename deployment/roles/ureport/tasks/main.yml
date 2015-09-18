@@ -1,8 +1,4 @@
 ---
-
-- name: Inlude role variables
-  include_vars: ../../../vars/{{instance}}.yml
-
 - name: Copy supervisor configuration to appropriate location
   sudo_user: root
   template: src=supervisor_conf.j2

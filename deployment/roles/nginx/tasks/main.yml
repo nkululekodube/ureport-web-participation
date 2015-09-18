@@ -16,7 +16,7 @@
 - name: Create the Nginx configuration file
   sudo_user: root
   sudo: yes
-  template: src=nginx_site_config.j2
+  template: src={{nginx_site}}_config.j2
             dest=/etc/nginx/conf.d/{{application_name}}.conf
             backup=yes
 
@@ -27,8 +27,9 @@
            removes=/etc/nginx/sites-enabled/default
 
 - name: Ensure Nginx service is started
-  service: name=nginx state=restarted enabled=yes
-  notify: start nginx
+  sudo: yes
+  sudo_user: root
+  command: sudo service nginx restart
 
 - name: Initialise log rotation for nginx
   sudo_user: root

@@ -1,8 +1,4 @@
 ---
-
-- name: Include default step variables
-  include_vars: ../../../vars/{{instance}}.yml
-
 - name: Suppress locale errors
   sudo: yes
   sudo_user: root

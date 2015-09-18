@@ -1,8 +1,5 @@
 ---
 
-- name: Include default step variables
-  include_vars: ../../../vars/{{instance}}.yml
-
 - name: Create log directory for celery
   sudo: yes
   sudo_user: root

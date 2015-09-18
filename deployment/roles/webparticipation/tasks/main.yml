@@ -1,8 +1,4 @@
 ---
-
-- name: Include default step variables
-  include_vars: ../../../vars/{{instance}}.yml
-
 - name: Install openssl and libssl
   sudo_user: root
   apt: name={{item}} update_cache=yes state=latest

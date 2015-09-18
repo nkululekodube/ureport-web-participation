@@ -2,13 +2,9 @@ upstream webparticipation {
    server 127.0.0.1:8200;
 }
 
-upstream ureport {
-   server 127.0.0.1:8100;
-}
-
 server {
     listen 80;
-    server_name {{web_participation_root_bare}};
+    server_name {{server_name}};
 
     charset utf-8;
     error_log /var/log/nginx/error.log debug;
@@ -29,36 +25,7 @@ server {
        alias /home/ubuntu/webparticipation/ureport-web-participation/webparticipation/static;
     }
 
-    location /sitestatic {
-       alias /home/ubuntu/webparticipation/ureport/sitestatic;
-    }
-
     location / {
-        include uwsgi_params;
-        uwsgi_pass ureport;
-    }
-
-    location /poll/latest/ {
-        include uwsgi_params;
-        uwsgi_pass webparticipation;
-    }
-
-    location ~* ^/poll/(\d+)/respond/$ {
-        include uwsgi_params;
-        uwsgi_pass webparticipation;
-    }
-
-    location ~* ^/ureporter/([\d\w-]+)/? {
-        include uwsgi_params;
-        uwsgi_pass webparticipation;
-    }
-
-    location ~* ^/password-reset/([\d\w-]+)/? {
-        include uwsgi_params;
-        uwsgi_pass webparticipation;
-    }
-
-    location ~* ^/(index|login|logout|register|forgot-password|ureporter|shout|rapidpro-receptor|send-token|confirm-token)/?$ {
         include uwsgi_params;
         uwsgi_pass webparticipation;
     }
