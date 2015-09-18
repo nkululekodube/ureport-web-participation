@@ -1,17 +1,18 @@
 {% include 'header.html' %}
+{% load i18n %}
 
 {% if deleted %}
-  <p>We're sorry to see you go.</p>
-  <a href="/">Take me back to the homepage</a>
+  <p>{% trans "We're sorry to see you go." %}</p>
+  <a href="/">{% trans "Take me back to the homepage" %}</a>
 {% else %}
-  <h1>Delete Account?</h1>
+  <h1>{% trans "Delete Account?" %}</h1>
 
-  <p>Are you sure you want to delete your account? Deleted accounts are non-recoverable.</p>
+  <p>{% trans "Are you sure you want to delete your account? Deleted accounts are non-recoverable." %}</p>
 
   <form action="/ureporter/{{uuid}}/deactivate/" method="post">
     {% csrf_token %}
-    <button type="submit" class="btn btn-danger">Yes, I'm sure.</button>
-    <a href="/" class="btn btn-success">No, get me out of here.</a>
+    <button type="submit" class="btn btn-danger">{% trans "Yes, I'm sure." %}</button>
+    <a href="/" class="btn btn-success">{% trans "No, get me out of here." %}</a>
   </form>
 {% endif %}
 

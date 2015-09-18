@@ -1,3 +1,5 @@
+{% load i18n %}
+
 <header id="ureport-public-navbar" class="ureport-header-navbar ureport-public-navbar navbar navbar-static-top" role="banner">
   <div class="container">
     <div class="navbar-header">
@@ -10,19 +12,19 @@
     <nav id="ureport-public-navbar-collapse" class="collapse navbar-collapse navbar-right public-nav" role="navigation">
       <ul class="nav navbar-nav public-nav-ul">
         <li class="level1">
-          <a class="primary-color" href="{{UREPORT_URL}}/about/"> About </a>
+          <a class="primary-color" href="{{UREPORT_URL}}/about/"> {% trans "About" %} </a>
         </li>
         <li class="level1">
-          <a class="primary-color" href="{{UREPORT_URL}}/polls/"> Polls </a>
+          <a class="primary-color" href="{{UREPORT_URL}}/polls/"> {% trans "Polls" %} </a>
         </li>
         <li class="level1">
-          <a class="primary-color" href="{{UREPORT_URL}}/stories/"> Stories </a>
+          <a class="primary-color" href="{{UREPORT_URL}}/stories/"> {% trans "Stories" %} </a>
         </li>
         <li class="level1">
-          <a class="primary-color" href="{{UREPORT_URL}}/ureporters/"> U-Reporters </a>
+          <a class="primary-color" href="{{UREPORT_URL}}/ureporters/"> {% trans "U-Reporters" %} </a>
         </li>
         <li class="level1">
-          <a class="primary-color" href="{{UREPORT_URL}}/join/"> Join &amp; Engage </a>
+          <a class="primary-color" href="{{UREPORT_URL}}/join/"> {% trans "Join &amp; Engage" %} </a>
         </li>
       </ul>
     </nav>

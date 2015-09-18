@@ -1,4 +1,5 @@
 {% include 'header.html' %}
+{% load i18n %}
 
 <section>
   {% block messages %}
@@ -12,27 +13,29 @@
   {% endblock %}
 
   {% if request.user.is_authenticated %}
-    <p>You're already logged in.</p>
-    <a href="/logout/">Logout</a>
+    <p>{% trans "You're already logged in." %}</p>
+    <a href="/logout/">{% trans "Logout" %}</a>
   {% else %}
     <h1 class="hr-header primary-color">Login</h1>
     <form class="form-horizontal webparticipation-form" name="LoginForm" action="/login/?next={{redirect_to}}" method="post">
       {% csrf_token %}
       <input type="hidden" name="next" value="{{next}}"/>
       <div>
-        <label for="email">Email</label>
+        <label for="email">{% trans "Email" %}</label>
         <input type="email" name="email" class="form-control" required autofocus>
       </div>
       <div>
-        <label for="password">Password</label>
+        <label for="password">{% trans "Password" %}</label>
         <input type="password" name="password" class="form-control" required>
       </div>
       <div class="clearfix">
-        <button class="wp-send btn btn-default pull-right clearfix"type="submit"> Login </button>
+        <button class="wp-send btn btn-default pull-right clearfix"type="submit">{% trans "Login" %}</button>
       </div>
       <div>
         <small class="pull-right">
-          <a href="/forgot-password/">Forgot password?</a>
+          <a href="/forgot-password/">{% trans "Forgot password?" %}</a>
+          |
+          <a href="/register/">{% trans "Register" %}</a>
         </small>
       </div>
     </form>

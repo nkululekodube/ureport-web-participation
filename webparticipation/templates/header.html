@@ -1,8 +1,10 @@
+{% load i18n %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>UReport</title>
+    <title>{% trans "UReport" %}</title>
     <link rel="stylesheet" href="/static/css/styles.min.css" type="text/css">
     <link rel="stylesheet" href="/static/css/inline-styles.css" type="text/css">
     <link rel="stylesheet" href="/static/css/web-participation.css" type="text/css">
@@ -17,7 +19,7 @@
 
     {% if request.session.lp %}
       <div class="alert alert-info">
-        There is a new poll! <a href="/poll/latest/">Take it now!</a>
+        There is a new poll! <a href="/poll/latest/">{% trans "Take it now!" %}</a>
       </div>
     {% endif %}
 

@@ -1,3 +1,4 @@
+{% load i18n %}
 <div class="footer-container global-footer">
   <div class="container">
     <footer>
@@ -63,7 +64,7 @@
 
         <div class="col-sm-3">
           <div class="follow-us">
-            FOLLOW US ON:
+            {% trans "FOLLOW US ON" %}:
             <a href="http://twitter.com/UReportGlobal">
               <img class="footer-social" src="/sitestatic/img/twitter_footer_icon.png">
             </a>
@@ -77,7 +78,7 @@
       <div class="row">
         <div class="col-sm-12">
           <div class="login-link">
-            <a class="primary-color" href="https://ureport.in/users/login/"> Login </a>
+            <a class="primary-color" href="https://ureport.in/users/login/">{% trans "Login" %}</a>
           </div>
         </div>
       </div>

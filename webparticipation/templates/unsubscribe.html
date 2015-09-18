@@ -1,17 +1,18 @@
 {% include 'header.html' %}
-<h1>Unsubscribe from email notifications:</h1>
+{% load i18n %}
+
+<h1>{% trans "Unsubscribe from email notifications:" %}</h1>
 {% if not subscribed %}
   <p>{{message}}</p>
-  <a href="/">Take me back to the homepage</a>
+  <a href="/">{% trans "Take me back to the homepage" %}</a>
 {% else %}
   <p> {{message}}</p>
-<!--<form action="/ureporter/{{uuid}}/unsubscribe/" method="post">-->
   <form action="/ureporter/unsubscribe/" method="post">
     {% csrf_token %}
     <input class="form-control" type="text" name="email" value=""/>
     <br>
-    <button type="submit" class="btn btn-danger">Unsubscribe</button>
-    <a href="/" class="btn btn-success">Cancel</a>
+    <button type="submit" class="btn btn-danger">{% trans "Unsubscribe" %}</button>
+    <a href="/" class="btn btn-success">{% trans "Cancel" %}</a>
   </form>
 {% endif %}
 

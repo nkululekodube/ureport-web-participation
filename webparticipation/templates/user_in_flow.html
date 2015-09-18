@@ -1,16 +1,18 @@
 {% include 'header.html' %}
 {% load i18n %}
+
 {% if messages %}
-{% for message in messages %}
-<div class="alert alert-{{message.tags}}">
-    {{ message|safe }}
-</div>
-{% endfor %}
+  {% for message in messages %}
+    <div class="alert alert-{{message.tags}}">
+      {{ message|safe }}
+    </div>
+  {% endfor %}
 {% endif %}
+
 <section>
-    {% if has_poll %}
+  {% if has_poll %}
     <a href="{% url 'poll_response' poll_id %}">{% trans "Click here to continue with the poll" %}</a>
-    {% endif %}
+  {% endif %}
 </section>
 
 {% include 'footer.html' %}
