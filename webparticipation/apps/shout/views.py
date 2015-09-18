@@ -1,6 +1,8 @@
-from itertools import groupby
+import requests
 
+from itertools import groupby
 from braces.views import LoginRequiredMixin
+
 from django import forms
 from django.conf import settings
 from django.contrib import messages
@@ -8,7 +10,6 @@ from django.core.exceptions import ValidationError
 from django.forms import Form
 from django.http import HttpResponseRedirect
 from django.views.generic import FormView
-import requests
 from django.utils.translation import ugettext_lazy as _
 
 from webparticipation.apps.rapidpro_receptor.views import send_message_to_rapidpro

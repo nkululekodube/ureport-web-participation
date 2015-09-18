@@ -1,10 +1,12 @@
+import responses
+
+from mock import patch
+
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 from django_webtest import WebTest
-from mock import patch
-import responses
 
 from webparticipation.apps.shout.views import user_in_flow, get_poll_id
 from webparticipation.apps.ureporter.models import Ureporter
@@ -165,7 +167,6 @@ class TestUserInFlow(TestCase):
                       content_type='application/json')
         self.assertEqual(False, user_in_flow(self.user)[0])
         self.assertEqual('', user_in_flow(self.user)[1])
-
 
 
 class TestGetPollId(TestCase):

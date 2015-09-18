@@ -1,9 +1,12 @@
-from django.conf import settings
 import requests
-from django.shortcuts import render
-from django.http import HttpResponseNotFound
-from django.contrib.auth.decorators import login_required
+import json
+import datetime
 
+from time import sleep
+
+from django.conf import settings as s
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
 from django.utils.translation import ugettext as _
 
 from webparticipation.apps.ureporter.models import Ureporter
@@ -12,45 +15,60 @@ from webparticipation.apps.rapidpro_receptor.views import send_message_to_rapidp
 
 @login_required
 def poll_response(request, poll_id):
-    username = str(request.user)
-    uuid = Ureporter.objects.get(user__username=username).uuid
-    flow_info = get_flow_info_from_poll_id(request, poll_id)
     if request.method == 'GET':
-        return serve_get_response(request, poll_id, flow_info, username, uuid)
+        return serve_get_response(request, poll_id)
     if request.method == 'POST':
-        return serve_post_response(request, poll_id, flow_info, username, uuid)
+        return serve_post_response(request, poll_id)
 
 
 @login_required
 def latest_poll_response(request):
-    response = requests.get(settings.UREPORT_ROOT +
-                            '/api/v1/polls/org/' + settings.UREPORT_ORG_ID + '/featured/')
-    response_json = response.json()
-    if response_json['count']:
-        latest_poll_id = response_json['results'][0]['id']
+    featured_poll = requests.get(s.UREPORT_ROOT + '/api/v1/polls/org/' + s.UREPORT_ORG_ID + '/featured/').json()
+    if featured_poll['count']:
+        latest_poll_id = featured_poll['results'][0]['id']
         return poll_response(request, latest_poll_id)
     else:
         return render(request, 'poll_response.html', {
-            'messages': [{'msg_text': _("There is no current poll available.")}],
+            'messages': [{'msg_text': _('There is no current poll available.')}],
             'is_complete': True,
             'no_latest': True,
             'submission': request.POST.get('send')})
-        HttpResponseNotFound('No latest poll')
+
+
+def serve_get_response(request, poll_id):
+    username = request.user
+    uuid = Ureporter.objects.get(user__username=username).uuid
+    flow_info = get_flow_info_from_poll_id(request, poll_id)
+
+    if complete_run_already_exists(flow_info['flow_uuid'], uuid):
+        return serve_already_taken_poll_message(request, poll_id, flow_info)
+
+    run = trigger_flow_run(flow_info['flow_uuid'], uuid)
+    print run
+    run_id = run.json()[0]['run']
+
+    messages = get_messages_for_user(username)
+
+    return render(request, 'poll_response.html',
+                  {'messages': messages,
+                   'poll_id': poll_id,
+                   'title': flow_info['title'],
+                   'flow_info': json.dumps(flow_info),
+                   'run_id': run_id})
 
 
 def get_flow_info_from_poll_id(request, poll_id):
-    response = requests.get(settings.UREPORT_ROOT + '/api/v1/polls/' + str(poll_id) + '/')
-    flow_info = response.json()
+    flow_info = requests.get(s.UREPORT_ROOT + '/api/v1/polls/' + str(poll_id) + '/').json()
     return flow_info
 
 
-def serve_get_response(request, poll_id, flow_info, username, uuid):
-    if is_run_complete(flow_info['flow_uuid'], uuid):
-        return serve_already_taken_poll_message(request, poll_id, flow_info)
-    trigger_flow_run(flow_info['flow_uuid'], uuid)
-    messages = get_messages_for_user(username)
-    title = flow_info['title']
-    return render(request, 'poll_response.html', {'messages': messages, 'poll_id': poll_id, 'title': title})
+def complete_run_already_exists(flow_uuid, uuid):
+    query_path = s.RAPIDPRO_API_PATH + '/runs.json' + \
+        '?flow_uuid=' + flow_uuid + \
+        '&contact=' + uuid
+    runs = requests.get(query_path, headers={'Authorization': 'Token ' + s.RAPIDPRO_API_TOKEN}).json()
+    has_completed_run = bool([run['completed'] for run in runs['results'] if run['completed'] is True])
+    return has_completed_run
 
 
 def serve_already_taken_poll_message(request, poll_id, flow_info):
@@ -63,37 +81,56 @@ def serve_already_taken_poll_message(request, poll_id, flow_info):
 
 
 def trigger_flow_run(flow_uuid, uuid):
-    api_path = settings.RAPIDPRO_API_PATH
-    rapidpro_api_token = settings.RAPIDPRO_API_TOKEN
-    requests.post(api_path + '/runs.json',
-                  data={'flow_uuid': flow_uuid, 'contacts': uuid},
-                  headers={'Authorization': 'Token ' + rapidpro_api_token})
+    run = requests.post(s.RAPIDPRO_API_PATH + '/runs.json',
+                        data={'flow_uuid': flow_uuid, 'contacts': uuid},
+                        headers={'Authorization': 'Token ' + s.RAPIDPRO_API_TOKEN})
+    return run
 
 
-def serve_post_response(request, poll_id, flow_info, username, uuid):
+def serve_post_response(request, poll_id):
+    username = request.user
+    uuid = Ureporter.objects.get(user__username=username).uuid
+    flow_info = json.loads(request.POST['flow_info'])
+    run_id = request.POST['run_id']
+    current_time = current_datetime_to_json_date()
+
     send_message_to_rapidpro({'from': username, 'text': request.POST['send']})
-    run_is_complete = is_run_complete(flow_info['flow_uuid'], uuid)
+
+    run_is_complete = is_current_run_complete(flow_info['flow_uuid'], uuid, run_id, current_time)
     if run_is_complete:
-        save_last_poll_taken(username, poll_id)
+        ureporter = Ureporter.objects.get(user__username=username)
+        ureporter.set_last_poll_taken(poll_id)
+
     msgs = get_messages_for_user(username)
-    title = flow_info['title']
+
     return render(request, 'poll_response.html', {
         'messages': msgs,
         'poll_id': poll_id,
-        'title': title,
+        'flow_info': json.dumps(flow_info),
+        'title': flow_info['title'],
+        'run_id': run_id,
         'is_complete': run_is_complete,
         'submission': request.POST.get('send')})
 
 
-def is_run_complete(flow_uuid, uuid):
-    api_path = settings.RAPIDPRO_API_PATH
-    rapidpro_api_token = settings.RAPIDPRO_API_TOKEN
-    runs = requests.get(api_path + '/runs.json?flow_uuid=' + flow_uuid + '&contact=' + uuid,
-                        headers={'Authorization': 'Token ' + rapidpro_api_token})
-    return bool([run['completed'] for run in runs.json()['results'] if run['completed'] is True])
+def current_datetime_to_json_date():
+    return datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3] + 'Z'
 
 
-def save_last_poll_taken(username, poll_id):
-    ureporter = Ureporter.objects.get(user__username=username)
-    ureporter.last_poll_taken = poll_id
-    ureporter.save()
+def is_current_run_complete(flow_uuid, uuid, run_id, current_time):
+    while True:
+        query_path = s.RAPIDPRO_API_PATH + '/runs.json' + \
+            '?flow_uuid=' + flow_uuid + \
+            '&contact=' + uuid + \
+            '&run=' + str(run_id)
+        user_run = requests.get(query_path, headers={'Authorization': 'Token ' + s.RAPIDPRO_API_TOKEN}).json()
+        if user_run['count']:
+            if not bool(user_run['results'][0]['values']):
+                return False
+            last_value_time = user_run['results'][0]['values'][-1::][0]['time']
+            if last_value_time > current_time:
+                has_completed_run = bool([run['completed'] for run in user_run['results'] if run['completed'] is True])
+                return has_completed_run
+                break
+        else:
+            sleep(1)

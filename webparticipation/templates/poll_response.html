@@ -13,6 +13,8 @@
   {% if not is_complete %}
   <form action="" method="post">
       {% csrf_token %}
+      <input type="hidden" name="flow_info" value="{{flow_info}}">
+      <input type="hidden" name="run_id" value="{{run_id}}">
       <input class="form-control" name="send" type="text">
       <button class="wp-send btn btn-default" type="submit">Send</button>
   </form>

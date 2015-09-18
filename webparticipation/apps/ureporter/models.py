@@ -38,6 +38,10 @@ class Ureporter(models.Model):
         latest_poll_id = LatestPoll.get_solo().poll_id
         return self.last_poll_taken == latest_poll_id
 
+    def set_last_poll_taken(self, poll_id):
+        self.last_poll_taken = poll_id
+        self.save()
+
     def save(self, **kwargs):
         self.user.save()
         super(Ureporter, self).save()
