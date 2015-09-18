@@ -20,9 +20,9 @@
   </form>
   {% else %}
     {% if no_latest %}
-      <a href="/polls/">View Polls</a>
+      <a href="{{UREPORT_URL}}/polls/">View Polls</a>
     {% else %}
-      <a href="/poll/{{poll_id}}/">View Results</a>
+      <a href="{{UREPORT_URL}}/poll/{{poll_id}}/">View Results</a>
     {% endif %}
   {% endif %}
 
