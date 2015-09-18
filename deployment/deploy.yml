@@ -26,10 +26,10 @@
     - ./vars/common.yml
 
   roles:
-    # - python
-    # - supervisor
-    # - postgres
-    # - webparticipation
-    # - redis
-    # - celery
+    - python
+    - supervisor
+    - postgres
+    - webparticipation
+    - redis
+    - celery
     - nginx
