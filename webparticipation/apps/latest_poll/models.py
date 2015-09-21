@@ -7,9 +7,11 @@ class LatestPoll(SingletonModel):
 
     poll_id = models.IntegerField(null=True)
     featured_polls = models.CommaSeparatedIntegerField(max_length=4096, default='0')
+    flow_uuid = models.CharField(max_length=256)
 
-    def set_poll_id(self, poll_id):
+    def set_poll_id(self, poll_id, flow_uuid):
         self.poll_id = poll_id
+        self.flow_uuid = flow_uuid
         self.save()
 
     def get_featured_polls_set(self):
