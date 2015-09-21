@@ -1,4 +1,5 @@
 import datetime
+import uuid
 from random import randint
 
 import requests
@@ -19,6 +20,10 @@ def generate_token():
     return str(randint(1000, 9999))
 
 
+def generate_unsubscribe_token():
+    return uuid.uuid4().hex
+
+
 class Ureporter(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL)
     uuid = models.CharField(max_length=36)
@@ -26,6 +31,7 @@ class Ureporter(models.Model):
     token = models.IntegerField(default=generate_token)
     last_poll_taken = models.IntegerField(default=0)
     subscribed = models.BooleanField(default=True)
+    unsubscribe_token = models.CharField(max_length=32, default=generate_unsubscribe_token)
 
     def invalidate_token(self):
         self.token = 0

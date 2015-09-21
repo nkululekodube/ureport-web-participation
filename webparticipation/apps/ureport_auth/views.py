@@ -5,6 +5,7 @@ from django.shortcuts import render_to_response, render
 from django.contrib.auth import authenticate, login
 from django.template import RequestContext
 from django.utils import timezone
+from django.utils.translation import ugettext as _
 
 from webparticipation.apps.ureport_auth import tasks
 from webparticipation.apps.ureport_auth.models import PasswordReset
@@ -29,7 +30,7 @@ def login_user(request):
         try:
             user = User.objects.get(email=email)
         except User.DoesNotExist:
-            messages.warning(request, 'There is no registered user with sign-in email ' + email)
+            messages.warning(request, _('There is no registered user with sign-in email %s' % email))
         if user:
             authenticated_user = authenticate(username=user.username, password=password)
             if authenticated_user is not None:
@@ -42,7 +43,7 @@ def login_user(request):
                     else:
                         return HttpResponseRedirect(redirect_to + '?lp=true')
             else:
-                messages.error(request, 'Password is incorrect')
+                messages.error(request, _('Password is incorrect'))
 
     return render_to_response('login.html', RequestContext(request, {'next': redirect_to}))
 
@@ -50,16 +51,15 @@ def login_user(request):
 def forgot_password(request):
     if request.method == 'POST':
         email = request.POST.get('email')
-        try:
-            user = User.objects.get(email=email)
-            if user:
-                tasks.send_forgot_password_email.delay(email)
-                return render(request, 'forgot_password.html', {
-                    'success_message': 'We have sent an email to ' + email + ' with recovery instructions. ' +
-                                       'Please check your email.',
-                    'password_reset_email_sent': True})
-        except User.DoesNotExist:
-            messages.error(request, 'There is no registered user with sign-in email ' + str(email))
+        user = User.objects.filter(email=email).first()
+        if user:
+            tasks.send_forgot_password_email.delay(email)
+            return render(request, 'forgot_password.html', {
+                'success_message': _('We have sent an email to %s with recovery instructions. Please check your email.')
+                % email,
+                'password_reset_email_sent': True})
+        else:
+            messages.error(request, _('There is no registered user with sign-in email %s') % str(email))
     return render_to_response('forgot_password.html', RequestContext(request))
 
 
@@ -68,7 +68,7 @@ def password_reset(request, reset_token):
 
     if request.method == 'GET':
         if not password_reset or not password_reset.expiry > timezone.now():
-            messages.error(request, 'Sorry that recovery link is expired. Please Try again.')
+            messages.error(request, _('Sorry that recovery link is expired. Please Try again.'))
             return HttpResponseRedirect('/forgot-password/')
 
     if request.method == 'POST':
@@ -80,11 +80,12 @@ def password_reset(request, reset_token):
             if is_valid_password(password):
                 user.set_password(password)
                 user.save()
-                messages.info(request, 'Password successfully changed for ' + user.email)
+                password_reset.delete()
+                messages.info(request, _('Password successfully changed for %s') % user.email)
                 return HttpResponseRedirect('/login/')
             else:
-                messages.error(request, 'Password should have a minimum of '
-                                        '8 characters.')
+                messages.error(request, _('Password should have a minimum of 8 characters.'))
         else:
-            messages.error(request, 'Password do not match.')
+            messages.error(request, _('Password do not match.'))
+
     return render_to_response('password_reset.html', RequestContext(request))

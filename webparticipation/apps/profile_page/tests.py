@@ -18,30 +18,18 @@ class TestProfilePage(TestCase):
         self.client.logout()
 
     def test_anon_user_cannot_view_page(self):
-        response = self.client.get('/ureporter/aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee/')
-        self.assertIn('/login/?next=/ureporter/aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee/', response.url)
+        response = self.client.get('/profile/')
+        self.assertIn('/login/?next=/profile/', response.url)
         self.assertEqual(response.status_code, 302)
 
-    def test_user_cannot_view_another_users_profile(self):
+    def test_user_can_view_profile(self):
         self.client.login(username='legituser', password='password')
-        response = self.client.get('/ureporter/ffffffff-gggg-hhhh-iiii-jjjjjjjjjjjj/')
-        self.assertEqual(response.status_code, 404)
-
-    def test_user_can_view_own_profile(self):
-        self.client.login(username='legituser', password='password')
-        response = self.client.get('/ureporter/aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee/')
+        response = self.client.get('/profile/')
         self.assertEqual(response.status_code, 200)
 
     def test_user_can_unsubscribe(self):
-        self.client.login(username='legituser', password='password')
         self.assertEqual(self.ureporter.subscribed, True)
-        response = self.client.post('/ureporter/aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee/', {'subscribed': None})
+        self.client.login(username='legituser', password='password')
+        response = self.client.post('/profile/unsubscribe/', {'subscribed': None})
+        self.assertEqual(response.status_code, 200)
         self.assertEqual(Ureporter.objects.get(uuid='aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee').subscribed, False)
-        self.assertEqual(response.status_code, 200)
-
-    def test_user_can_resubscribe(self):
-        self.client.login(username='legituser', password='password')
-        self.assertEqual(self.ureporter.subscribed, True)
-        response = self.client.post('/ureporter/aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee/', {'subscribed': True})
-        self.assertEqual(Ureporter.objects.get(uuid='aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee').subscribed, True)
-        self.assertEqual(response.status_code, 200)

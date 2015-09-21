@@ -44,7 +44,6 @@ def serve_get_response(request, poll_id):
         return serve_already_taken_poll_message(request, poll_id, flow_info)
 
     run = trigger_flow_run(flow_info['flow_uuid'], uuid)
-    print run
     run_id = run.json()[0]['run']
 
     messages = get_messages_for_user(username)

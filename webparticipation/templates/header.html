@@ -19,7 +19,7 @@
 
     {% if request.session.lp %}
       <div class="alert alert-info">
-        There is a new poll! <a href="/poll/latest/">{% trans "Take it now!" %}</a>
+        {% trans "There is a new poll!" %} <a href="/poll/latest/">{% trans "Take it now!" %}</a>
       </div>
     {% endif %}
 

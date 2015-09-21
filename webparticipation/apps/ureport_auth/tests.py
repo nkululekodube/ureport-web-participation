@@ -26,10 +26,7 @@ class TestUserLogin(TestCase):
         self.assertTemplateUsed(response, 'forgot_password.html')
 
     def test_user_is_logged_in(self):
-        user = User.objects.create_user(username='jacob',
-                                        email='john@doe.com', password='top_secret')
-        user.save()
-        Ureporter.objects.create(user=user)
+        user = User.objects.create_user(username='jacob', email='john@doe.com', password='top_secret')
         request = self.factory.post('/login', {'email': user.email, 'password': 'top_secret'})
         session = self.client.session
         request.session = session

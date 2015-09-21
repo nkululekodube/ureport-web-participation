@@ -39,7 +39,7 @@ def notify_users_of_new_poll(latest_poll_id):
 
 
 def construct_new_poll_email(flow_info, latest_poll_id):
-    unsubscribe_link = get_url('/ureporter/unsubscribe/')
+    unsubscribe_link = get_url('/profile/unsubscribe/')
     body = '<p>Hello Ureporter,</p>' \
            '<p>We have published a new poll, "' + flow_info['title'] + '".</p>' \
            '<p>Take the poll by clicking the following link: ' + \

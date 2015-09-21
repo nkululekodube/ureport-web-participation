@@ -1,5 +1,8 @@
 from django.shortcuts import render
+from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_http_methods, require_GET
+from django.utils.translation import ugettext as _
 
 from webparticipation.apps.ureporter.models import Ureporter
 from webparticipation.apps.latest_poll.decorators import show_untaken_latest_poll_message
@@ -7,62 +10,53 @@ from webparticipation.apps.latest_poll.decorators import show_untaken_latest_pol
 
 @login_required
 @show_untaken_latest_poll_message
-def view_profile(request, ureporter_uuid):
-
+def view_profile(request):
     ureporter = Ureporter.objects.get(user__username=request.user)
-
     confirm_changes = False
-
     if request.method == 'POST':
         ureporter.subscribed = True if request.POST.get('subscribed') == 'True' else False
         ureporter.save()
         confirm_changes = True
+    return render(request, 'profile.html', {'uuid': ureporter.uuid,
+                                            'email': ureporter.user.email,
+                                            'date_joined': ureporter.user.date_joined,
+                                            'subscribed': ureporter.subscribed,
+                                            'confirm_changes': confirm_changes})
 
-    if ureporter.uuid == ureporter_uuid:
-        return render(request, 'profile.html', {'uuid': ureporter_uuid,
-                                                'email': ureporter.user.email,
-                                                'date_joined': ureporter.user.date_joined,
-                                                'subscribed': ureporter.subscribed,
-                                                'confirm_changes': confirm_changes})
-    else:
-        return render(request, '404.html', status=404)
 
-def deactivate_account(request, ureporter_uuid):
+@login_required
+@require_http_methods(['GET', 'POST'])
+def deactivate_account(request):
+    ureporter = Ureporter.objects.get(user__username=request.user)
     if request.method == 'GET':
-        ureporter = Ureporter.objects.get(user__username=request.user)
-        if ureporter.uuid == ureporter_uuid:
-            return render(
-                request,
-                'deactivate.html',
-                {'uuid': ureporter_uuid, 'email': ureporter.user.email, 'is_active': ureporter.user.is_active})
-        else:
-            return render(request, '404.html', status=404)
+        return render(
+            request,
+            'deactivate.html',
+            {'uuid': ureporter.uuid, 'email': ureporter.user.email, 'is_active': ureporter.user.is_active})
+    elif request.method == 'POST':
+        ureporter.delete()
+        return HttpResponseRedirect('/profile/goodbye')
 
-    if request.method == 'POST':
-        Ureporter.objects.get(user__username=request.user).delete()
-        return render(request, 'deactivate.html', {'deleted': True})
 
-def unsubscribe_account(request):
-    message = "Sorry! \n No matching user found"
-    if Ureporter.objects.filter(user__username=request.user).exists():
-        ureporter = Ureporter.objects.get(user__username=request.user)
-        if ureporter:
-            uuid=ureporter.uuid
-            if request.method == 'GET':
-                if ureporter.subscribed:
-                    message = "Please confirm the email to unsubscribe"
-                    return render( request, 'unsubscribe.html',
-                    {'uuid': uuid, 'subscribed': True, 'email': ureporter.user.email, 'message': message, 'is_active': ureporter.user.is_active})
-                else:
-                    message = "Hello " + ureporter.user.email + ",\
-                        \n you are not currently subscribed to email notifications"
-            elif request.method == 'POST':
-                user_email=request.POST.get("email", "")
-                if ureporter.user.email == user_email:
-                    ureporter.subscribed = False
-                    ureporter.save()
-                    message = "Hello," + user_email + ",\
-                              \n you are not currently subscribed to email notifications"
-                    return render(request, 'unsubscribe.html', {'uuid': uuid, 'message': message, 'subscribed': False})
+@require_GET
+def goodbye(request):
+    return render(request, 'goodbye.html')
 
+
+@require_http_methods(['GET', 'POST'])
+def unsubscribe_account(request, unsubscribe_token):
+    message = _('Sorry! \nNo matching user found')
+
+    ureporter = Ureporter.objects.filter(unsubscribe_token=unsubscribe_token).first()
+    if ureporter:
+        if request.method == 'GET':
+            ureporter.subscribed = False
+            ureporter.save()
+            message = _('You are now no longer subscribed to email notifications.\n\n \
+                <p>If you change your mind you can resubscribe through your profile page.</p>')
+            return render(request, 'unsubscribe.html',
+                          {
+                              'email': ureporter.user.email,
+                              'message': message
+                          })
     return render(request, 'unsubscribe.html', {'message': message, 'subscribed': None})

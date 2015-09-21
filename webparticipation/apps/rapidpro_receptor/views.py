@@ -1,10 +1,12 @@
 import re
+import requests
+
 from time import sleep
 
-import requests
 from django.conf import settings
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.utils.translation import ugettext as _
 
 from webparticipation.apps.message_bus.models import MessageBus
 
@@ -89,7 +91,7 @@ def is_duplicate_message(kwargs):
 
 
 def has_password_keyword(msgs, username):
-    return bool([msg for msg in msgs if re.search('^.+[P|p]assword.+$', msg)])
+    return bool([msg for msg in msgs if re.search(_('^.+[P|p]assword.+$'), msg)])
 
 
 settings.RAPIDPRO_DISPATCHER.connect(append_rapidpro_message_to_message_bus)
