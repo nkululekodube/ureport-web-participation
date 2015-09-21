@@ -25,12 +25,7 @@ def login_user(request):
         email = request.POST.get('email')
         password = request.POST.get('password')
         redirect_to = request.POST.get('next', '/index')
-        user = None
-
-        try:
-            user = User.objects.get(email=email)
-        except User.DoesNotExist:
-            messages.warning(request, _('There is no registered user with sign-in email %s' % email))
+        user = User.objects.filter(email=email).first()
         if user:
             authenticated_user = authenticate(username=user.username, password=password)
             if authenticated_user is not None:
@@ -44,6 +39,8 @@ def login_user(request):
                         return HttpResponseRedirect(redirect_to + '?lp=true')
             else:
                 messages.error(request, _('Password is incorrect'))
+        else:
+            messages.warning(request, _('There is no registered user with sign-in email %s' % email))
 
     return render_to_response('login.html', RequestContext(request, {'next': redirect_to}))
 

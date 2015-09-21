@@ -2,7 +2,6 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_http_methods, require_GET
-from django.utils.translation import ugettext as _
 
 from webparticipation.apps.ureporter.models import Ureporter
 from webparticipation.apps.latest_poll.decorators import show_untaken_latest_poll_message
@@ -44,19 +43,11 @@ def goodbye(request):
 
 
 @require_http_methods(['GET', 'POST'])
+@require_GET
 def unsubscribe_account(request, unsubscribe_token):
-    message = _('Sorry! \nNo matching user found')
-
     ureporter = Ureporter.objects.filter(unsubscribe_token=unsubscribe_token).first()
     if ureporter:
-        if request.method == 'GET':
-            ureporter.subscribed = False
-            ureporter.save()
-            message = _('You are now no longer subscribed to email notifications.\n\n \
-                <p>If you change your mind you can resubscribe through your profile page.</p>')
-            return render(request, 'unsubscribe.html',
-                          {
-                              'email': ureporter.user.email,
-                              'message': message
-                          })
-    return render(request, 'unsubscribe.html', {'message': message, 'subscribed': None})
+        ureporter.subscribed = False
+        ureporter.save()
+        return render(request, 'unsubscribe.html', {'user_exists': True})
+    return render(request, 'unsubscribe.html', {'user_exists': False})

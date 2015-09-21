@@ -1,8 +1,13 @@
 {% include 'header.html' %}
 {% load i18n %}
 
-<p>{% trans "You are now no longer subscribed to email notifications." %}</p>
-<p>{% trans "If you change your mind you can always resubscribe through your <a href='/profile/'>profile page</a>." %}</p>
-<a href="{{UREPORT_URL}}">{% trans "Take me back to the homepage" %}</a>
+{% if user_exists %}
+  <p>{% trans "You are now no longer subscribed to email notifications." %}</p>
+  <p>{% trans "If you change your mind you can always resubscribe through your <a href='/profile/'>profile page</a>." %}</p>
+{% else %}
+  <p>{% trans "Sorry, no matching user found." %}</p>
+{% endif %}
+
+<p><a href="{{UREPORT_URL}}">{% trans "Take me back to the homepage" %}</a></p>
 
 {% include 'footer.html' %}

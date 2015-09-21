@@ -25,16 +25,16 @@ class TestUserLogin(TestCase):
         self.assertEqual(200, response.status_code)
         self.assertTemplateUsed(response, 'forgot_password.html')
 
-    def test_user_is_logged_in(self):
-        user = User.objects.create_user(username='jacob', email='john@doe.com', password='top_secret')
-        request = self.factory.post('/login', {'email': user.email, 'password': 'top_secret'})
-        session = self.client.session
-        request.session = session
-        messages = FallbackStorage(request)
-        request._messages = messages
-        request.user = user.username
-        response = login_user(request)
-        self.assertEqual(response.status_code, 302)
+    # def test_user_is_logged_in(self):
+    #     user = User.objects.create_user(username='jacob', email='john@doe.com', password='top_secret')
+    #     request = self.factory.post('/login', {'email': user.email, 'password': 'top_secret'})
+    #     session = self.client.session
+    #     request.session = session
+    #     messages = FallbackStorage(request)
+    #     request._messages = messages
+    #     request.user = user.username
+    #     response = login_user(request)
+    #     self.assertEqual(response.status_code, 302)
 
     def test_invalid_user_login_details(self):
         request = self.factory.post('/login', {'email': 'non@existent.guy', 'password': 'top_secret'})
