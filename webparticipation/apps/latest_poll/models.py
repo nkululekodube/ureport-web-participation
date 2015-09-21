@@ -4,7 +4,6 @@ from solo.models import SingletonModel
 
 
 class LatestPoll(SingletonModel):
-
     poll_id = models.IntegerField(null=True)
     featured_polls = models.CommaSeparatedIntegerField(max_length=4096, default='0')
     flow_uuid = models.CharField(max_length=256)
@@ -15,7 +14,7 @@ class LatestPoll(SingletonModel):
         self.save()
 
     def get_featured_polls_set(self):
-        featured_polls_set = set([int(item) for item in self.featured_polls.split(',')])
+        featured_polls_set = set([int(item) for item in self.featured_polls.split(',') if len(item) > 0])
         return featured_polls_set
 
     def has_in_previous_featured_polls(self, poll_id):
