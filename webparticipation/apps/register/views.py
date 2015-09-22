@@ -45,11 +45,7 @@ def serve_post_response(request, uuid, ureporter):
         send_message_to_rapidpro({'from': username, 'text': request.POST['send']})
     msgs = get_messages_for_user(username)
     is_password = has_password_keyword(msgs, username)
-    post_password = request.POST['post_password'] or 0  # 0=before password, 1=on password, 2=post password
-    if post_password == 1:
-        post_password = 2
-    if is_password:
-        post_password = 1
+    post_password = get_post_password_status(request, is_password)
     show_latest_poll_link = post_password > 1
     return render(request, 'register.html', {
         'messages': msgs,
@@ -58,3 +54,12 @@ def serve_post_response(request, uuid, ureporter):
         'post_password': post_password,
         'show_latest_poll_link': show_latest_poll_link,
         'uuid': uuid})
+
+
+def get_post_password_status(request, is_password):
+    post_password = request.POST['post_password'] or 0  # 0=before password, 1=on password, 2=post password
+    if int(post_password) == 1:
+        post_password = 2
+    if is_password:
+        post_password = 1
+    return post_password

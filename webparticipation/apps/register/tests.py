@@ -8,7 +8,8 @@ from webparticipation.apps.ureporter.models import Ureporter
 from webparticipation.apps.utils.views import undashify_user
 from webparticipation.apps.message_bus.models import MessageBus
 
-from views import register, serve_get_response, has_password_keyword
+from webparticipation.apps.register.views import register, serve_get_response, has_password_keyword, \
+    get_post_password_status
 
 
 class TestRegistration(TestCase):
@@ -62,3 +63,16 @@ class TestRegistration(TestCase):
                                   msg_text='A sentence containing password keyword')
         messages = [msg.msg_text for msg in MessageBus.objects.filter(msg_to=self.username)]
         self.assertEqual(has_password_keyword(messages, self.username), True)
+
+    def test_show_latest_poll_link(self):
+        request = self.factory.post('/register/', {'post_password': 0})
+        post_password_status = get_post_password_status(request, False)
+        self.assertEqual(int(post_password_status), 0)
+
+        request = self.factory.post('/register/', {'post_password': 1})
+        post_password_status = get_post_password_status(request, True)
+        self.assertEqual(int(post_password_status), 1)
+
+        request = self.factory.post('/register/', {'post_password': 1})
+        post_password_status = get_post_password_status(request, False)
+        self.assertEqual(int(post_password_status), 2)
