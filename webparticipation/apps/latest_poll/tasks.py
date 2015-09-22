@@ -15,6 +15,9 @@ def retrieve_latest_poll():
     latest_poll_id_from_api = response['results'][0]['id']
     latest_poll_id_flow_uuid = response['results'][0]['flow_uuid']
     latest_poll_singleton = LatestPoll.get_solo()
+    if latest_poll_singleton.flow_uuid == '':
+        latest_poll_singleton.flow_uuid = latest_poll_id_flow_uuid
+        latest_poll_singleton.save()
     if not latest_poll_singleton.poll_id == latest_poll_id_from_api \
        and not latest_poll_singleton.has_in_previous_featured_polls(latest_poll_id_from_api):
         latest_poll_singleton.set_poll_id(latest_poll_id_from_api, latest_poll_id_flow_uuid)
