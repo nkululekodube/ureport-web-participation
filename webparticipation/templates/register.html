@@ -13,12 +13,16 @@
   <form action="" method="post">
       {% csrf_token %}
       <input type="hidden" name="uuid" value="{{uuid}}"/>
+      <input type="hidden" name="post_password" value="{{post_password}}"/>
       {% if is_password %}
-      <input class="form-control" name="password" type="password">
+        <input class="form-control" name="password" type="password">
       {% else %}
-      <input class="form-control" name="send" type="text">
+        <input class="form-control" name="send" type="text">
       {% endif %}
       <button class="wp-send btn btn-default" type="submit">{% trans "Send" %}</button>
+      {% if show_latest_poll_link %}
+        <a href="/poll/latest/respond">{% trans "Take the Latest Poll" %}</a>
+      {% endif %}
   </form>
   {% else %}
   <a href="/poll/latest/respond">{% trans "Go To Latest Poll" %}</a>
