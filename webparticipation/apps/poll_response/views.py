@@ -113,18 +113,18 @@ def serve_post_response(request, poll_id):
 
 
 def current_datetime_to_json_date():
-    return datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3] + 'Z'
+    return (datetime.datetime.utcnow() - datetime.timedelta(seconds=int(s.UREPORT_TIME_DELTA))) \
+        .strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3] + 'Z'
 
 
 def is_current_run_complete(flow_uuid, uuid, run_id, current_time):
     while True:
-        query_path = s.RAPIDPRO_API_PATH + '/runs.json' + \
-            '?flow_uuid=' + flow_uuid + \
-            '&contact=' + uuid + \
-            '&run=' + str(run_id)
+        query_path = '%s/runs.json?flow_uuid=%s&contact=%s&run=%s' \
+            % (s.RAPIDPRO_API_PATH, flow_uuid, uuid, str(run_id))
         user_run = requests.get(query_path, headers={'Authorization': 'Token ' + s.RAPIDPRO_API_TOKEN}).json()
         if user_run['count']:
-            if not bool(user_run['results'][0]['values']):
+            user_run_has_values = bool(user_run['results'][0]['values'])
+            if not user_run_has_values:
                 return False
             last_value_time = user_run['results'][0]['values'][-1::][0]['time']
             if last_value_time > current_time:
