@@ -67,17 +67,18 @@ class ShoutView(LoginRequiredMixin, FormView):
 
     def get(self, request, *args, **kwargs):
         in_flow, flow_id = user_in_flow(request.user)
+        form = self.get_form()
+        context = self.get_context_data(form=form)
         if not in_flow:
-            form = self.get_form()
-            return self.render_to_response(self.get_context_data(form=form))
+            return self.render_to_response(context)
         else:
-            self.template_name = "user_in_flow.html"
-            context = self.get_context_data()
             poll_id = get_poll_id(flow_id)
             context['poll_id'] = poll_id
-            context['has_poll'] = poll_id is not None
-
-            messages.info(self.request, _('Please complete the poll before you can send us a message'))
+            has_poll = poll_id is not None
+            context['has_poll'] = has_poll
+            if has_poll:
+                self.template_name = "user_in_flow.html"
+                messages.info(self.request, _('Please complete the poll before you can send us a message'))
             return self.render_to_response(context)
 
     def form_valid(self, form):

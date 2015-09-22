@@ -63,6 +63,16 @@ class ShoutViewTestCase(WebTest):
         self.assertTemplateUsed(response, 'user_in_flow.html')
         get_poll_mock_method.assert_called_with(flow_uuid)
 
+    @patch('webparticipation.apps.shout.views.get_poll_id')
+    @patch('webparticipation.apps.shout.views.user_in_flow')
+    def test_should_not_show_message_if_there_is_no_poll_id(self, mock_method, get_poll_mock_method):
+        get_poll_mock_method.return_value = None
+        flow_uuid = "the flow uuid"
+        mock_method.return_value = True, flow_uuid
+        response = self.app.get(self.get_url(), user=self.user)
+        self.assertTemplateUsed(response, 'shout.html')
+        get_poll_mock_method.assert_called_with(flow_uuid)
+
 
 class TestUserInFlow(TestCase):
     username = "the wonder user"
