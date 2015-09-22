@@ -1,7 +1,10 @@
 import requests
-from django.core.mail import EmailMessage
-from django.conf import settings
+
 from celery import task
+
+from django.conf import settings
+from django.core.mail import EmailMessage
+from django.utils.translation import ugettext_lazy as _
 
 from webparticipation.apps.utils.views import get_url
 from webparticipation.apps.ureporter.models import Ureporter
@@ -28,7 +31,7 @@ def retrieve_latest_poll():
 def notify_users_of_new_poll(latest_poll_id):
     flow_info = requests.get(settings.UREPORT_ROOT + '/api/v1/polls/' + str(latest_poll_id) + '/').json()
 
-    subject = 'New U-Report poll "' + flow_info['title'] + '" now available'
+    subject = _('New U-Report poll %s now available' % flow_info['title'])
     email_content = construct_new_poll_email(flow_info, latest_poll_id)
 
     active_users = Ureporter.objects \

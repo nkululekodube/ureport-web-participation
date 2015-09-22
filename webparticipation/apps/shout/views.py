@@ -15,6 +15,7 @@ from django.utils.translation import ugettext_lazy as _
 from webparticipation.apps.rapidpro_receptor.views import send_message_to_rapidpro
 from webparticipation.apps.ureporter.models import Ureporter
 
+
 def validate_not_spaces(value):
     if value.strip() == '':
         raise ValidationError(_(u"Please enter a message."))
@@ -61,9 +62,9 @@ def get_poll_id(flow_id):
 
 
 class ShoutView(LoginRequiredMixin, FormView):
-    template_name = "shout.html"
+    template_name = 'shout.html'
     form_class = ShoutForm
-    success_url = "/shout"
+    success_url = '/shout'
 
     def get(self, request, *args, **kwargs):
         in_flow, flow_id = user_in_flow(request.user)
@@ -77,7 +78,7 @@ class ShoutView(LoginRequiredMixin, FormView):
             has_poll = poll_id is not None
             context['has_poll'] = has_poll
             if has_poll:
-                self.template_name = "user_in_flow.html"
+                self.template_name = 'user_in_flow.html'
                 messages.info(self.request, _('Please complete the poll before you can send us a message'))
             return self.render_to_response(context)
 
@@ -85,5 +86,5 @@ class ShoutView(LoginRequiredMixin, FormView):
         reporter = Ureporter.objects.get(user=self.request.user)
         data = {'text': form.cleaned_data['message'], 'from': reporter.urn_tel}
         send_message_to_rapidpro(data)
-        messages.info(self.request, _('Thank you change maker for sending ureport this message'))
+        messages.info(self.request, _('Thank you change maker for sending U-Report this message'))
         return HttpResponseRedirect(self.get_success_url())

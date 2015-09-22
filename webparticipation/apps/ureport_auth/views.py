@@ -19,12 +19,12 @@ def login_user(request):
     backend = 'django.contrib.auth.backends.ModelBackend'
 
     if request.method == 'GET':
-        redirect_to = request.GET.get('next', '/index')
+        redirect_to = request.GET.get('next', '/shout')
 
     if request.method == 'POST':
         email = request.POST.get('email')
         password = request.POST.get('password')
-        redirect_to = request.POST.get('next', '/index')
+        redirect_to = request.POST.get('next', '/shout')
         user = User.objects.filter(email=email).first()
         if user:
             authenticated_user = authenticate(username=user.username, password=password)

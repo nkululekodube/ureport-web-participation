@@ -1,16 +1,17 @@
 {% include 'header.html' %}
 {% load i18n %}
 {% load bootstrap3 %}
-  {% if messages %}
-    {% for message in messages %}
-      <div class="alert alert-{{message.tags}}">
-        {{ message|safe }}
-      </div>
-    {% endfor %}
-  {% endif %}
+
+{% if messages %}
+  {% for message in messages %}
+    <div class="alert alert-{{message.tags}}">
+      {{ message|safe }}
+    </div>
+  {% endfor %}
+{% endif %}
 
 <section>
-  <h3>{% trans "Send us a message." %}</h3>
+  <h3>{% trans "Do you have something you want to get off your chest? Send us a message." %}</h3>
   <form action="{% url 'shout' %}" method="post">
     {% csrf_token %}
     {% bootstrap_form form %}
