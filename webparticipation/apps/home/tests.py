@@ -27,4 +27,4 @@ class TestHome(TestCase):
         request = self.factory.get('/')
         request.user = self.username
         response = home(request)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 302)
