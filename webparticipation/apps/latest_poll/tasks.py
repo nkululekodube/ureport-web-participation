@@ -28,7 +28,7 @@ def retrieve_latest_poll():
 def notify_users_of_new_poll(latest_poll_id):
     flow_info = requests.get(settings.UREPORT_ROOT + '/api/v1/polls/' + str(latest_poll_id) + '/').json()
 
-    subject = 'New Ureport poll "' + flow_info['title'] + '" now available'
+    subject = 'New U-Report poll "' + flow_info['title'] + '" now available'
     email_content = construct_new_poll_email(flow_info, latest_poll_id)
 
     active_users = Ureporter.objects \
@@ -44,12 +44,12 @@ def notify_users_of_new_poll(latest_poll_id):
 
 def construct_new_poll_email(flow_info, latest_poll_id):
     unsubscribe_link = get_url('/profile/unsubscribe/')
-    body = '<p>Hello Ureporter,</p>' \
+    body = '<p>Hello U-Reporter,</p>' \
            '<p>We have published a new poll, "' + flow_info['title'] + '".</p>' \
            '<p>Take the poll by clicking the following link: ' + \
            settings.WEBPARTICIPATION_ROOT + '/poll/' + str(latest_poll_id) + '/respond/</p>' \
            '<p>-----</p>'
-    signature = '<p>Your friendly Ureport team</p>'
+    signature = '<p>Your friendly U-Report team</p>'
     footer = '<hr>' \
              '<p>Please click <a href="' + unsubscribe_link + '">unsubscribe</a> ' \
              'to stop receiving email notifications</p>'
