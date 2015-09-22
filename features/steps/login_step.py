@@ -2,11 +2,8 @@ from behave import *
 import time
 import uuid as uuid
 from django.contrib.auth.models import User
-from webparticipation.apps.ureporter.models import Ureporter
 
-email = 'mbakoola@gmail.com'
-username = 'user999999900'
-password = 'password'
+username = 'user999999999'
 uid = uuid.uuid4()
 
 @given(u'I am a registered user')
@@ -16,17 +13,12 @@ def step_impl(context):
 
 @when(u'I visit the login page')
 def step_impl(context):
-    Ureporter.objects.create(uuid=uid, user=User.objects.create_user(username=username, email=email, password=password))
     context.browser.visit(context.base_url + '/login/')
     time.sleep(1)
-    # print(Ureporter.objects.all()[0].__dict__)
-    # print(context.base_url, context.browser.url)
-
 @then(u'I shall login')
 def step_impl(context):
-    time.sleep(1)
-    context.browser.fill('email', 'mbakoola@gmail.com')
-    context.browser.fill('password', password)
+    context.browser.fill('email', 'ureport@webpro.com')
+    context.browser.fill('password', 'password')
     time.sleep(1)
     print(User.objects.get(username=username).__dict__)
     context.browser.find_by_css('.wp-send.btn').click()

@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 from webparticipation.apps.ureport_auth.models import PasswordReset
 
 username = 'user999999999'
+user_email = 'ureport@webpro.com'
 expiry = timezone.now() + timezone.timedelta(days=1)
 
 @when(u'I click Forgot-password link')
@@ -22,15 +23,15 @@ def step_impl(context):
 @then(u'I shall input my email address')
 def step_impl(context):
     time.sleep(2)
-    context.browser.fill('email', 'mben03@gmail.com')
+    context.browser.fill('email', 'ureport@webpro.com')
     context.browser.find_by_css('.wp-send.btn').click()
-    time.sleep(1)
-    print(User.objects.get(email='mben03@gmail.com').__dict__, "Then User input \n")
+    time.sleep(2)
 
 @then(u'I shall see a notification \'We have sent an email ...\'')
 def step_impl(context):
-    time.sleep(2)
-    assert context.browser.is_text_present('We have sent an email to mben03@gmail.com'), 'Email notification not found'
+    time.sleep(1)
+    assert context.browser.is_text_present('We have sent an email to ureport@webpro.com'), 'Email notification not found'
+    time.sleep(1)
 
 @then(u'I shall input a wrong email address')
 def step_impl(context):
@@ -40,38 +41,35 @@ def step_impl(context):
 
 @then(u'I shall see a notification \'There is no registered user ... \'')
 def step_impl(context):
-    time.sleep(2)
+    time.sleep(1)
     assert context.browser.is_text_present('There is no registered user'), 'No registered user notification not found'
+    time.sleep(1)
 
 @when(u'I see the page requesting me for an email address')
 def step_impl(context):
-    time.sleep(2)
+    time.sleep(1)
     assert context.browser.find_by_name('email'), 'Email field not found'
+    time.sleep(1)
 
 @when(u'I shall input my email address')
 def step_impl(context):
     time.sleep(2)
-    context.browser.fill('email', 'mben03@gmail.com')
+    context.browser.fill('email', 'ureport@webpro.com')
     context.browser.find_by_css('.wp-send.btn').click()
     time.sleep(1)
-    user = User.objects.get(username=username)
-    print(user.__dict__, "User \n")
+    user = User.objects.get(email=user_email)
 
 @when(u'I shall see a notification \'We have sent an email ...\'')
 def step_impl(context):
     time.sleep(2)
-    assert context.browser.is_text_present('We have sent an email to mben03@gmail.com'), 'Email notification not found'
+    assert context.browser.is_text_present('We have sent an email to ureport@webpro.com'), 'Email notification not found'
 
 @when(u'I go to reset password page')
 def step_impl(context):
     time.sleep(2)
-    user = User.objects.get(username=username)
-    PasswordReset.objects.create(expiry=expiry, user=user, token=uuid.uuid4().hex)
-    password_reset = PasswordReset.objects.all()[0]
+    user = User.objects.get(email=user_email)
+    password_reset = PasswordReset.objects.create(expiry=expiry, user=user, token=uuid.uuid4().hex)
     url = context.base_url + '/password-reset/' + str(password_reset.token)
-    print(password_reset.token, "Reset Password - token \n")
-    print(url, "URL \n")
-    print(password_reset.__dict__, "Reset Password \n")
     context.browser.visit(url)
     time.sleep(2)
 
@@ -86,13 +84,13 @@ def step_impl(context):
 @then(u'I see a notification of password changed')
 def step_impl(context):
     time.sleep(2)
-    assert context.browser.is_text_present('Password successfully changed for mben03@gmail.com'), 'password_changed not found'
+    assert context.browser.is_text_present('Password successfully changed for ureport@webpro.com'), 'password_changed not found'
 
 
 @then(u'I shall login with the new password')
 def step_impl(context):
     time.sleep(1)
-    context.browser.fill('email', 'mben03@gmail.com')
+    context.browser.fill('email', 'ureport@webpro.com')
     context.browser.fill('password', 'Password1')
     time.sleep(2)
     context.browser.find_by_css('.wp-send.btn').click()
@@ -103,20 +101,15 @@ def step_impl(context):
 @when(u'I visit reset password page')
 def step_impl(context):
     time.sleep(2)
-    user = User.objects.get(username=username)
-    PasswordReset.objects.create(expiry=expiry, user=user, token=uuid.uuid4().hex)
-    password_reset = PasswordReset.objects.all()[0]
+    user = User.objects.get(email=user_email)
+    password_reset = PasswordReset.objects.create(expiry=expiry, user=user, token=uuid.uuid4().hex)
     url = context.base_url + '/password-reset/' + str(password_reset.token)
-    print(password_reset.token, "Reset Password - token \n")
-    print(url, "URL \n")
-    print(password_reset.__dict__, "Reset Password \n")
     context.browser.visit(url)
     time.sleep(2)
 
 @when(u'I submit my un matching passwords')
 def step_impl(context):
     time.sleep(1)
-    print(context.browser.url)
     context.browser.fill('password', 'Password1')
     context.browser.fill('confirm_password', 'Password2')
     time.sleep(2)
@@ -131,7 +124,7 @@ def step_impl(context):
 def step_impl(context):
     context.browser.visit(context.base_url + '/login/')
     time.sleep(1)
-    context.browser.fill('email', 'mben03@gmail.com')
+    context.browser.fill('email', 'ureport@webpro.com')
     context.browser.fill('password', 'password')
     time.sleep(2)
     context.browser.find_by_css('.wp-send.btn').click()
