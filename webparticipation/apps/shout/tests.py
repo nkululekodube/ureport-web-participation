@@ -8,7 +8,8 @@ from django.core.urlresolvers import reverse
 from django.test import TestCase
 from django_webtest import WebTest
 
-from webparticipation.apps.shout.views import user_in_flow, get_poll_id
+from webparticipation.apps.shout.views import user_in_flow
+from webparticipation.api_client import get_poll_id
 from webparticipation.apps.ureporter.models import Ureporter
 
 

@@ -1,10 +1,7 @@
-import requests
-
 from itertools import groupby
-from braces.views import LoginRequiredMixin
 
+from braces.views import LoginRequiredMixin
 from django import forms
-from django.conf import settings
 from django.contrib import messages
 from django.core.exceptions import ValidationError
 from django.forms import Form
@@ -14,6 +11,9 @@ from django.utils.translation import ugettext_lazy as _
 
 from webparticipation.apps.rapidpro_receptor.views import send_message_to_rapidpro
 from webparticipation.apps.ureporter.models import Ureporter
+from webparticipation.api_client import get_runs_for_ureporter, get_poll_id
+
+
 
 
 def validate_not_spaces(value):
@@ -27,10 +27,7 @@ class ShoutForm(Form):
 
 def user_in_flow(user):
     reporter = Ureporter.objects.get(user=user)
-    params = {'contact': reporter.uuid}
-    headers = {'Authorization': 'Token %s' % settings.RAPIDPRO_API_TOKEN}
-    url = '%s/runs.json' % settings.RAPIDPRO_API_PATH
-    data = requests.get(url, params=params, headers=headers).json()
+    data = get_runs_for_ureporter(reporter)
     in_flow = False
     flow_uuid = ''
     flows = {}
@@ -45,20 +42,6 @@ def user_in_flow(user):
             flow_uuid = key
             break
     return in_flow, flow_uuid
-
-
-def get_poll_id(flow_id):
-    url = '%s/api/v1/polls/org/%s/' % (settings.UREPORT_ROOT, settings.UREPORT_ORG_ID)
-    params = {'flow_uuid': flow_id}
-    try:
-        data = requests.get(url, params=params).json()
-        if len(data['results']) > 0:
-            return data['results'][0]['id']
-    except requests.exceptions.RequestException as e:
-        print e
-        pass
-
-    return None
 
 
 class ShoutView(LoginRequiredMixin, FormView):
