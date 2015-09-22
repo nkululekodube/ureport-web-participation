@@ -26,6 +26,21 @@
         <li class="level1">
           <a class="primary-color" href="{{UREPORT_URL}}/join/"> {% trans "Join &amp; Engage" %} </a>
         </li>
+        {% if user.is_authenticated %}
+        <li class="level1">
+          <a class="primary-color" href="/profile/"> {% trans "Profile" %} </a>
+        </li>
+        <li class="level1">
+          <a class="primary-color" href="/logout/"> {% trans "Logout" %} </a>
+        </li>
+        {% else %}
+        <li class="level1">
+          <a class="primary-color" href="/register/"> {% trans "Register" %} </a>
+        </li>
+        <li class="level1">
+          <a class="primary-color" href="/login/"> {% trans "Login" %} </a>
+        </li>
+        {% endif %}
       </ul>
     </nav>
   </div>
