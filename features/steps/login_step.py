@@ -20,7 +20,6 @@ def step_impl(context):
     context.browser.fill('email', 'ureport@webpro.com')
     context.browser.fill('password', 'password')
     time.sleep(1)
-    print(User.objects.get(username=username).__dict__)
     context.browser.find_by_css('.wp-send.btn').click()
 
 
@@ -33,3 +32,6 @@ def step_impl(context):
 def step_impl(context):
     time.sleep(1)
     context.browser.find_link_by_href('/logout/').click()
+    time.sleep(1)
+    context.browser.visit(context.base_url + '/login/')
+    time.sleep(1)

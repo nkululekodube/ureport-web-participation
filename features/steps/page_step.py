@@ -19,4 +19,4 @@ def step_impl(context):
 @then(u'I shall see a link to login')
 def step_impl(context):
     time.sleep(1)
-    assert context.browser.find_link_by_href("/login/?next=/"), 'Login link not found!'
+    assert context.browser.find_link_by_href("/login/"), 'Login link not found!'

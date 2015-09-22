@@ -17,15 +17,15 @@ def step_impl(context):
 @when(u'I go to the profile page')
 def step_impl(context):
     time.sleep(2)
-    assert context.browser.find_link_by_text('Profile'), 'Logout link not found'
+    assert context.browser.find_link_by_href('/profile/'), 'Logout link not found'
     time.sleep(1)
-    context.browser.find_link_by_text('Profile').click()
+    context.browser.find_link_by_href('/profile/').click()
     pass
 
 @when(u'I deactivate my account')
 def step_impl(context):
     time.sleep(1)
-    context.browser.find_by_css('.btn.btn-deactivate').click()
+    context.browser.find_link_by_href('/profile/deactivate/').click()
     time.sleep(2)
     context.browser.find_by_css('.btn.btn-danger').click()
     time.sleep(3)
