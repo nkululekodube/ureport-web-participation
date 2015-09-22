@@ -34,7 +34,7 @@ class TestRegistration(TestCase):
         mock_get_user.return_value = self.ureporter
         request = self.factory.get('/register/')
         register(request)
-        mock_serve_get_response.assert_called_once_with(request, self.uuid)
+        mock_serve_get_response.assert_called_once_with(request, self.ureporter)
 
     @patch('webparticipation.apps.register.views.get_user')
     @patch('webparticipation.apps.register.views.serve_post_response')
@@ -42,7 +42,7 @@ class TestRegistration(TestCase):
         mock_get_user.return_value = self.ureporter
         request = self.factory.post('/register/')
         register(request)
-        mock_serve_post_response.assert_called_once_with(request, self.uuid, self.ureporter)
+        mock_serve_post_response.assert_called_once_with(request, self.ureporter)
 
     @patch('webparticipation.apps.register.views.get_already_registered_message')
     @patch('webparticipation.apps.register.views.user_is_authenticated')
@@ -50,7 +50,7 @@ class TestRegistration(TestCase):
             self, mock_user_is_authenticated, mock_get_already_registered_message):
         mock_user_is_authenticated.return_value = True
         request = self.factory.post('/register/', {})
-        serve_get_response(request, self.uuid)
+        serve_get_response(request, self.ureporter)
         mock_get_already_registered_message.assert_called_once_with(request)
 
     def test_has_password_keyword(self):
