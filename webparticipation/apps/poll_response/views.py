@@ -28,10 +28,10 @@ def latest_poll_response(request):
         latest_poll_id = featured_poll['results'][0]['id']
         return poll_response(request, latest_poll_id)
     else:
-        return serve_no_current_poll_available(request)
+        return render_no_current_poll_available(request)
 
 
-def serve_no_current_poll_available(request):
+def render_no_current_poll_available(request):
     return render(request, 'poll_response.html', {
         'messages': [{'msg_text': _('There is no current poll available.')}],
         'is_complete': True,
@@ -45,7 +45,7 @@ def serve_get_response(request, poll_id):
     flow_info = get_flow_info_from_poll_id(request, poll_id)
 
     if complete_run_already_exists(flow_info['flow_uuid'], uuid):
-        return serve_already_taken_poll_message(request, poll_id, flow_info)
+        return render_already_taken_poll_message(request, poll_id, flow_info)
 
     run = trigger_flow_run(flow_info['flow_uuid'], uuid)
     run_id = run.json()[0]['run']
@@ -72,7 +72,7 @@ def complete_run_already_exists(flow_uuid, uuid):
     return has_completed_run
 
 
-def serve_already_taken_poll_message(request, poll_id, flow_info):
+def render_already_taken_poll_message(request, poll_id, flow_info):
     return render(request, 'poll_response.html', {
         'messages': [_("You've already taken this poll.")],
         'title': flow_info['title'],
@@ -91,13 +91,13 @@ def serve_post_response(request, poll_id):
     uuid = Ureporter.objects.get(user__username=username).uuid
     flow_info = json.loads(request.POST['flow_info'])
     run_id = request.POST['run_id']
-    current_time = current_datetime_to_json_date()
+    current_time = current_datetime_to_rapidpro_formatted_date()
 
     send_message_to_rapidpro({'from': username, 'text': request.POST['send']})
 
     msgs = get_messages_for_user(username)
     if False in msgs:
-        return serve_timeout_message(request, msgs)
+        return render_timeout_message(request, msgs)
     else:
         run_is_complete = is_current_run_complete(flow_info['flow_uuid'], uuid, run_id, current_time)
         if run_is_complete:
@@ -113,7 +113,7 @@ def serve_post_response(request, poll_id):
             'submission': request.POST.get('send')})
 
 
-def current_datetime_to_json_date():
+def current_datetime_to_rapidpro_formatted_date():
     return (datetime.datetime.utcnow() - datetime.timedelta(seconds=int(s.UREPORT_TIME_DELTA))) \
         .strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3] + 'Z'
 
@@ -148,7 +148,7 @@ def has_completed_run(run_results):
     return bool([run['completed'] for run in run_results if run['completed'] is True])
 
 
-def serve_timeout_message(request, msgs):
+def render_timeout_message(request, msgs):
     flow_info = json.loads(request.POST['flow_info'])
     msgs = msgs[0]
     return render(request, 'poll_response.html', {
