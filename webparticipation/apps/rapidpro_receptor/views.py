@@ -1,5 +1,6 @@
 import re
 import requests
+import datetime
 
 from time import sleep
 
@@ -35,8 +36,14 @@ def broadcast_rapidpro_response(request_params):
 
 
 def get_messages_for_user(username):
+    start_time = datetime.datetime.now()
+    timeout = datetime.timedelta(seconds=10)
     while not MessageBus.objects.filter(msg_to=username).exists():
-        sleep(.5)
+        time_now = datetime.datetime.now()
+        if time_now > start_time + timeout:
+            return [_('Sorry, something went wrong.')], False
+        else:
+            sleep(.5)
     sorted_message_ids = get_sorted_message_ids(username)
     messages_from_rapidpro = get_messages_from_rapidpro_api(sorted_message_ids)
     full_text_messages = [msg['results'][0]['text'] for msg in messages_from_rapidpro]

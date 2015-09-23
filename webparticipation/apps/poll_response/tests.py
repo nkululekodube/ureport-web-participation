@@ -1,11 +1,13 @@
+import re
+
 from mock import patch
 
 from django.test import TestCase
 from django.test.client import RequestFactory
 from django.contrib.auth.models import User
 
-from webparticipation.apps.poll_response.views import poll_response
 from webparticipation.apps.ureporter.models import Ureporter
+from webparticipation.apps.poll_response.views import poll_response, current_datetime_to_json_date
 
 
 class TestPollResponse(TestCase):
@@ -37,3 +39,8 @@ class TestPollResponse(TestCase):
         request.user = self.ureporter.user
         poll_response(request, self.poll_id)
         mock_serve_post_response.assert_called_once_with(request, self.poll_id)
+
+    def test_current_datetime_to_json_date(self):
+        date = current_datetime_to_json_date()
+        search = re.search(r"[\d]{4}-[\d]{2}-[\d]{2}T[\d]{2}:[\d]{2}:[\d]{2}\.[\d]{3}Z", date)
+        self.assertTrue(bool(search))

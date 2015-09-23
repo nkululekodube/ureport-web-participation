@@ -7,9 +7,7 @@ from webparticipation.apps.rapidpro_receptor.views import send_message_to_rapidp
     get_messages_for_user
 
 POST_PASSWORD = 2
-
 ON_PASSWORD = 1
-
 BEFORE_PASSWORD = 0
 
 
@@ -47,10 +45,15 @@ def serve_post_response(request, reporter):
         send_message_to_rapidpro({'from': username, 'text': 'next'})
     else:
         send_message_to_rapidpro({'from': username, 'text': request.POST['send']})
+
     msgs = get_messages_for_user(username)
+    if False in msgs:
+        return serve_timeout_message(request, msgs)
+
     is_password = has_password_keyword(msgs, username)
     post_password = get_post_password_status(request, is_password)
     show_latest_poll_link = post_password > ON_PASSWORD
+
     return render(request, 'register.html', {
         'messages': msgs,
         'submission': request.POST.get('send') or None,
@@ -60,8 +63,16 @@ def serve_post_response(request, reporter):
         'uuid': reporter.uuid})
 
 
+def serve_timeout_message(request, msgs):
+    msgs = msgs[0]
+    return render(request, 'register.html', {
+        'messages': msgs,
+        'is_complete': True,
+        'submission': request.POST.get('send')})
+
+
 def get_post_password_status(request, is_password):
-    post_password = request.POST['post_password'] or BEFORE_PASSWORD  # 0=before password, 1=on password, 2=post password
+    post_password = request.POST['post_password'] or BEFORE_PASSWORD
     if int(post_password) == ON_PASSWORD:
         post_password = POST_PASSWORD
     if is_password:

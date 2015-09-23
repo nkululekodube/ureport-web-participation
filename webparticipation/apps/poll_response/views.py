@@ -28,11 +28,15 @@ def latest_poll_response(request):
         latest_poll_id = featured_poll['results'][0]['id']
         return poll_response(request, latest_poll_id)
     else:
-        return render(request, 'poll_response.html', {
-            'messages': [{'msg_text': _('There is no current poll available.')}],
-            'is_complete': True,
-            'no_latest': True,
-            'submission': request.POST.get('send')})
+        return serve_no_current_poll_available(request)
+
+
+def serve_no_current_poll_available(request):
+    return render(request, 'poll_response.html', {
+        'messages': [{'msg_text': _('There is no current poll available.')}],
+        'is_complete': True,
+        'no_latest': True,
+        'submission': request.POST.get('send')})
 
 
 def serve_get_response(request, poll_id):
@@ -62,9 +66,7 @@ def get_flow_info_from_poll_id(request, poll_id):
 
 
 def complete_run_already_exists(flow_uuid, uuid):
-    query_path = s.RAPIDPRO_API_PATH + '/runs.json' + \
-        '?flow_uuid=' + flow_uuid + \
-        '&contact=' + uuid
+    query_path = '%s/runs.json?flow_uuid=%s&contact=%s' % (s.RAPIDPRO_API_PATH, flow_uuid, uuid)
     runs = requests.get(query_path, headers={'Authorization': 'Token ' + s.RAPIDPRO_API_TOKEN}).json()
     has_completed_run = bool([run['completed'] for run in runs['results'] if run['completed'] is True])
     return has_completed_run
@@ -73,10 +75,8 @@ def complete_run_already_exists(flow_uuid, uuid):
 def serve_already_taken_poll_message(request, poll_id, flow_info):
     return render(request, 'poll_response.html', {
         'messages': [_("You've already taken this poll.")],
-        'poll_id': poll_id,
         'title': flow_info['title'],
-        'is_complete': True,
-        'submission': request.POST.get('send')})
+        'is_complete': True})
 
 
 def trigger_flow_run(flow_uuid, uuid):
@@ -95,21 +95,22 @@ def serve_post_response(request, poll_id):
 
     send_message_to_rapidpro({'from': username, 'text': request.POST['send']})
 
-    run_is_complete = is_current_run_complete(flow_info['flow_uuid'], uuid, run_id, current_time)
-    if run_is_complete:
-        ureporter = Ureporter.objects.get(user__username=username)
-        ureporter.set_last_poll_taken(poll_id)
-
     msgs = get_messages_for_user(username)
-
-    return render(request, 'poll_response.html', {
-        'messages': msgs,
-        'poll_id': poll_id,
-        'flow_info': json.dumps(flow_info),
-        'title': flow_info['title'],
-        'run_id': run_id,
-        'is_complete': run_is_complete,
-        'submission': request.POST.get('send')})
+    if False in msgs:
+        return serve_timeout_message(request, msgs)
+    else:
+        run_is_complete = is_current_run_complete(flow_info['flow_uuid'], uuid, run_id, current_time)
+        if run_is_complete:
+            ureporter = Ureporter.objects.get(user__username=username)
+            ureporter.set_last_poll_taken(poll_id)
+        return render(request, 'poll_response.html', {
+            'messages': msgs,
+            'poll_id': poll_id,
+            'flow_info': json.dumps(flow_info),
+            'title': flow_info['title'],
+            'run_id': run_id,
+            'is_complete': run_is_complete,
+            'submission': request.POST.get('send')})
 
 
 def current_datetime_to_json_date():
@@ -118,18 +119,40 @@ def current_datetime_to_json_date():
 
 
 def is_current_run_complete(flow_uuid, uuid, run_id, current_time):
+    start_time = datetime.datetime.now()
+    timeout = datetime.timedelta(seconds=10)
     while True:
-        query_path = '%s/runs.json?flow_uuid=%s&contact=%s&run=%s' \
+        time_now = datetime.datetime.now()
+        if time_now > start_time + timeout:
+            return False
+        user_run_query_path = '%s/runs.json?flow_uuid=%s&contact=%s&run=%s' \
             % (s.RAPIDPRO_API_PATH, flow_uuid, uuid, str(run_id))
-        user_run = requests.get(query_path, headers={'Authorization': 'Token ' + s.RAPIDPRO_API_TOKEN}).json()
-        if user_run['count']:
+        user_run = requests.get(user_run_query_path, headers={'Authorization': 'Token ' + s.RAPIDPRO_API_TOKEN}).json()
+        if user_run['count'] > 0:
             user_run_has_values = bool(user_run['results'][0]['values'])
             if not user_run_has_values:
                 return False
-            last_value_time = user_run['results'][0]['values'][-1::][0]['time']
-            if last_value_time > current_time:
-                has_completed_run = bool([run['completed'] for run in user_run['results'] if run['completed'] is True])
-                return has_completed_run
-                break
+            time_last_value_sent = get_last_value_time(user_run)
+            if time_last_value_sent > current_time:
+                results = user_run['results']
+                return has_completed_run(results)
         else:
             sleep(1)
+
+
+def get_last_value_time(user_run):
+    return user_run['results'][0]['values'][-1::][0]['time']
+
+
+def has_completed_run(run_results):
+    return bool([run['completed'] for run in run_results if run['completed'] is True])
+
+
+def serve_timeout_message(request, msgs):
+    flow_info = json.loads(request.POST['flow_info'])
+    msgs = msgs[0]
+    return render(request, 'poll_response.html', {
+        'messages': msgs,
+        'title': flow_info['title'],
+        'is_complete': True,
+        'submission': request.POST.get('send')})
