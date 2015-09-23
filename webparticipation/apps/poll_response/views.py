@@ -68,8 +68,11 @@ def get_flow_info_from_poll_id(request, poll_id):
 def complete_run_already_exists(flow_uuid, uuid):
     query_path = '%s/runs.json?flow_uuid=%s&contact=%s' % (s.RAPIDPRO_API_PATH, flow_uuid, uuid)
     runs = requests.get(query_path, headers={'Authorization': 'Token ' + s.RAPIDPRO_API_TOKEN}).json()
-    has_completed_run = bool([run['completed'] for run in runs['results'] if run['completed'] is True])
-    return has_completed_run
+    return has_completed_run(runs['results'])
+
+
+def has_completed_run(run_results):
+    return bool([run['completed'] for run in run_results if run['completed'] is True])
 
 
 def render_already_taken_poll_message(request, poll_id, flow_info):
@@ -142,10 +145,6 @@ def is_current_run_complete(flow_uuid, uuid, run_id, current_time):
 
 def get_last_value_time(user_run):
     return user_run['results'][0]['values'][-1::][0]['time']
-
-
-def has_completed_run(run_results):
-    return bool([run['completed'] for run in run_results if run['completed'] is True])
 
 
 def render_timeout_message(request, msgs):
