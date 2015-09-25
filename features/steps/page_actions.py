@@ -27,13 +27,12 @@ def go_to_register_page(context):
     return context.browser.visit(context.base_url + '/register/')
 
 def login_to_web_pro(context, email, password):
-    br = context.browser
     time.sleep(1)
     context.browser.visit(context.base_url + '/login/')
     context.browser.fill('email', email)
     context.browser.fill('password', password)
     time.sleep(1)
-    send_submit_btn(br).click()
+    send_submit_btn(context.browser).click()
 
 def deactivate_profile(browser):
     time.sleep(1)
@@ -50,6 +49,8 @@ def send_a_message(browser, message):
     time.sleep(1)
 
 def log_out_of_web_pro(context):
+    time.sleep(2)
+    assert logout_link(context.browser), 'Logout link not found'
     logout_link(context.browser).click()
     time.sleep(1)
     go_to_login_page(context)
@@ -59,22 +60,16 @@ def get_become_reporter_btn(context):
     time.sleep(1)
     return register_link.first(context.browser)
 
-def get_login_btn(context):
+
+def reset_password(browser, password, confirm_password):
     time.sleep(1)
-    return context.browser.find_by_css('/login/?next=/').first()
+    browser.fill('password', password)
+    browser.fill('confirm_password', confirm_password)
+    time.sleep(2)
+    browser.find_by_css('.wp-send.btn').click()
 
-def take_screen_shot(context):
+def send_forgot_password_email(browser, email):
+    time.sleep(2)
+    browser.fill('email', email)
+    browser.find_by_css('.wp-send.btn').click()
     time.sleep(1)
-    filename = context.browser.screenshot(name='screen-shot-' % timezone.now().__str__(), suffix='jpeg')
-    # context.assertTrue(tempfile.gettempdir() in filename)
-
-def take_screenshot(driver):
-    name = 'screen-shot-' % timezone.now().__str__()
-    save_location="../../webparticipation/screenshots"
-    path = os.path.abspath(save_location)
-    if not os.path.exists(path):
-        os.makedirs(path)
-    full_path = '%s/%s' % (path, name)
-    driver.get_screenshot_as_file(full_path)
-    return full_path
-

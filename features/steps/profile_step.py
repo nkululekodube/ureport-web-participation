@@ -20,11 +20,11 @@ def step_impl(context):
 def step_impl(context):
     deactivate_profile(context.browser)
     time.sleep(2)
-    assert context.browser.is_text_present("We're sorry to see you go."), 'sorry_to_see_you_go not found'
+    assert sorry_to_go_notification_present(context.browser), 'sorry_to_see_you_go not found'
 
 
 @then(u'I shall not be able to login')
 def step_impl(context):
     login_to_web_pro(context, email, password)
     time.sleep(1)
-    assert un_registered_user_notification(context.browser, email), 'No registered user notification not found'
+    assert no_user_notification_present(context.browser, email), 'No registered user notification not found'

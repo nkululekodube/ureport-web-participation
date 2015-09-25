@@ -17,5 +17,23 @@ def logout_link(browser):
 def send_submit_btn(browser):
     return browser.find_by_css('.wp-send.btn')
 
-def un_registered_user_notification(browser, email):
+def email_input_field(browser):
+    return browser.find_by_name('email')
+
+def no_user_notification_present(browser, email):
     return browser.is_text_present('There is no registered user with sign-in email ' + email)
+
+def password_unmatched_notification_present(browser):
+    return browser.is_text_present('Password do not match')
+
+def sorry_to_go_notification_present(browser):
+    return browser.is_text_present("We're sorry to see you go.")
+
+def password_changed_notification_present(browser, email):
+    return browser.is_text_present('Password successfully changed for ' + email)
+
+def change_password_failed_notification_present(browser, email):
+    return browser.is_text_present('Password successfully changed for ' + email)
+
+def sent_email_notification_present(browser, email):
+    return browser.is_text_present('We have sent an email to ' + email)
