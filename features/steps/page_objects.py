@@ -37,3 +37,6 @@ def change_password_failed_notification_present(browser, email):
 
 def sent_email_notification_present(browser, email):
     return browser.is_text_present('We have sent an email to ' + email)
+
+def send_message_notification_present(browser):
+    return browser.is_text_present('Thank you change maker for sending U-Report this message')

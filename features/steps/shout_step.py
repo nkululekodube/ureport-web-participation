@@ -23,3 +23,4 @@ def step_impl(context):
 @then(u'I shall be able to send a message')
 def step_impl(context):
     send_a_message(context.browser, 'Testing Testing')
+    assert (send_message_notification_present,'Thank_you_message not found')
