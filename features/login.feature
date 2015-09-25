@@ -1,6 +1,6 @@
-#### #22: A global user verifies email during registration process
-##### User Login
-Feature: A registered user should be able to login to web-pro
+##### Logging in to web-pro
+Feature: As registered user
+  I should be able to login to web-pro
 
   Scenario: Logging in to web-pro
 

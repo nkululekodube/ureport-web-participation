@@ -1,6 +1,6 @@
 from behave import *
-import page_actions
-import time
+from page_actions import *
+from page_objects import *
 
 @given(u'I am a visitor to web-pro')
 def step_impl(context):
@@ -8,15 +8,10 @@ def step_impl(context):
 
 @when(u'I browse to web-pro')
 def step_impl(context):
-    context.browser.visit(context.base_url)
+    go_to_web_pro(context)
     time.sleep(1)
-
-@then(u'I shall see a link to register')
-def step_impl(context):
-    time.sleep(1)
-    assert context.browser.find_link_by_href("/register/"), 'Become_a_UReporter_Today link not found!'
 
 @then(u'I shall see a link to login')
 def step_impl(context):
     time.sleep(1)
-    assert context.browser.find_link_by_href("/login/"), 'Login link not found!'
+    assert login_link(context.browser), 'Login link not found!'

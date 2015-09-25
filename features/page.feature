@@ -8,5 +8,4 @@ Feature: A visitor should be able to browses webpro
     Scenario: A visitor browses to web-pro
     Given I am a visitor to web-pro
     When I browse to web-pro
-    Then I shall see a link to register
-    And I shall see a link to login
+    Then I shall see a link to login

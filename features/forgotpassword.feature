@@ -1,5 +1,4 @@
-#### #22: A global user verifies email during registration process
-##### User Login
+##### Forgotten the password for web-pro
 Feature: A registered user has forgotten the password
 
   Scenario: User has forgotten the password for web-pro but has a registered email
