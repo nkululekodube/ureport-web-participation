@@ -22,6 +22,8 @@
   {% else %}
     {% if no_latest %}
       <a href="{{UREPORT_URL}}/polls/">View Polls</a>
+    {% elif timeout %}
+      <a href="{{UREPORT_URL}}/polls/{{poll_id}}/respond/">Retake the Poll</a>
     {% else %}
       <a href="{{UREPORT_URL}}/poll/{{poll_id}}/">View Results</a>
     {% endif %}

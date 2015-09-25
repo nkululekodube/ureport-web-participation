@@ -154,5 +154,7 @@ def render_timeout_message(request, msgs):
     return render(request, 'poll_response.html', {
         'messages': msgs,
         'title': flow_info['title'],
+        'poll_id': flow_info['id'],
         'is_complete': True,
+        'timeout': True,
         'submission': request.POST.get('send')})
