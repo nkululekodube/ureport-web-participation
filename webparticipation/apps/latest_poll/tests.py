@@ -1,3 +1,4 @@
+from django.core import mail
 from mock import Mock, patch, MagicMock
 from django.test import TestCase, RequestFactory
 
@@ -75,14 +76,13 @@ class TestLatestPoll(TestCase):
         mock_notify_users_of_new_poll.assert_called_once_with(2)
 
     @patch('requests.get')
-    @patch('django.core.mail.EmailMessage.send')
-    def test_notify_users_of_new_poll(self, mock_email_send, mock_requests_get):
+    def test_notify_users_of_new_poll(self, mock_requests_get):
         mock_requests_get.return_value = mock_response = Mock()
         mock_response.json.return_value = {'title': 'whatever'}
-        message = notify_users_of_new_poll(self.latest_poll_id)
-        mock_email_send.assert_called_with()
-        self.assertEqual(len(message.bcc), 1)
-        self.assertEqual(message.bcc[0], 'remindme@email.com')
+        notify_users_of_new_poll(self.latest_poll_id)
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(mail.outbox[0].to, ['remindme@email.com'])
+        self.assertIn("profile/unsubscribe/%s" % self.should_receive_email_user.unsubscribe_token ,mail.outbox[0].body )
 
 
 @show_untaken_latest_poll_message
