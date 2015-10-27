@@ -1,0 +1,11 @@
+---
+ureport_root: http://ureport.in
+ureport_time_delta: 17 # time difference between ureport server and webparticipation server
+web_participation_root: http://polling.ureport.in
+web_participation_root_bare: polling.ureport.in
+secret_key: rwellxp86tzdxr2p88iiuzftxo6xw87d
+django_secret_key: "somesupersecretkey"
+
+rapidpro_web_channel: 7d60f8da-7936-4c6d-9a39-b01a2378b32f # get this from https://app.rapidpro.io/api/v1
+rapidro_received_path: https://rapidpro.io/api/v1/external/received/7d60f8da-7936-4c6d-9a39-b01a2378b32f/
+rapidpro_register_trigger: registerdemo # the keyword trigger for the registration flow

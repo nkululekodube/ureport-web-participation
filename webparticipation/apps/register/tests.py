@@ -3,6 +3,7 @@ from mock import patch
 from django.test import TestCase
 from django.test.client import RequestFactory
 from django.contrib.auth.models import User
+from django.conf import settings as s
 
 from webparticipation.apps.ureporter.models import Ureporter
 from webparticipation.apps.utils.views import undashify_user
@@ -17,9 +18,11 @@ class TestRegistration(TestCase):
     def setUp(self):
         self.factory = RequestFactory()
         self.uuid = 'octagons-help-feed-some-elephantsies'
+        self.urn_tel = 'user123456789'
         self.undashified_uuid = undashify_user(self.uuid)
         self.username = 'registerMe'
-        self.ureporter = Ureporter.objects.create(uuid=self.uuid, user=User.objects.create_user(username=self.username))
+        self.ureporter = Ureporter.objects.create(
+            uuid=self.uuid, user=User.objects.create_user(username=self.username), urn_tel=self.urn_tel)
         self.ureporter.save()
 
     @patch('requests.delete')
@@ -36,6 +39,15 @@ class TestRegistration(TestCase):
         register(request)
         mock_serve_get_response.assert_called_once_with(request, self.ureporter)
 
+    @patch('webparticipation.apps.register.views.get_already_registered_message')
+    @patch('webparticipation.apps.register.views.user_is_authenticated')
+    def test_serve_get_response_when_user_is_authenticated(
+            self, mock_user_is_authenticated, mock_get_already_registered_message):
+        mock_user_is_authenticated.return_value = True
+        request = self.factory.get('/register/', {})
+        serve_get_response(request, self.ureporter)
+        mock_get_already_registered_message.assert_called_once_with(request)
+
     @patch('webparticipation.apps.register.views.get_user')
     @patch('webparticipation.apps.register.views.serve_post_response')
     def test_register_with_post_method(self, mock_serve_post_response, mock_get_user):
@@ -44,14 +56,23 @@ class TestRegistration(TestCase):
         register(request)
         mock_serve_post_response.assert_called_once_with(request, self.ureporter)
 
-    @patch('webparticipation.apps.register.views.get_already_registered_message')
+    @patch('webparticipation.apps.register.views.get_messages_for_user')
+    @patch('webparticipation.apps.register.views.get_run_id')
+    @patch('webparticipation.apps.register.views.render')
+    @patch('webparticipation.apps.register.views.send_message_to_rapidpro')
     @patch('webparticipation.apps.register.views.user_is_authenticated')
-    def test_serve_get_response_when_user_is_authenticated(
-            self, mock_user_is_authenticated, mock_get_already_registered_message):
-        mock_user_is_authenticated.return_value = True
-        request = self.factory.post('/register/', {})
+    def test_serve_get_response_when_user_is_not_authenticated(
+            self, mock_user_is_authenticated, mock_send_message_to_rapidpro, mock_render, mock_get_run_id,
+            mock_get_messages_for_user):
+        mock_user_is_authenticated.return_value = False
+        mock_get_run_id.return_value = 123
+        mock_get_messages_for_user.return_value = 'whatever'
+        request = self.factory.get('/register/', {})
         serve_get_response(request, self.ureporter)
-        mock_get_already_registered_message.assert_called_once_with(request)
+        mock_send_message_to_rapidpro.assert_called_once_with(
+            {'from': self.urn_tel, 'text': s.RAPIDPRO_REGISTER_TRIGGER})
+        mock_render.assert_called_once_with(
+            request, 'register.html', {'messages': 'whatever', 'uuid': self.uuid, 'run_id': 123})
 
     def test_has_password_keyword(self):
         MessageBus.objects.create(msg_id=123, msg_channel=1, msg_to=self.username, msg_from='somechannel',

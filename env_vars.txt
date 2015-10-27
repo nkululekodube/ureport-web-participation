@@ -6,6 +6,8 @@ export WEBPARTICIPATION_ROOT='http://localhost:8200'
 
 export UREPORT_ROOT='http://localhost:8100'
 export UREPORT_ORG_ID='1'
+export UREPORT_TIME_DELTA=0
+export UREPORT_REGISTRATION_FLOW_UUID='zzzzzzzz-yyyy-xxxx-wwww-vvvvvvvvvvvv'
 
 export RAPIDPRO_API_TOKEN='abcdefghijklmnopqrstuvwxyz0123456789abcd'
 export RAPIDPRO_API_PATH='http://localhost:8000/api/v1'
@@ -17,7 +19,7 @@ export DATABASE_PASSWORD=''
 export DATABASE_HOST=''
 export DATABASE_PORT='5432'
 
-export EMAIL_HOST='smtp.gmail.com'
+export EMAIL_HOST='smtp.mail.com'
 export EMAIL_HOST_USER='some.address@mail.com'
 export EMAIL_HOST_PASSWORD=''
 export DEFAULT_FROM_EMAIL='some.address@mail.com'
