@@ -37,3 +37,13 @@ DATABASES = {
         'PORT': '{{database_port}}',
     }
 }
+
+INSTALLED_APPS += (
+    'raven.contrib.django.raven_compat',
+)
+
+import raven
+
+RAVEN_CONFIG = {
+    'dsn': '{{raven_dsn}}'
+}
