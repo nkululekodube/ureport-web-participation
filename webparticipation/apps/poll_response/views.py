@@ -1,16 +1,15 @@
-import requests
-import json
 import datetime
-
+import json
 from time import sleep
 
+import requests
 from django.conf import settings as s
-from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
+from django.shortcuts import render
 from django.utils.translation import ugettext as _
 
-from webparticipation.apps.ureporter.models import Ureporter
 from webparticipation.apps.rapidpro_receptor.views import send_message_to_rapidpro, get_messages_for_user
+from webparticipation.apps.ureporter.models import Ureporter
 
 
 @login_required
@@ -68,11 +67,11 @@ def get_flow_info_from_poll_id(request, poll_id):
 def complete_run_already_exists(flow_uuid, uuid):
     query_path = '%s/runs.json?flow_uuid=%s&contact=%s' % (s.RAPIDPRO_API_PATH, flow_uuid, uuid)
     runs = requests.get(query_path, headers={'Authorization': 'Token ' + s.RAPIDPRO_API_TOKEN}).json()
-    return has_completed_run(runs['results'])
+    return has_completed_run(runs.get('results', []))
 
 
 def has_completed_run(run_results):
-    return bool([run['completed'] for run in run_results if run['completed'] is True])
+    return any([run.get('completed', False) for run in run_results])
 
 
 def render_already_taken_poll_message(request, poll_id, flow_info):
@@ -118,7 +117,7 @@ def serve_post_response(request, poll_id):
 
 def current_datetime_to_rapidpro_formatted_date():
     return (datetime.datetime.utcnow() - datetime.timedelta(seconds=int(s.UREPORT_TIME_DELTA))) \
-        .strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3] + 'Z'
+               .strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3] + 'Z'
 
 
 def is_current_run_complete(flow_uuid, uuid, run_id, current_time):
@@ -129,7 +128,7 @@ def is_current_run_complete(flow_uuid, uuid, run_id, current_time):
         if time_now > start_time + timeout:
             return False
         user_run_query_path = '%s/runs.json?flow_uuid=%s&contact=%s&run=%s' \
-            % (s.RAPIDPRO_API_PATH, flow_uuid, uuid, str(run_id))
+                              % (s.RAPIDPRO_API_PATH, flow_uuid, uuid, str(run_id))
         user_run = requests.get(user_run_query_path, headers={'Authorization': 'Token ' + s.RAPIDPRO_API_TOKEN}).json()
         if user_run['count'] > 0:
             user_run_has_values = bool(user_run['results'][0]['values'])

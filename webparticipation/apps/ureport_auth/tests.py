@@ -1,8 +1,7 @@
-from mock import patch
-
-from django.test import TestCase, RequestFactory, Client
 from django.contrib.auth.models import User
 from django.contrib.messages.storage.fallback import FallbackStorage
+from django.test import TestCase, RequestFactory, Client
+from mock import patch
 
 from webparticipation.apps.ureport_auth.tasks import send_forgot_password_email
 from webparticipation.apps.ureport_auth.views import login_user
@@ -10,7 +9,6 @@ from webparticipation.apps.ureporter.models import Ureporter
 
 
 class TestUserLogin(TestCase):
-
     def setUp(self):
         self.client = Client()
         self.factory = RequestFactory()
@@ -43,6 +41,7 @@ class TestUserLogin(TestCase):
         setattr(request, 'session', session)
         messages = FallbackStorage(request)
         setattr(request, '_messages', messages)
+        request.user = None
         response = login_user(request)
         self.assertEquals(response.status_code, 200)
         self.assertTrue('There is no registered user with '

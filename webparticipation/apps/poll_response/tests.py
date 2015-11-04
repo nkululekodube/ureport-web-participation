@@ -1,17 +1,15 @@
 import re
 
-from mock import patch
-
+from django.contrib.auth.models import User
 from django.test import TestCase
 from django.test.client import RequestFactory
-from django.contrib.auth.models import User
+from mock import patch
 
+from webparticipation.apps.poll_response.views import poll_response, current_datetime_to_rapidpro_formatted_date, has_completed_run
 from webparticipation.apps.ureporter.models import Ureporter
-from webparticipation.apps.poll_response.views import poll_response, current_datetime_to_rapidpro_formatted_date
 
 
 class TestPollResponse(TestCase):
-
     def setUp(self):
         self.factory = RequestFactory()
         self.uuid = 'cheetahs-flew-over-golf-sanctuariess'
@@ -44,3 +42,13 @@ class TestPollResponse(TestCase):
         date = current_datetime_to_rapidpro_formatted_date()
         search = re.search(r"[\d]{4}-[\d]{2}-[\d]{2}T[\d]{2}:[\d]{2}:[\d]{2}\.[\d]{3}Z", date)
         self.assertTrue(bool(search))
+
+
+class Test_has_completed_run(TestCase):
+    def test_has_completed_run_if_one_of_the_runs_is_complete(self):
+        runs = [{"completed": True}, {"completed": False}, {"completed": True}]
+        self.assertEquals(True, has_completed_run(runs))
+
+    def test_has_not_completed_run_if_none_of_the_runs_is_complete(self):
+        runs = [{"completed": False}, {"completed": False}, {"completed": False}]
+        self.assertEquals(False, has_completed_run(runs))
