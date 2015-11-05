@@ -1,12 +1,11 @@
 import requests
-
-from django.shortcuts import render
 from django.conf import settings as s
+from django.shortcuts import render
 from django.utils.translation import ugettext as _
 
-from webparticipation.apps.ureporter.views import get_user, activate_user
 from webparticipation.apps.rapidpro_receptor.views import send_message_to_rapidpro, has_password_keyword, \
     get_messages_for_user
+from webparticipation.apps.ureporter.views import get_user, activate_user
 
 POST_PASSWORD = 2
 ON_PASSWORD = 1
@@ -63,14 +62,17 @@ def serve_post_response(request, reporter):
     else:
         send_message_to_rapidpro({'from': username, 'text': request.POST['send']})
 
-    msgs = get_messages_for_user(username)
+    is_complete = is_registration_complete(run_id)
+    if is_complete:
+        msgs = ["Registration Complete"]
+    else:
+        msgs = get_messages_for_user(username)
     if False in msgs:
         return serve_timeout_message(request, msgs)
 
     is_password = has_password_keyword(msgs, username)
     post_password = get_post_password_status(request, is_password)
     show_latest_poll_link = post_password > ON_PASSWORD
-    is_complete = is_registration_complete(run_id)
 
     return render(request, 'register.html', {
         'is_complete': is_complete,

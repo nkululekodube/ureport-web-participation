@@ -71,7 +71,7 @@ def complete_run_already_exists(flow_uuid, uuid):
 
 
 def has_completed_run(run_results):
-    return any([run.get('completed', False) for run in run_results]) or any([run.get('steps', [])[-1].get('type') == 'A' for run in run_results if (not run.get('completed', False) and len(run.get('steps', [])) > 0)])
+    return any([run.get('completed', False) for run in run_results])
 
 
 def render_already_taken_poll_message(request, poll_id, flow_info):
@@ -93,13 +93,15 @@ def serve_post_response(request, poll_id):
     uuid = Ureporter.objects.get(user__username=username).uuid
     flow_info = json.loads(request.POST['flow_info'])
     run_id = request.POST['run_id']
-    current_time = current_datetime_to_rapidpro_formatted_date()
     send_message_to_rapidpro({'from': username, 'text': request.POST['send']})
-    msgs = get_messages_for_user(username)
-    if False in msgs:
+    run_is_complete = is_current_run_complete(flow_info['flow_uuid'], uuid, run_id)
+    if run_is_complete:
+        msgs = ["Poll Completed"]
+    else:
+        msgs = get_messages_for_user(username)
+    if False in msgs and not run_is_complete:
         return render_timeout_message(request, msgs)
     else:
-        run_is_complete = is_current_run_complete(flow_info['flow_uuid'], uuid, run_id, current_time)
         if run_is_complete:
             ureporter = Ureporter.objects.get(user__username=username)
             ureporter.set_last_poll_taken(poll_id)
@@ -118,7 +120,7 @@ def current_datetime_to_rapidpro_formatted_date():
                .strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3] + 'Z'
 
 
-def is_current_run_complete(flow_uuid, uuid, run_id, current_time):
+def is_current_run_complete(flow_uuid, uuid, run_id):
     start_time = datetime.datetime.now()
     timeout = datetime.timedelta(seconds=10)
     while True:
@@ -132,12 +134,10 @@ def is_current_run_complete(flow_uuid, uuid, run_id, current_time):
             user_run_has_values = bool(user_run['results'][0]['values'])
             if not user_run_has_values:
                 return False
-            time_last_value_sent = get_last_value_time(user_run)
-            if time_last_value_sent > current_time:
-                results = user_run['results']
-                return has_completed_run(results)
+            results = user_run['results']
+            return has_completed_run(results)
         else:
-            sleep(1)
+            sleep(2)
 
 
 def get_last_value_time(user_run):

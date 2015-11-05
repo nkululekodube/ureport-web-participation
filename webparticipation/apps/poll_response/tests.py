@@ -53,15 +53,6 @@ class Test_has_completed_run(TestCase):
         runs = [{"completed": False}, {"completed": False}, {"completed": False}]
         self.assertEquals(False, has_completed_run(runs))
 
-    def test_that_run_is_complete_if_last_step_in_complete_run_is_a(self):
-        runs = [{"completed": False}, {"completed": False, "steps": [{"type": "R"}, {"type": "A"}]}]
-        self.assertEquals(True, has_completed_run(runs))
-
-    def test_that_run_is_in_complete_if_last_step_in_complete_run_is_r(self):
-        runs = [{"completed": False}, {"completed": False, "steps": [{"type": "R"}, {"type": "R"}]}]
-        self.assertEquals(False, has_completed_run(runs))
-
-
 class PollResponseTestCase(TestCase):
     @patch("webparticipation.apps.ureporter.models.Ureporter.objects.get")
     @patch("webparticipation.apps.poll_response.views.send_message_to_rapidpro")
@@ -87,7 +78,7 @@ class PollResponseTestCase(TestCase):
     @patch("webparticipation.apps.poll_response.views.is_current_run_complete")
     @patch("webparticipation.apps.poll_response.views.render_timeout_message")
     def test_should_send_render_timeout_message_if_no_messages(self, render_timeout_message_mock, is_current_run_complete_mock, get_messages_for_user_mock, send_message_to_rapidpro_mock, get_ureporter_mock):
-        is_current_run_complete_mock.return_value = True
+        is_current_run_complete_mock.return_value = False
         messages = ['Sorry, something went wrong.'], False
         get_messages_for_user_mock.return_value = messages
 
