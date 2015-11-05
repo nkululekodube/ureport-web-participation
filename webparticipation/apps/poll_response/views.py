@@ -71,7 +71,7 @@ def complete_run_already_exists(flow_uuid, uuid):
 
 
 def has_completed_run(run_results):
-    return any([run.get('completed', False) for run in run_results])
+    return any([run.get('completed', False) for run in run_results]) or any([run.get('steps', [])[-1].get('type') == 'A' for run in run_results if (not run.get('completed', False) and len(run.get('steps', [])) > 0)])
 
 
 def render_already_taken_poll_message(request, poll_id, flow_info):
@@ -94,9 +94,7 @@ def serve_post_response(request, poll_id):
     flow_info = json.loads(request.POST['flow_info'])
     run_id = request.POST['run_id']
     current_time = current_datetime_to_rapidpro_formatted_date()
-
     send_message_to_rapidpro({'from': username, 'text': request.POST['send']})
-
     msgs = get_messages_for_user(username)
     if False in msgs:
         return render_timeout_message(request, msgs)
