@@ -94,16 +94,24 @@ def serve_post_response(request, poll_id):
     flow_info = json.loads(request.POST['flow_info'])
     run_id = request.POST['run_id']
     send_message_to_rapidpro({'from': username, 'text': request.POST['send']})
-    run_is_complete = is_current_run_complete(flow_info['flow_uuid'], uuid, run_id)
+    run_complete_before_messages = is_current_run_complete(flow_info['flow_uuid'], uuid, run_id)
 
-    if run_is_complete:
+    if run_complete_before_messages:
         got_messages = True
         msgs = ["Poll Completed"]
     else:
         msgs, got_messages = get_messages_for_user(username)
-    if not got_messages and not run_is_complete:
+
+    if not got_messages and not run_complete_before_messages:
         return render_timeout_message(request, msgs)
     else:
+        if not run_complete_before_messages:
+            run_complete_after_messages = is_current_run_complete(flow_info['flow_uuid'], uuid, run_id)
+        else:
+            run_complete_after_messages = run_complete_before_messages
+
+        run_is_complete = run_complete_before_messages or run_complete_after_messages
+
         if run_is_complete:
             ureporter = Ureporter.objects.get(user__username=username)
             ureporter.set_last_poll_taken(poll_id)
