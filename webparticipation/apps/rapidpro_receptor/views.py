@@ -1,13 +1,12 @@
-import re
-import requests
 import datetime
-
+import re
 from time import sleep
 
+import requests
 from django.conf import settings
 from django.http import HttpResponse
-from django.views.decorators.csrf import csrf_exempt
 from django.utils.translation import ugettext as _
+from django.views.decorators.csrf import csrf_exempt
 
 from webparticipation.apps.message_bus.models import MessageBus
 
@@ -47,7 +46,7 @@ def get_messages_for_user(username):
     sorted_message_ids = get_sorted_message_ids(username)
     messages_from_rapidpro = get_messages_from_rapidpro_api(sorted_message_ids)
     full_text_messages = [msg['results'][0]['text'] for msg in messages_from_rapidpro]
-    return full_text_messages
+    return full_text_messages, True
 
 
 def get_sorted_message_ids(username):

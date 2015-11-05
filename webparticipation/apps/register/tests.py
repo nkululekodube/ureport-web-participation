@@ -1,20 +1,17 @@
-from mock import patch
-
+from django.conf import settings as s
+from django.contrib.auth.models import User
 from django.test import TestCase
 from django.test.client import RequestFactory
-from django.contrib.auth.models import User
-from django.conf import settings as s
+from mock import patch
 
-from webparticipation.apps.ureporter.models import Ureporter
-from webparticipation.apps.utils.views import undashify_user
 from webparticipation.apps.message_bus.models import MessageBus
-
 from webparticipation.apps.register.views import register, serve_get_response, has_password_keyword, \
     get_post_password_status
+from webparticipation.apps.ureporter.models import Ureporter
+from webparticipation.apps.utils.views import undashify_user
 
 
 class TestRegistration(TestCase):
-
     def setUp(self):
         self.factory = RequestFactory()
         self.uuid = 'octagons-help-feed-some-elephantsies'
@@ -42,7 +39,7 @@ class TestRegistration(TestCase):
     @patch('webparticipation.apps.register.views.get_already_registered_message')
     @patch('webparticipation.apps.register.views.user_is_authenticated')
     def test_serve_get_response_when_user_is_authenticated(
-            self, mock_user_is_authenticated, mock_get_already_registered_message):
+        self, mock_user_is_authenticated, mock_get_already_registered_message):
         mock_user_is_authenticated.return_value = True
         request = self.factory.get('/register/', {})
         serve_get_response(request, self.ureporter)
@@ -62,17 +59,17 @@ class TestRegistration(TestCase):
     @patch('webparticipation.apps.register.views.send_message_to_rapidpro')
     @patch('webparticipation.apps.register.views.user_is_authenticated')
     def test_serve_get_response_when_user_is_not_authenticated(
-            self, mock_user_is_authenticated, mock_send_message_to_rapidpro, mock_render, mock_get_run_id,
-            mock_get_messages_for_user):
+        self, mock_user_is_authenticated, mock_send_message_to_rapidpro, mock_render, mock_get_run_id,
+        mock_get_messages_for_user):
         mock_user_is_authenticated.return_value = False
         mock_get_run_id.return_value = 123
-        mock_get_messages_for_user.return_value = 'whatever'
+        mock_get_messages_for_user.return_value = ['whatever'], True
         request = self.factory.get('/register/', {})
         serve_get_response(request, self.ureporter)
         mock_send_message_to_rapidpro.assert_called_once_with(
             {'from': self.urn_tel, 'text': s.RAPIDPRO_REGISTER_TRIGGER})
         mock_render.assert_called_once_with(
-            request, 'register.html', {'messages': 'whatever', 'uuid': self.uuid, 'run_id': 123})
+            request, 'register.html', {'messages': ['whatever'], 'uuid': self.uuid, 'run_id': 123})
 
     def test_has_password_keyword(self):
         MessageBus.objects.create(msg_id=123, msg_channel=1, msg_to=self.username, msg_from='somechannel',

@@ -49,7 +49,7 @@ def serve_get_response(request, poll_id):
     run = trigger_flow_run(flow_info['flow_uuid'], uuid)
     run_id = run.json()[0]['run']
 
-    messages = get_messages_for_user(username)
+    messages, got_messages = get_messages_for_user(username)
 
     return render(request, 'poll_response.html',
                   {'messages': messages,
@@ -95,11 +95,13 @@ def serve_post_response(request, poll_id):
     run_id = request.POST['run_id']
     send_message_to_rapidpro({'from': username, 'text': request.POST['send']})
     run_is_complete = is_current_run_complete(flow_info['flow_uuid'], uuid, run_id)
+
     if run_is_complete:
+        got_messages = True
         msgs = ["Poll Completed"]
     else:
-        msgs = get_messages_for_user(username)
-    if False in msgs and not run_is_complete:
+        msgs, got_messages = get_messages_for_user(username)
+    if not got_messages and not run_is_complete:
         return render_timeout_message(request, msgs)
     else:
         if run_is_complete:

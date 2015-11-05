@@ -28,8 +28,9 @@ def serve_get_response(request, reporter):
     else:
         send_message_to_rapidpro({'from': username, 'text': s.RAPIDPRO_REGISTER_TRIGGER})
 
+        messages, got_messages = get_messages_for_user(username)
         return render(request, 'register.html', {
-            'messages': get_messages_for_user(username),
+            'messages': messages,
             'uuid': reporter.uuid,
             'run_id': get_run_id(reporter)})
 
@@ -64,10 +65,11 @@ def serve_post_response(request, reporter):
 
     is_complete = is_registration_complete(run_id)
     if is_complete:
+        got_messages = True
         msgs = ["Registration Complete"]
     else:
-        msgs = get_messages_for_user(username)
-    if False in msgs:
+        msgs, got_messages = get_messages_for_user(username)
+    if not got_messages:
         return serve_timeout_message(request, msgs)
 
     is_password = has_password_keyword(msgs, username)

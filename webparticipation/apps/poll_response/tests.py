@@ -91,4 +91,4 @@ class PollResponseTestCase(TestCase):
         serve_post_response(request, 1)
 
         get_messages_for_user_mock.assert_called_with(username)
-        render_timeout_message_mock.assert_called_with(request, messages)
+        render_timeout_message_mock.assert_called_with(request, ['Sorry, something went wrong.'])
