@@ -94,7 +94,8 @@ def serve_post_response(request, poll_id):
     flow_info = json.loads(request.POST['flow_info'])
     run_id = request.POST['run_id']
     send_message_to_rapidpro({'from': username, 'text': request.POST['send']})
-    run_complete_before_messages = is_current_run_complete(flow_info['flow_uuid'], uuid, run_id)
+    current_time = current_datetime_to_rapidpro_formatted_date()
+    run_complete_before_messages = is_current_run_complete_before_messages(flow_info['flow_uuid'], uuid, run_id)
 
     if run_complete_before_messages:
         got_messages = True
@@ -106,7 +107,7 @@ def serve_post_response(request, poll_id):
         return render_timeout_message(request, msgs)
     else:
         if not run_complete_before_messages:
-            run_complete_after_messages = is_current_run_complete(flow_info['flow_uuid'], uuid, run_id)
+            run_complete_after_messages = is_current_run_complete_after_messages(flow_info['flow_uuid'], uuid, run_id, current_time)
         else:
             run_complete_after_messages = run_complete_before_messages
 
@@ -130,16 +131,14 @@ def current_datetime_to_rapidpro_formatted_date():
                .strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3] + 'Z'
 
 
-def is_current_run_complete(flow_uuid, uuid, run_id):
+def is_current_run_complete_before_messages(flow_uuid, uuid, run_id):
     start_time = datetime.datetime.now()
     timeout = datetime.timedelta(seconds=10)
     while True:
         time_now = datetime.datetime.now()
         if time_now > start_time + timeout:
             return False
-        user_run_query_path = '%s/runs.json?flow_uuid=%s&contact=%s&run=%s' \
-                              % (s.RAPIDPRO_API_PATH, flow_uuid, uuid, str(run_id))
-        user_run = requests.get(user_run_query_path, headers={'Authorization': 'Token ' + s.RAPIDPRO_API_TOKEN}).json()
+        user_run = get_user_run(flow_uuid, run_id, uuid)
         if user_run['count'] > 0:
             user_run_has_values = bool(user_run['results'][0]['values'])
             if not user_run_has_values:
@@ -148,6 +147,34 @@ def is_current_run_complete(flow_uuid, uuid, run_id):
             return has_completed_run(results)
         else:
             sleep(2)
+
+
+def is_current_run_complete_after_messages(flow_uuid, uuid, run_id, current_time):
+    start_time = datetime.datetime.now()
+    timeout = datetime.timedelta(seconds=10)
+    while True:
+        time_now = datetime.datetime.now()
+        if time_now > start_time + timeout:
+            return False
+        user_run = get_user_run(flow_uuid, run_id, uuid)
+        if user_run['count'] > 0:
+            user_run_has_values = bool(user_run['results'][0]['values'])
+            if not user_run_has_values:
+                return False
+            time_last_value_sent = get_last_value_time(user_run)
+            if time_last_value_sent > current_time:
+                results = user_run['results']
+                return has_completed_run(results)
+            sleep(2)
+        else:
+            sleep(2)
+
+
+def get_user_run(flow_uuid, run_id, uuid):
+    user_run_query_path = '%s/runs.json?flow_uuid=%s&contact=%s&run=%s' \
+                          % (s.RAPIDPRO_API_PATH, flow_uuid, uuid, str(run_id))
+    user_run = requests.get(user_run_query_path, headers={'Authorization': 'Token ' + s.RAPIDPRO_API_TOKEN}).json()
+    return user_run
 
 
 def get_last_value_time(user_run):

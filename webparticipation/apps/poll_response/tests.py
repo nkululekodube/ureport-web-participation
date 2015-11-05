@@ -57,9 +57,9 @@ class PollResponseTestCase(TestCase):
     @patch("webparticipation.apps.ureporter.models.Ureporter.objects.get")
     @patch("webparticipation.apps.poll_response.views.send_message_to_rapidpro")
     @patch("webparticipation.apps.poll_response.views.get_messages_for_user")
-    @patch("webparticipation.apps.poll_response.views.is_current_run_complete")
-    def test_should_send_message_to_rapidpro(self, is_current_run_complete_mock, get_messages_for_user_mock, send_message_to_rapidpro_mock, get_ureporter_mock):
-        is_current_run_complete_mock.return_value = True
+    @patch("webparticipation.apps.poll_response.views.is_current_run_complete_before_messages")
+    def test_should_send_message_to_rapidpro(self, is_current_run_complete_before_messages_mock, get_messages_for_user_mock, send_message_to_rapidpro_mock, get_ureporter_mock):
+        is_current_run_complete_before_messages_mock.return_value = True
         get_messages_for_user_mock.return_value = ["a question"]
 
         username = 'user'
@@ -75,10 +75,10 @@ class PollResponseTestCase(TestCase):
     @patch("webparticipation.apps.ureporter.models.Ureporter.objects.get")
     @patch("webparticipation.apps.poll_response.views.send_message_to_rapidpro")
     @patch("webparticipation.apps.poll_response.views.get_messages_for_user")
-    @patch("webparticipation.apps.poll_response.views.is_current_run_complete")
+    @patch("webparticipation.apps.poll_response.views.is_current_run_complete_before_messages")
     @patch("webparticipation.apps.poll_response.views.render_timeout_message")
-    def test_should_send_render_timeout_message_if_no_messages(self, render_timeout_message_mock, is_current_run_complete_mock, get_messages_for_user_mock, send_message_to_rapidpro_mock, get_ureporter_mock):
-        is_current_run_complete_mock.return_value = False
+    def test_should_send_render_timeout_message_if_no_messages(self, render_timeout_message_mock, is_current_run_complete_before_messages_mock, get_messages_for_user_mock, send_message_to_rapidpro_mock, get_ureporter_mock):
+        is_current_run_complete_before_messages_mock.return_value = False
         messages = ['Sorry, something went wrong.'], False
         get_messages_for_user_mock.return_value = messages
 
