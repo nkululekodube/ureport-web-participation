@@ -37,6 +37,17 @@ DATABASES = {
         'PORT': '{{database_port}}',
     }
 }
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+        'LOCATION': '127.0.0.1:11211',
+    },
+    'local': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+    },
+}
+
+SOLO_CACHE = 'default'
 
 INSTALLED_APPS += (
     'raven.contrib.django.raven_compat',

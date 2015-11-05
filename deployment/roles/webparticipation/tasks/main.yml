@@ -19,6 +19,7 @@
     - python-pip
     - python-pycurl
     - uwsgi
+    - memcached
   tags: packages
 
 - name: Install virtualenv
