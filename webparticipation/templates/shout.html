@@ -12,11 +12,17 @@
 
 <section>
   <h3>{% trans "Do you have something you want to get off your chest? Send us a message." %}</h3>
-  <form action="{% url 'shout' %}" method="post">
-    {% csrf_token %}
-    {% bootstrap_form form %}
-    <button class="wp-send btn btn-default" type="submit">{% trans "Send" %}</button>
-  </form>
+  <div class="row">
+      <div class="col-md-6">
+          <form action="{% url 'shout' %}" method="post">
+            {% csrf_token %}
+            {% bootstrap_form form %}
+            <button class="btn btn-default pull-right" type="submit">{% trans "SEND" %}</button>
+          </form>
+      </div>
+
+  </div>
+
 </section>
 
 {% include 'footer.html' %}

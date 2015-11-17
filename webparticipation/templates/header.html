@@ -6,8 +6,8 @@
     <meta charset="UTF-8">
     <title>{% trans "UReport" %}</title>
     <link rel="stylesheet" href="/static/css/styles.min.css" type="text/css">
-    <link rel="stylesheet" href="/static/css/inline-styles.css" type="text/css">
     <link rel="stylesheet" href="/static/css/web-participation.css" type="text/css">
+    <link rel="stylesheet" href="/static/css/inline-styles.css" type="text/css">
 </head>
 
 <body class="wp-body pattern-bg">
@@ -18,8 +18,7 @@
     <div class="content">
 
     {% if request.session.lp %}
-      <div class="alert alert-info">
-        {% trans "There is a new poll!" %} <a href="/poll/latest/">{% trans "Take it now!" %}</a>
+      <div class="">
+        <a href="/poll/latest/" class="newpoll">{% trans "There is a new poll ! Take it now !" %}</a>
       </div>
     {% endif %}
-

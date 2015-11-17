@@ -7,34 +7,50 @@
   </div>
 {% endif %}
 
-<h1>{% trans "Profile" %}</h1>
+<h1>{% trans "Your Profile" %}</h1>
 
 <section class='profile-details webparticipation-form'>
 
   <form action="" method="post">
     {% csrf_token %}
 
-    <div><label for="email">{% trans "Email" %}</label></div>
-    <div>{{email}}</div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="email">{% trans "Email" %}</label>
+                <input type="text" disabled name="email" value="{{email}}" class="form-control">
+            </div>
 
-    <div><label for="date_joined">{% trans "Date joined" %}</label></div>
-    <div>{{date_joined}}</div>
+            <div class="form-group">
+                <label for="date_joined">{% trans "Date joined" %}</label>
+                <input type="text" disabled name="date_joined" value="{{date_joined}}" class="form-control">
+            </div>
 
-    <div><label for="email_reminders">{% trans "Email new poll reminders" %}</label></div>
-    <div><input type="checkbox"
-                name="subscribed"
-                value="True"
-                {% if subscribed %}checked{% endif %}>
-                  {% trans "Subscribed" %}
+            <div class="checkbox">
+                <label for="email_reminders">
+                    <input type="checkbox" name="subscribed" value="True" {% if subscribed %}checked{% endif %}>
+                    {% trans "Subscribe to poll reminders" %}
+                </label>
+            </div>
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-1">
+            <button href="/profile/" type="submit" class="btn btn-default btn-submit btn-deactivate">{% trans "SAVE" %}</button>
+        </div>
+        <div class="col-md-3">
+            <a href="/profile/deactivate/" class="danger-link">{% trans "Deactivate account" %}</a>
+        </div>
     </div>
 
-    <div>
-        <button href="/profile/" type="submit" class="btn btn-success btn-deactivate">{% trans "Save" %}</button>
-    </div>
+
+
+
   </form>
 
   <div>
-    <a href="/profile/deactivate/" class="btn btn-xs btn-danger btn-deactivate">{% trans "Deactivate account" %}</a>
+
   </div>
 
 </section>

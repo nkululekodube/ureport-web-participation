@@ -2,23 +2,35 @@
 {% load i18n %}
 
 <section>
-  <h1>{{title}}</h1>
+    <div class="row">
+        <div class="col-md-12">
+            <h1>Poll : {{title}}</h1>
 
-  {% if submission %}
-      <p class="wp-bubble wp-to">{{submission}}</p>
-  {% endif %}
-  {% for message in messages %}
-      <p class="wp-bubble wp-from">{{message}}</p>
-  {% endfor %}
+            {% if submission %}
+                <p class="wp-bubble wp-to">{{submission}}</p>
+            {% endif %}
+            {% for message in messages %}
+                <p class="wp-bubble wp-from">{{message}}</p>
+            {% endfor %}
+        </div>
+
+    </div>
+
 
   {% if not is_complete %}
-    <form action="" method="post">
-      {% csrf_token %}
-      <input type="hidden" name="flow_info" value="{{flow_info}}">
-      <input type="hidden" name="run_id" value="{{run_id}}">
-      <input class="form-control" name="send" type="text">
-      <button class="wp-send btn btn-default" type="submit">{% trans "Send" %}</button>
-    </form>
+  <div class="row">
+      <div class="col-md-12">
+          <form action="" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="flow_info" value="{{flow_info}}">
+            <input type="hidden" name="run_id" value="{{run_id}}">
+            <input class="form-control" name="send" type="text">
+            <button class="btn btn-default pull-right" type="submit">{% trans "SEND" %}</button>
+          </form>
+      </div>
+  </div>
+
+
   {% else %}
     {% if no_latest %}
       <a href="{{UREPORT_URL}}/polls/">View Polls</a>

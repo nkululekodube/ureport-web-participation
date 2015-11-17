@@ -22,7 +22,7 @@ def validate_not_spaces(value):
 
 
 class ShoutForm(Form):
-    message = forms.CharField(required=True, validators=[validate_not_spaces])
+    message = forms.CharField(required=True, validators=[validate_not_spaces], widget=forms.Textarea)
 
 
 def user_in_flow(user):

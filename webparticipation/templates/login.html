@@ -16,29 +16,33 @@
     <p>{% trans "You're already logged in." %}</p>
     <a href="/logout/">{% trans "Logout" %}</a>
   {% else %}
-    <h1 class="hr-header primary-color">Login</h1>
-    <form class="form-horizontal webparticipation-form" name="LoginForm" action="/login/?next={{redirect_to}}" method="post">
-      {% csrf_token %}
-      <input type="hidden" name="next" value="{{next}}"/>
-      <div>
-        <label for="email">{% trans "Email" %}</label>
-        <input type="email" name="email" class="form-control" required autofocus>
-      </div>
-      <div>
-        <label for="password">{% trans "Password" %}</label>
-        <input type="password" name="password" class="form-control" required>
-      </div>
-      <div class="clearfix">
-        <button class="wp-send btn btn-default pull-right clearfix"type="submit">{% trans "Login" %}</button>
-      </div>
-      <div>
-        <small class="pull-right">
-          <a href="/forgot-password/">{% trans "Forgot password?" %}</a>
-          |
-          <a href="/register/">{% trans "Register" %}</a>
-        </small>
-      </div>
-    </form>
+    <h1>Login</h1>
+    <div class="row">
+        <div class="col-md-6">
+            <form class="form-horizontal webparticipation-form" name="LoginForm" action="/login/?next={{redirect_to}}" method="post">
+              {% csrf_token %}
+              <input type="hidden" name="next" value="{{next}}"/>
+              <div>
+                <label for="email">{% trans "Email" %}</label>
+                <input type="email" name="email" class="form-control" required autofocus>
+              </div>
+              <div>
+                <label for="password">{% trans "Password" %}</label>
+                <input type="password" name="password" class="form-control" required>
+              </div>
+              <div class="col-md-offset-3 col-md-6 small login-button-links">
+                  <a href="/forgot-password/">{% trans "Forgot Password?" %}</a>
+                  |
+                  <a href="/register/">{% trans "Register" %}</a>
+              </div>
+              <div class="col-md-3 login-button">
+                  <button class="btn btn-default pull-right clearfix"type="submit">{% trans "LOG IN" %}</button>
+              </div>
+            </form>
+        </div>
+    </div>
+
+
   {% endif %}
 </section>
 

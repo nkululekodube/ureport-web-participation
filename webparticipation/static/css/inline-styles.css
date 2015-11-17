@@ -10,13 +10,23 @@ url(/static/fonts/SharpSansNo1-Bold.eot?#iefix) format("embedded-opentype"),url(
   src:url(/static/fonts/SharpSansNo1-BoldItalic.otf)
 }
 
+@font-face {
+  font-family:Asap;
+  src:url(/static/fonts/Asap-Regular.otf)
+}
+
+@font-face {
+  font-family:AsapBold;
+  src:url(/static/fonts/Asap-Bold.otf)
+}
+
 .pattern-bg {
   background-image: url("/static/images/back.png");
 }
 
 .content {
   background-color:rgba(255,255,255,0.7);
-  font-family:SharpSansBold;
+  font-family:AsapBold;
   font-size:14pt
 }
 
@@ -104,7 +114,7 @@ url(/static/fonts/SharpSansNo1-Bold.eot?#iefix) format("embedded-opentype"),url(
 
 .content {
   background-color:rgba(255,255,255,0.7);
-  font-family:SharpSansBold;
+  font-family:AsapBold;
   font-size:14pt
 }
 
@@ -186,4 +196,31 @@ url(/static/fonts/SharpSansNo1-Bold.eot?#iefix) format("embedded-opentype"),url(
 
 .hero-small-background {
   background-image:url(http://dl-ureport.s3.amazonaws.com/cache/43/74/43749fa3678329d82705001f60098022.jpg)
+}
+
+.danger-link {
+  display: inline-block;
+  font-family: Asap;
+  color: #D43D34;
+  font-size: 12pt;
+  font-style: italic;
+  text-decoration: underline;
+}
+.btn-default {
+    color: #41ABD3;
+}
+
+.newpoll{
+    text-decoration: underline;
+}
+h1, h2, h3, h4, body{
+    font-family: AsapBold,Arial,Helvetica,sans-serif;
+}
+
+.login-button-links {
+    margin-top: 1em;
+}
+
+.login-button {
+    margin-top: .5em;
 }

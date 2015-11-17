@@ -2,32 +2,41 @@
 {% load i18n %}
 
 <section>
-  {% if submission %}
-      <p class="wp-bubble wp-to">{{submission}}</p>
-  {% endif %}
-  {% for message in messages %}
-      <p class="wp-bubble wp-from">{{message}}</p>
-  {% endfor %}
+    <div class="row">
+        <div class="col-md-12">
+            {% if submission %}
+                <p class="wp-bubble wp-to">{{submission}}</p>
+            {% endif %}
+            {% for message in messages %}
+                <p class="wp-bubble wp-from">{{message}}</p>
+            {% endfor %}
+        </div>
 
-  {% if not is_complete %}
-  <form action="" method="post">
-      {% csrf_token %}
-      <input type="hidden" name="uuid" value="{{uuid}}"/>
-      <input type="hidden" name="run_id" value="{{run_id}}"/>
-      <input type="hidden" name="post_password" value="{{post_password}}"/>
-      {% if is_password %}
-        <input class="form-control" name="password" type="password">
-      {% else %}
-        <input class="form-control" name="send" type="text">
-      {% endif %}
-      <button class="wp-send btn btn-default" type="submit">{% trans "Send" %}</button>
-      {% if show_latest_poll_link %}
-        <a href="/poll/latest/respond">{% trans "Take the Latest Poll" %}</a>
-      {% endif %}
-  </form>
-  {% else %}
-  <a href="/poll/latest/respond">{% trans "Go To Latest Poll" %}</a>
-  {% endif %}
+        <div class="col-md-12">
+            {% if not is_complete %}
+            <form action="" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="uuid" value="{{uuid}}"/>
+                <input type="hidden" name="run_id" value="{{run_id}}"/>
+                <input type="hidden" name="post_password" value="{{post_password}}"/>
+                {% if is_password %}
+                  <input class="form-control" name="password" type="password">
+                {% else %}
+                  <input class="form-control" name="send" type="text">
+                {% endif %}
+                <button class="btn btn-default pull-right" type="submit">{% trans "SEND" %}</button>
+                {% if show_latest_poll_link %}
+                  <a href="/poll/latest/respond">{% trans "Take the Latest Poll" %}</a>
+                {% endif %}
+            </form>
+            {% else %}
+            <a href="/poll/latest/respond">{% trans "Go To Latest Poll" %}</a>
+            {% endif %}
+        </div>
+    </div>
+
+
+
 </section>
 
 {% include 'footer.html' %}

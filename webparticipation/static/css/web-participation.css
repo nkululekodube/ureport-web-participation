@@ -1,14 +1,13 @@
 .wp-bubble  {
-  color: #fff;
+  color: #000000;
   border-radius: 6px;
   padding: 10px 10px;
 }
 .wp-to {
-  background: #0066CB;
-  margin-left: 2em;
+  background: #FFD100;
+  margin-left: 4em;
 }
 .wp-from {
-  background: #009A17;
   margin-right: 2em;
 }
 
@@ -26,16 +25,4 @@
 
 .wp-send:hover {
   cursor: pointer;
-}
-
-.webparticipation-form label {
-  margin-top: 1em;
-}
-
-.btn-deactivate {
-  margin-top: 2em;
-}
-
-.profile-details input[type='checkbox'] {
-  width: auto;
 }
