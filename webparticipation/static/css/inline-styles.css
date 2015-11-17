@@ -11,7 +11,7 @@ url(/static/fonts/SharpSansNo1-Bold.eot?#iefix) format("embedded-opentype"),url(
 }
 
 .pattern-bg {
-  background:#bc9980
+  background-image: url("/static/images/back.png");
 }
 
 .content {
@@ -48,10 +48,6 @@ url(/static/fonts/SharpSansNo1-Bold.eot?#iefix) format("embedded-opentype"),url(
 
 .secondary-border-color {
   border-color:!important
-}
-
-.pattern-bg {
-  background:#bc9980
 }
 
 .banner {
