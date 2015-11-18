@@ -20,9 +20,14 @@
                 <input type="hidden" name="run_id" value="{{run_id}}"/>
                 <input type="hidden" name="post_password" value="{{post_password}}"/>
                 {% if is_password %}
-                  <input class="form-control" name="password" type="password">
+                <div class="form-group">
+                     <input class="form-control" name="password" type="password">
+                </div>
+
                 {% else %}
-                  <input class="form-control" name="send" type="text">
+                 <div class="form-group">
+                      <input class="form-control" name="send" type="text">
+                 </div>
                 {% endif %}
                 <button class="btn btn-default pull-right" type="submit">{% trans "SEND" %}</button>
                 {% if show_latest_poll_link %}

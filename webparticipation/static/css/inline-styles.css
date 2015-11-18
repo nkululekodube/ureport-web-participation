@@ -219,6 +219,7 @@ h1, h2, h3, h4, body{
 
 .login-button-links {
     margin-top: 1em;
+    font-style: italic;
 }
 
 .login-button {
