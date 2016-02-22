@@ -17,8 +17,11 @@
   <div class="container wp-content">
     <div class="content">
 
-    {% if request.session.lp %}
       <div class="">
-        <a href="/poll/latest/" class="newpoll">{% trans "There is a new poll ! Take it now !" %}</a>
+      {% if login_message %}
+        <p>{% trans "You're already logged in." %}</p>
+      {% endif %}
+      {% if request.session.lp %}
+        <p><a href="/poll/latest/" class="newpoll">{% trans "There is a new poll ! Take it now !" %}</a></p>
+      {% endif %}
       </div>
-    {% endif %}

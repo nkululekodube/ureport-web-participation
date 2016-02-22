@@ -42,7 +42,8 @@ def login_user(request):
         else:
             messages.warning(request, _('There is no registered user with sign-in email %s' % email))
 
-    return render_to_response('login.html', RequestContext(request, {'next': redirect_to}))
+    login_msg = 't' if request.user.is_authenticated() else None
+    return render_to_response('login.html', RequestContext(request, {'next': redirect_to, 'login_message': login_msg}))
 
 
 def forgot_password(request):
