@@ -1,8 +1,13 @@
+html, body {
+  height: 100%;
+}
+
 .wp-bubble  {
   color: #000000;
   border-radius: 6px;
   padding: 10px 10px;
 }
+
 .wp-to {
   background: #FFD100;
   margin-left: 4em;
@@ -29,4 +34,8 @@
 
 .webparticipation-form label {
   margin: 1em 0;
+}
+
+.wp-content {
+  min-height: calc(100% - 315px - 96px);
 }
