@@ -6,11 +6,15 @@ from webparticipation.apps.ureporter.models import delete_user_from_rapidpro as 
 @task()
 def send_verification_token(ureporter):
     if ureporter.token:
-        subject = 'Hello'
-        body = 'Welcome to ureport. To complete the registration process, ' \
-               'use this code to verify your account: ' + str(ureporter.token) + ' .' \
-               '\n\n-----\nThanks'
-        signature = '\nureport team'
+        subject = 'U-Report Registration'
+        body = 'Thank you for registering with U-Report. ' \
+               'Here is your code to complete your U-Report profile: ' + str(ureporter.token) + ' .' \
+               '\n\nWe are so happy for you to join us to speak out on the important issues ' \
+               'affecting young people in your community.'
+        signature = '\n\n-----\nU-Report\nVoice Matters' \
+                    '\n\nThis is an automated email so please don\'t reply.' \
+                    '\nFor more information about U-Report go to www.ureport.in/about ' \
+                    'or follow us on Twitter @UReportGlobal'
         recipients = [ureporter.user.email]
         message = EmailMessage(subject, body + signature, to=recipients)
         message.send()
