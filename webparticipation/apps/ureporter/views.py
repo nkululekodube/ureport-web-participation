@@ -51,6 +51,7 @@ def activate_user(request, ureporter):
     ureporter.invalidate_token()
     ureporter.user.is_active = True
     ureporter.save()
+    return ureporter.user
 
 
 def is_valid_password(password_string):

@@ -2,6 +2,7 @@ import requests
 from django.conf import settings as s
 from django.shortcuts import render
 from django.utils.translation import ugettext as _
+from django.contrib.auth import login
 
 from webparticipation.apps.rapidpro_receptor.views import send_message_to_rapidpro, has_password_keyword, \
     get_messages_for_user
@@ -58,7 +59,9 @@ def serve_post_response(request, reporter):
     run_id = request.POST['run_id']
 
     if request.POST.get('password'):
-        activate_user(request, reporter)
+        user = activate_user(request, reporter)
+        user.backend = 'django.contrib.auth.backends.ModelBackend'
+        login(request, user)
         send_message_to_rapidpro({'from': username, 'text': 'next'})
     else:
         send_message_to_rapidpro({'from': username, 'text': request.POST['send']})
