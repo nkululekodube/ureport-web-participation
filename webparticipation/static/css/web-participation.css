@@ -37,5 +37,5 @@ html, body {
 }
 
 .wp-content {
-  min-height: calc(100% - 315px - 96px);
+  min-height: calc(100% - 415px - 96px);
 }
