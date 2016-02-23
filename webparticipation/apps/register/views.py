@@ -69,7 +69,7 @@ def serve_post_response(request, reporter):
     is_complete = is_registration_complete(run_id)
     if is_complete:
         got_messages = True
-        msgs = ["Registration Complete"]
+        msgs = ["Thank you for joining us. Please click or tap below to take the latest U-Report poll."]
     else:
         msgs, got_messages = get_messages_for_user(username)
     if not got_messages:
