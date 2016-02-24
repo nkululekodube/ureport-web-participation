@@ -31,7 +31,7 @@ def create_new_rapidpro_contact():
         urn_tel = generate_random_urn_tel()
         if not Ureporter.objects.filter(urn_tel=urn_tel).exists():
             return requests.post(api_path + '/contacts.json',
-                                 data={'urns': ['tel:' + urn_tel]},
+                                 json={'urns': ['tel:' + urn_tel]},
                                  headers={'Authorization': 'Token ' + rapidpro_api_token})
 
 
