@@ -25,7 +25,7 @@ def serve_get_response(request, reporter):
     username = reporter.urn_tel
 
     if user_is_authenticated(request):
-        return get_already_registered_message(request)
+        return get_already_logged_in_message(request)
     else:
         send_message_to_rapidpro({'from': username, 'text': s.RAPIDPRO_REGISTER_TRIGGER})
 
@@ -48,7 +48,7 @@ def get_run_id(reporter):
     return run_id
 
 
-def get_already_registered_message(request):
+def get_already_logged_in_message(request):
     return render(request, 'register.html', {
         'messages': [_("You're already logged in. Why don't you take our latest poll?")],
         'is_complete': True})

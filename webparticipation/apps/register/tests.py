@@ -36,14 +36,14 @@ class TestRegistration(TestCase):
         register(request)
         mock_serve_get_response.assert_called_once_with(request, self.ureporter)
 
-    @patch('webparticipation.apps.register.views.get_already_registered_message')
+    @patch('webparticipation.apps.register.views.get_already_logged_in_message')
     @patch('webparticipation.apps.register.views.user_is_authenticated')
     def test_serve_get_response_when_user_is_authenticated(
-        self, mock_user_is_authenticated, mock_get_already_registered_message):
+        self, mock_user_is_authenticated, mock_get_already_logged_in_message):
         mock_user_is_authenticated.return_value = True
         request = self.factory.get('/register/', {})
         serve_get_response(request, self.ureporter)
-        mock_get_already_registered_message.assert_called_once_with(request)
+        mock_get_already_logged_in_message.assert_called_once_with(request)
 
     @patch('webparticipation.apps.register.views.get_user')
     @patch('webparticipation.apps.register.views.serve_post_response')
