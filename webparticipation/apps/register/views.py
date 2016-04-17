@@ -66,15 +66,11 @@ def serve_post_response(request, reporter):
     else:
         send_message_to_rapidpro({'from': username, 'text': request.POST['send']})
 
-    is_complete = is_registration_complete(run_id)
-    if is_complete:
-        got_messages = True
-        msgs = ["Thank you for joining us. Please click or tap below to take the latest U-Report poll."]
-    else:
-        msgs, got_messages = get_messages_for_user(username)
+    msgs, got_messages = get_messages_for_user(username)
     if not got_messages:
         return serve_timeout_message(request, msgs)
 
+    is_complete = is_registration_complete(run_id)
     is_password = has_password_keyword(msgs, username)
     post_password = get_post_password_status(request, is_password)
     show_latest_poll_link = post_password > ON_PASSWORD

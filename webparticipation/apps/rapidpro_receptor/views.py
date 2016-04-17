@@ -43,7 +43,7 @@ def get_messages_for_user(username):
             return [_('Sorry, something went wrong.')], False
         else:
             sleep(.5)
-    sleep(2)
+    sleep(2) # two seconds for all message for that ureporter to come in
     sorted_message_ids = get_sorted_message_ids(username)
     messages_from_rapidpro = get_messages_from_rapidpro_api(sorted_message_ids)
     full_text_messages = [msg['results'][0]['text'] for msg in messages_from_rapidpro]
