@@ -42,7 +42,7 @@ def login_user(request):
         else:
             messages.warning(request, _('There is no registered user with sign-in email %s' % email))
 
-    login_msg = 't' if request.user.is_authenticated() else None
+    login_msg = 't' if request.user and request.user.is_authenticated() else None
     return render_to_response('login.html', RequestContext(request, {'next': redirect_to, 'login_message': login_msg}))
 
 
